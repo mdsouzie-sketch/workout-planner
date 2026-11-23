@@ -4,6 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Exercise Library & Programmer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700&display=swap" rel="stylesheet">
 <style>
 :root{--paper:#FAF7F2;--card:#fff;--ink:#1A1A1A;--muted:#6a6a6a;--accent:#B8956A;--rule:rgba(26,26,26,.12);--bg2:#f1ece3}
 :root[data-theme=light]{color-scheme:light}
@@ -119,6 +121,126 @@ tr.dt-below td{box-shadow:inset 0 -3px 0 var(--accent)}
 tr.dt-in td{outline:2px dashed var(--accent);outline-offset:-3px}
 tr.newzone td{padding:14px;text-align:center;color:var(--muted);font-size:12px;border-top:1px dashed var(--rule)}
 td input.grp{width:48px;text-transform:uppercase}
+/* ===== modern look ===== */
+:root{--paper:#F6F5F2;--card:#FFFFFF;--ink:#1B1B1F;--muted:#6E6E78;--accent:#B8956A;--rule:rgba(20,20,30,.08);--bg2:#EFEDE8;--r:12px;--shadow:0 1px 2px rgba(20,20,30,.05),0 6px 20px rgba(20,20,30,.06)}
+:root[data-theme=dark]{--paper:#0F1013;--card:#17181D;--ink:#EDEDF0;--muted:#8E8F99;--rule:rgba(255,255,255,.07);--bg2:#1F2128;--shadow:0 1px 2px rgba(0,0,0,.4),0 8px 28px rgba(0,0,0,.35)}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--paper:#0F1013;--card:#17181D;--ink:#EDEDF0;--muted:#8E8F99;--rule:rgba(255,255,255,.07);--bg2:#1F2128;--shadow:0 1px 2px rgba(0,0,0,.4),0 8px 28px rgba(0,0,0,.35)}}
+body{font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;font-size:14px;line-height:1.5;letter-spacing:-.005em;-webkit-font-smoothing:antialiased;font-feature-settings:"cv11","ss03"}
+input,select,textarea,button{font-family:inherit}
+/* buttons: soft fills instead of outlined boxes */
+button{border:0;background:var(--bg2);border-radius:9px;padding:6px 12px;font-weight:500;transition:background .12s,color .12s,box-shadow .12s}
+button:hover{background:color-mix(in srgb,var(--ink) 9%,var(--bg2))}
+button.pri{background:var(--accent);color:#fff;box-shadow:0 1px 2px rgba(0,0,0,.2)}
+button.pri:hover{background:color-mix(in srgb,var(--accent) 88%,#000)}
+button.danger{color:#d0443a}
+/* fields: tonal fill, accent ring on focus */
+input,select,textarea{background:var(--bg2);border:1px solid transparent;border-radius:9px;padding:7px 10px;transition:background .12s,border-color .12s,box-shadow .12s}
+input:hover,select:hover,textarea:hover{background:color-mix(in srgb,var(--ink) 6%,var(--bg2))}
+input:focus,select:focus,textarea:focus{outline:0;background:var(--card);border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 22%,transparent)}
+::placeholder{color:color-mix(in srgb,var(--muted) 70%,transparent)}
+/* header */
+header{padding:10px 24px;gap:12px;border-bottom:1px solid var(--rule);background:color-mix(in srgb,var(--paper) 82%,transparent);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+header h1{font-size:13px;font-weight:600;letter-spacing:.22em}
+nav{gap:2px;background:var(--bg2);padding:3px;border-radius:11px}
+nav button{background:transparent;padding:6px 16px;border-radius:9px;color:var(--muted)}
+nav button:hover{color:var(--ink);background:transparent}
+nav button.on{background:var(--card);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.12)}
+details.menu{position:relative}
+details.menu>summary{list-style:none;cursor:pointer;padding:6px 12px;border-radius:9px;background:var(--bg2);font-weight:500;user-select:none}
+details.menu>summary::-webkit-details-marker{display:none}
+details.menu[open]>summary{background:color-mix(in srgb,var(--ink) 10%,var(--bg2))}
+details.menu .pop{position:absolute;right:0;top:calc(100% + 8px);min-width:280px;white-space:nowrap;background:var(--card);border-radius:14px;box-shadow:var(--shadow),0 0 0 1px var(--rule);padding:6px;display:flex;flex-direction:column;gap:1px;z-index:30}
+details.menu .pop button{background:transparent;text-align:left;border-radius:8px;padding:8px 10px;font-weight:450}
+details.menu .pop button:hover{background:var(--bg2)}
+details.menu .pop hr{border:0;border-top:1px solid var(--rule);margin:4px 6px}
+/* library */
+.side h3,.sec-h{font-size:11px;font-weight:600;letter-spacing:.08em;color:var(--muted)}
+.side .f{border-radius:9px;padding:6px 10px}.side .f:hover{background:var(--bg2)}.side .f.on{background:var(--bg2);color:var(--ink)}
+.seg button{border-radius:9px}.seg button.on{background:var(--accent)}
+.chip{border:0;background:color-mix(in srgb,var(--c) 16%,transparent);color:color-mix(in srgb,var(--c) 70%,var(--ink));font-weight:500;padding:2px 9px}
+.group-h{font-family:inherit;font-style:normal;font-size:17px;font-weight:650;letter-spacing:-.01em;border-bottom:0;padding-bottom:0;margin:28px 0 12px}
+.group-h small{font-size:12px;background:var(--bg2);padding:1px 8px;border-radius:99px}
+.grid{gap:12px}
+.card{border:0;border-radius:14px;box-shadow:var(--shadow);padding:14px 16px;transition:transform .12s,box-shadow .12s;border-left:4px solid var(--c,var(--accent))}
+.card:hover{transform:translateY(-2px)}
+.card b{font-size:15px;font-weight:600;letter-spacing:-.01em;margin-bottom:6px}
+.meta{font-size:12px}
+.lvl{color:var(--accent)}
+.bar input[type=search]{max-width:360px}
+/* modal */
+.ov{background:rgba(8,9,12,.55);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+.modal{border:0;border-radius:20px;box-shadow:0 24px 80px rgba(0,0,0,.45);padding:26px}
+.modal h2{font-family:inherit;font-style:normal;font-weight:650;font-size:22px;letter-spacing:-.02em}
+label.l{font-size:11px;font-weight:600;letter-spacing:.06em}
+.ladder{border-radius:14px}.lnode{border:0;background:var(--card);border-radius:10px;box-shadow:0 1px 2px rgba(0,0,0,.1)}
+.pickres{border:0;border-radius:12px;box-shadow:var(--shadow)}
+/* workout rows as cards */
+table{border-collapse:separate;border-spacing:0 8px;background:none;border:0;border-radius:0;overflow:visible}
+th{background:none;font-size:11px;font-weight:600;letter-spacing:.06em;color:var(--muted);padding:2px 12px 0}
+td{border:0;padding:10px 12px}
+tr.xr td{background:var(--card)}
+tr.xr td:first-child{border-radius:14px 0 0 14px;border-left:6px solid var(--g,transparent)}
+tr.xr td:last-child{border-radius:0 14px 14px 0}
+tr.xr{filter:drop-shadow(0 1px 1px rgba(0,0,0,.08))}
+tr.xr:hover td{background:color-mix(in srgb,var(--ink) 3%,var(--card))}
+tr.xr td.nm b{font-size:15px;font-weight:600;letter-spacing:-.01em}
+tr.xr td.nm .chip{font-size:11px}
+td input{background:transparent;border:1px solid transparent;text-align:center;padding:6px 4px;border-radius:8px;font-variant-numeric:tabular-nums;font-weight:500}
+td input:hover{background:var(--bg2)}
+td input:focus{background:var(--card);border-color:var(--accent)}
+td input[data-wf$=":note"]{text-align:left;color:var(--muted);width:100%;min-width:120px;font-weight:400}
+td input.grp{opacity:.55;width:48px}
+.grab{opacity:.3;transition:opacity .12s}tr:hover .grab,.sbrow:hover .sbgrip{opacity:1}
+tr.xr td.noprint button{background:transparent;opacity:.35;padding:4px 8px;border-radius:8px}
+tr.xr:hover td.noprint button{opacity:.9}tr.xr td.noprint button:hover{background:var(--bg2);opacity:1}
+tr.xr td.noprint button.danger{color:#d0443a}
+td input[type=checkbox]{width:16px;height:16px;accent-color:var(--accent);vertical-align:middle;margin-left:2px}
+.gb{border-radius:6px;font-size:10px;letter-spacing:.02em;padding:1px 7px;margin-right:8px;vertical-align:1px}
+/* block headers */
+tr.blk td{border-radius:16px;border:0;border-left:0;border-top:0;padding:14px 18px;background:color-mix(in srgb,var(--bc,var(--accent)) 13%,var(--card));box-shadow:inset 6px 0 0 var(--bc,var(--accent)),var(--shadow)}
+tr.blk.act td{box-shadow:inset 6px 0 0 var(--bc,var(--accent)),0 0 0 2px var(--bc,var(--accent)),var(--shadow)}
+.bnum{width:32px;height:32px;font-size:14px;box-shadow:0 2px 6px color-mix(in srgb,var(--bc) 50%,transparent)}
+td input.bt{background:transparent;border:1px solid transparent;text-align:left;font-size:18px;font-weight:650;letter-spacing:-.015em;padding:4px 8px}
+td input.bt:hover{background:color-mix(in srgb,var(--bc) 10%,transparent)}
+td input.bt:focus{background:var(--card)}
+.bl{font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+td input.bm,td input.bff{background:color-mix(in srgb,var(--bc) 12%,transparent);border-radius:99px;padding:4px 12px;font-weight:500;text-align:center}
+td input.bm:focus,td input.bff:focus{background:var(--card)}
+select.bf{background:color-mix(in srgb,var(--bc) 12%,transparent);border-radius:99px;padding:5px 12px;font-weight:500}
+.bctl button{background:transparent;opacity:.7;padding:5px 9px}.bctl button:hover{background:color-mix(in srgb,var(--bc) 14%,transparent);opacity:1}
+td input.bcol{padding:0;width:26px;height:26px;border-radius:50%;border:2px solid var(--card);box-shadow:0 0 0 1px var(--rule);background:none}
+td input.bcol::-webkit-color-swatch-wrapper{padding:0}td input.bcol::-webkit-color-swatch{border:0;border-radius:50%}
+.bn{background:color-mix(in srgb,var(--bc) 8%,transparent);border-radius:12px;padding:10px 12px;line-height:1.5}
+.npre{padding:2px 8px;border-radius:8px}.npre:hover{background:color-mix(in srgb,var(--bc) 10%,transparent)}
+tr.newzone td{background:none;border:1.5px dashed var(--rule);border-radius:14px;color:var(--muted);padding:16px}
+tr.dt-above td{box-shadow:inset 0 3px 0 var(--accent)}
+tr.dt-below td{box-shadow:inset 0 -3px 0 var(--accent)}
+tr.dt-in td{outline:2px solid var(--accent);outline-offset:-2px}
+.swap{border-radius:12px;background:var(--bg2);padding:10px 14px}
+.wzone{overflow-x:auto;padding:2px 4px 8px}
+input.wt{background:transparent;font-size:22px;font-weight:650;letter-spacing:-.02em;padding:4px 10px;max-width:460px}
+input.wt:hover{background:var(--bg2)}input.wt:focus{background:var(--card)}
+/* sidebar panel */
+.exsb{border:0;border-radius:18px;box-shadow:var(--shadow);padding:16px}
+.sbh b{font-size:15px;font-weight:650;letter-spacing:-.01em}
+.sbseg{background:var(--bg2);padding:3px;border-radius:11px}.sbseg button{background:transparent;border-radius:9px;color:var(--muted)}
+.sbseg button.on{background:var(--card);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.12)}
+.sbmode button{background:transparent;border-radius:6px}.sbmode button.on{background:var(--accent);color:#fff}
+.sbgh{background:transparent;border-radius:10px;padding:8px 10px;font-weight:600}.sbgh:hover{background:var(--bg2)}
+.sbrow{border-bottom:0;border-radius:10px;padding:7px 8px}.sbrow:hover{background:var(--bg2)}
+.sbn b{font-weight:550;font-size:13px}
+.sbrow button{background:transparent;width:30px;height:30px;padding:0;border-radius:50%;font-size:16px;color:var(--accent)}
+.sbrow button:hover{background:var(--accent);color:#fff}
+.addto{background:color-mix(in srgb,var(--accent) 14%,transparent);padding:6px 10px;border-radius:10px;margin:2px 0 10px}
+.dghost{border-radius:10px;font-weight:500;box-shadow:0 10px 30px rgba(0,0,0,.4)}
+.trow{border:0;border-radius:14px;box-shadow:var(--shadow)}
+td input[data-wf$=":rest"]{width:150px}
+td input[data-wf$=":sets"],td input[data-wf$=":reps"]{width:64px}
+tr.xr td:nth-child(8){min-width:240px;width:30%}
+tr.xr td:nth-child(8) input{width:100%}
+.bar input.wt{flex:1 1 380px;max-width:none}
+#wsel{max-width:210px}
+/* ===== end modern look ===== */
 /* large screens: scale type and use the width (built for 2560 x 1440) */
 @media (min-width:1700px){
   body{font-size:16px}
@@ -140,10 +262,10 @@ td input.grp{width:48px;text-transform:uppercase}
   .sec-h,.side h3,label.l{font-size:13px}
   th{font-size:12px;padding:8px 10px}
   td{padding:8px 10px}
-  td input{width:84px}
   td input.grp{width:60px}
   td.nm{min-width:300px}
-  .bnum{min-width:34px;height:34px}.bt{font-size:19px}td input.bm{width:140px}.bn{min-height:72px}
+  .bnum{min-width:36px;height:36px;font-size:15px}td input.bt{font-size:21px}td input.bm{width:140px}.bn{min-height:72px}
+  input.wt{font-size:26px}
   button,input,select,textarea{padding:7px 12px}
   .wb{grid-template-columns:minmax(0,1fr) 560px;gap:32px}
   .exsb{top:80px;max-height:calc(100vh - 100px);padding:18px}
@@ -154,7 +276,7 @@ td input.grp{width:48px;text-transform:uppercase}
   .lnode{font-size:14px;padding:7px 12px}.lcol{min-width:180px}
 }
 /* end large screens */
-@media print{.wb{display:block}.bn{border:0;background:none;resize:none}header,.noprint,.side{display:none!important}main{padding:0}.layout{display:block}body{background:#fff;color:#000}td input{border:0;background:none}}
+@media print{details.menu{display:none!important}tr.xr{filter:none}table{border-spacing:0}td input{background:none!important}.wb{display:block}.bn{border:0;background:none;resize:none}header,.noprint,.side{display:none!important}main{padding:0}.layout{display:block}body{background:#fff;color:#000}td input{border:0;background:none}}
 </style>
 </head>
 <body>
@@ -164,13 +286,17 @@ td input.grp{width:48px;text-transform:uppercase}
   <span class="sp"></span>
   <button id="btnSync" title="Cloud sync status. Click to sync now.">☁ …</button>
   <button id="btnTheme" title="Switch light / dark / auto"></button>
-  <button id="btnExport">Export JSON</button>
-  <button id="btnImport">Import JSON</button>
-  <button id="btnMerge" title="Adds starter exercises you don't have yet; keeps all your edits">Add new starter exercises</button>
-  <button id="btnOpen" title="Adds exercises from the free-exercise-db public-domain dataset">Add open dataset</button>
-  <button id="btnTbx" title="Adds the reviewed TeamBuildr exercises; skips ones you already have">Add TeamBuildr exercises</button>
-  <button id="btnCov" title="Check which TeamBuildr exercises are in this library">Check TeamBuildr coverage</button>
-  <button id="btnReset" class="danger">Reset to starter set</button>
+  <details class="menu" id="dataMenu"><summary>Data ▾</summary><div class="pop">
+    <button id="btnExport">Export JSON</button>
+    <button id="btnImport">Import JSON</button>
+    <hr>
+    <button id="btnMerge" title="Adds starter exercises you don't have yet; keeps all your edits">Add new starter exercises</button>
+    <button id="btnOpen" title="Adds exercises from the free-exercise-db public-domain dataset">Add open dataset</button>
+    <button id="btnTbx" title="Adds the reviewed TeamBuildr exercises; skips ones you already have">Add TeamBuildr exercises</button>
+    <button id="btnCov" title="Check which TeamBuildr exercises are in this library">Check TeamBuildr coverage</button>
+    <hr>
+    <button id="btnReset" class="danger">Reset to starter set</button>
+  </div></details>
   <input type="file" id="file" accept="application/json" hidden>
 </header>
 <main id="app"></main>
@@ -1263,12 +1389,12 @@ function viewWorkouts(){
       <td>${num}</td><td class="nm" data-ract="${n}">${gb}<b>${esc(e.name)}</b><div>${chips(e)}</div><span class="lvl">${lvl(e.level)}</span></td>
       <td><input class="grp" maxlength="3" value="${esc(i.grp||'')}" placeholder="${esc(autoG||'-')}" data-wf="${n}:grp" title="Group label: follows the block automatically (A1, A2 for block A, B1, B2 for block B). Type to override, clear to go back to automatic."></td>
       <td><input type="number" min="1" value="${i.sets}" data-wf="${n}:sets"></td><td><input value="${esc(i.reps)}" data-wf="${n}:reps"></td>
-      <td><input value="${esc(i.rest)}" data-wf="${n}:rest"></td><td><input style="width:140px" value="${esc(i.note)}" placeholder="note" data-wf="${n}:note"></td>
+      <td><input value="${esc(i.rest)}" data-wf="${n}:rest"></td><td><input value="${esc(i.note)}" placeholder="Add a note" data-wf="${n}:note"></td>
       <td class="noprint" style="white-space:nowrap"><button data-swap="${n}:dn" ${dn.length?'':'disabled'} title="Regress">↓</button>
        <button data-swap="${n}:up" ${up.length?'':'disabled'} title="Progress">↑</button>
        <button class="danger" data-rm="${n}">✕</button></td></tr>${sw}`;}).join('');
     const nsel=[...ui.sel].filter(k=>items.some(x=>x.k===k)).length;
-    main=`<div class="bar noprint" style="margin-bottom:10px">${sel}<input id="wname" value="${esc(w.name)}" style="max-width:300px">
+    main=`<div class="bar noprint" style="margin-bottom:10px">${sel}<input id="wname" class="wt" value="${esc(w.name)}">
       <button data-wnew>+ New</button><button data-wdup>Duplicate</button><button data-wprint>Print</button><button class="danger" data-wdel>Delete</button></div>
       <div class="bar noprint" style="margin-bottom:8px"><button data-bnew>+ Block</button><button data-bgroup ${nsel?'':'disabled'}>Group ${nsel||''} into a block</button>
         <span class="meta">Tick exercises to group them. Each exercise’s Grp label follows its block (A1, A2 in the first block, B1, B2 in the second). Drag any exercise to reorder; drop on a block header to join it, or on the strip at the bottom to start a new block. Click a block to make it the target for +.</span></div>
@@ -1425,6 +1551,7 @@ document.addEventListener('change',ev=>{
   else if(t.id==='addtrait'){ui.addT=t.value;render();}
   else if(t.dataset.tname||t.dataset.tcolor)render();
 });
+document.addEventListener('click',ev=>{const m=document.getElementById('dataMenu');if(!m||!m.open)return;if(ev.target.closest('#dataMenu .pop button')||!ev.target.closest('#dataMenu'))m.open=false;});
 document.addEventListener('keydown',ev=>{if(ev.key==='Escape'){if(typeof DR!=='undefined'&&DR)endDrag(false);else if(D)closeModal();}});
 
 $('#btnExport').onclick=()=>{const a=document.createElement('a');
