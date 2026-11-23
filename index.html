@@ -94,10 +94,29 @@ td.nm{min-width:200px}
 /* blocks */
 .xr td:first-child{border-left:4px solid var(--g,transparent)}
 .gc{white-space:nowrap;width:50px}.grab{cursor:grab;color:var(--muted);font-size:16px;padding:0 4px;user-select:none}
-tr.blk td{background:var(--bg2);border-top:2px solid var(--accent)}
-.bh{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.bt{font-weight:600;max-width:260px}.bm{width:100px!important}
-.bn{margin-top:6px;min-height:44px;width:100%}
-tr.dtgt td{box-shadow:inset 0 3px 0 var(--accent)}
+tr.blk td{background:color-mix(in srgb,var(--bc,var(--accent)) 16%,var(--bg2));border-top:3px solid var(--bc,var(--accent));border-left:8px solid var(--bc,var(--accent));cursor:pointer}
+tr.blk.act td{box-shadow:inset 0 0 0 2px var(--bc,var(--accent))}
+.bh1{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.bnum{display:inline-flex;align-items:center;justify-content:center;min-width:30px;height:30px;border-radius:50%;background:var(--bc);color:#fff;font-weight:700}
+.bt{flex:1 1 320px;min-width:240px;font-size:16px;font-weight:700}
+.bl{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
+td input.bm{width:120px}td input.bff,.bff{width:84px}select.bf{width:auto}
+.bsum{margin-left:auto}.bctl{display:flex;gap:6px;align-items:center}
+td input.bcol{width:34px;height:30px;padding:1px}
+.bn{margin-top:8px;min-height:60px;width:100%}
+.npre{margin-top:6px;font-size:13px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.xr td:first-child{border-left:8px solid var(--g,transparent)}
+.gb{display:inline-block;font-size:11px;font-weight:700;color:#fff;border-radius:4px;padding:0 6px;margin-right:6px;background:var(--gc,#888)}
+.grab{font-size:22px;padding:2px 6px;touch-action:none;cursor:grab}
+.sbgrip{color:var(--muted);cursor:grab;padding:0 6px 0 2px;touch-action:none;font-size:18px}
+.sbrow{user-select:none}.sbrow .sbn{flex:1;text-align:left}
+.addto{margin:4px 0 8px}
+.dghost{position:fixed;z-index:200;pointer-events:none;background:var(--accent);color:#fff;padding:6px 12px;border-radius:8px;font-size:13px;box-shadow:0 4px 14px rgba(0,0,0,.35)}
+body.dragging{user-select:none;cursor:grabbing}
+tr.dt-above td{box-shadow:inset 0 3px 0 var(--accent)}
+tr.dt-below td{box-shadow:inset 0 -3px 0 var(--accent)}
+tr.dt-in td{outline:2px dashed var(--accent);outline-offset:-3px}
+tr.newzone td{padding:14px;text-align:center;color:var(--muted);font-size:12px;border-top:1px dashed var(--rule)}
 td input.grp{width:48px;text-transform:uppercase}
 /* large screens: scale type and use the width (built for 2560 x 1440) */
 @media (min-width:1700px){
@@ -123,7 +142,7 @@ td input.grp{width:48px;text-transform:uppercase}
   td input{width:84px}
   td input.grp{width:60px}
   td.nm{min-width:300px}
-  .bt{max-width:420px}.bm{width:120px!important}.bn{min-height:56px}
+  .bnum{min-width:34px;height:34px}.bt{font-size:19px}td input.bm{width:140px}.bn{min-height:72px}
   button,input,select,textarea{padding:7px 12px}
   .wb{grid-template-columns:minmax(0,1fr) 560px;gap:32px}
   .exsb{top:80px;max-height:calc(100vh - 100px);padding:18px}
@@ -954,7 +973,7 @@ function mergeStarter(){
   applyVariations();
   return fresh.length;
 }
-const sbDefaults=()=>({q:'',by:'trait',traits:[],mode:'any',move:'',kind:'',lmin:1,lmax:5,cap:60,open:{}});
+const sbDefaults=()=>({q:'',by:'trait',traits:[],mode:'any',move:'',kind:'train',lmin:1,lmax:5,cap:60,open:{}});
 const ui={sb:sbDefaults(),tab:'library',by:'trait',show:'all',sel:{trait:'all',move:'all',phase:'all'},q:'',group:true,wid:null,addQ:'',addT:'',addM:'',addK:'',swap:null};
 const exById=id=>S.exercises.find(e=>e.id===id);
 const trById=id=>S.traits.find(t=>t.id===id);
@@ -1041,12 +1060,12 @@ function sbGroups(list){
   const other={id:'_',name:'Unassigned',color:'#888',items:[]};
   list.forEach(e=>(idx.get(key(e))||other).items.push(e));
   if(other.items.length)out.push(other);
-  out.forEach(g=>g.items.sort((a,b)=>f.by==='none'?a.name.localeCompare(b.name):a.level-b.level||a.name.localeCompare(b.name)));
+  out.forEach(g=>g.items.sort((a,b)=>(!!a.phase-!!b.phase)||(f.by==='none'?a.name.localeCompare(b.name):a.level-b.level||a.name.localeCompare(b.name))));
   return out.filter(g=>g.items.length);
 }
 function sbRow(e,inW){
   const t=e.traits.slice(0,3).map(id=>trById(id)).filter(Boolean).map(t=>`<i class="dot" style="--c:${t.color};margin:0 2px 0 0" title="${esc(t.name)}"></i>`).join('');
-  return `<div class="sbrow" draggable="true" data-dragex="${e.id}" title="${esc(e.cues||'')}"><div class="sbn"><b>${esc(e.name)}</b><div class="meta">${t} ${esc(e.move||'')}${e.phase?' · warm-up':''} · <span class="lvl">${lvl(e.level)}</span></div></div>
+  return `<div class="sbrow" data-dragex="${e.id}" title="${esc(e.cues||'')}"><span class="sbgrip" title="Drag into the workout">\u2807</span><div class="sbn"><b>${esc(e.name)}</b><div class="meta">${t} ${esc(e.move||'')}${e.phase?' · warm-up':''} · <span class="lvl">${lvl(e.level)}</span></div></div>
     <button data-add="${e.id}" title="Add to workout">${inW?'✓':'+'}</button></div>`;
 }
 function sbList(){
@@ -1061,7 +1080,8 @@ function sbList(){
 }
 function sbPanel(){
   const f=ui.sb;
-  return `<aside class="exsb noprint"><div class="sbh"><b>Exercise database</b><button data-sbclear title="Reset filters">Reset</button></div>
+  return `<aside class="exsb noprint"><div class="sbh"><b>Exercise database</b><button data-sbclear title="Reset filters">Reset filters</button></div>
+    <div class="meta addto">Adding to: <b>${esc(addTarget())}</b></div>
     <input type="search" id="sbq" placeholder="Search name, movement, equipment…" value="${esc(f.q)}">
     <div class="sec-h" style="margin:10px 0 4px">Organize by</div>
     <div class="sbseg">${[['trait','Trait'],['move','Movement'],['level','Level'],['none','A–Z']].map(([k,l])=>`<button data-sbby="${k}" class="${f.by===k?'on':''}">${l}</button>`).join('')}</div>
@@ -1073,20 +1093,32 @@ function sbPanel(){
     <div id="sblist">${sbList()}</div></aside>`;
 }
 function sbRefresh(){const el=$('#sblist');if(el)el.innerHTML=sbList();}
-/* ----- workout blocks, grouping and ordering ----- */
+/* ----- workout blocks, grouping and ordering (v2: colours, active block, formats, pointer drag) ----- */
 const newK=()=>uid('k_');
 const isBlk=i=>i&&i.type==='block';
 function wItems(w){w.items.forEach(i=>{if(!i.k)i.k=newK();});return w.items;}
 const blockEnd=(it,i)=>{let j=i+1;while(j<it.length&&!isBlk(it[j]))j++;return j;};
 const blockOf=(it,i)=>{for(let j=i;j>=0;j--)if(isBlk(it[j]))return j;return -1;};
 const parseMin=t=>{const m=String(t||'').match(/\d+(\.\d+)?/);return m?+m[0]:0;};
-const GRP_COL=['#2f8fb3','#3f8f5a','#d98b1f','#b3452f','#7a4fb3','#b34f8a','#6b7f8f','#8a7a2f'];
+const parseIv=t=>{const m=String(t||'').match(/^\s*(\d+):(\d{1,2})\s*$/);return m?+m[1]+(+m[2])/60:parseMin(t);};
+const BLK_COL=['#2f8fb3','#3f8f5a','#d98b1f','#b3452f','#7a4fb3','#b34f8a','#6b7f8f','#8a7a2f'];
+const GRP_COL=BLK_COL;
 const grpColor=g=>{g=(g||'').trim();return g?GRP_COL[(g.toUpperCase().charCodeAt(0)+160)%GRP_COL.length]:'transparent';};
-ui.sel=new Set();
+const FMTS=[['','No format'],['straight','Straight sets'],['circuit','Circuit'],['emom','EMOM'],['amrap','AMRAP'],['every','Every X min']];
+const blockMin=b=>{const m=parseMin(b.time);if(m)return m;
+  if(b.fmt==='emom'||b.fmt==='amrap')return parseMin(b.rounds);
+  if(b.fmt==='every')return parseIv(b.interval)*(parseMin(b.rounds)||0);return 0;};
+ui.sel=new Set();ui.activeBlock=null;
+const mkBlock=(it,title)=>({k:newK(),type:'block',title:title||'Block '+(it.filter(isBlk).length+1),time:'',notes:'',notesOpen:false,collapsed:false,color:pickColor(it),fmt:'',rounds:'',interval:''});
+const pickColor=it=>{const used=new Set(it.filter(isBlk).map(b=>b.color));return BLK_COL.find(c=>!used.has(c))||BLK_COL[it.filter(isBlk).length%BLK_COL.length];};
+const activeIdx=it=>ui.activeBlock?it.findIndex(x=>x.k===ui.activeBlock&&isBlk(x)):-1;
+function addTarget(){const w=curW();if(!w)return 'end of workout';const i=activeIdx(w.items);return i>=0?(w.items[i].title||'Block'):'end of workout';}
 function addToWorkout(id,at){
   const w=curW();if(!w||!exById(id))return;
-  const it={k:newK(),ex:id,sets:3,reps:'8',rest:'90s',note:'',grp:''};
-  if(at==null||at>=w.items.length)w.items.push(it);else w.items.splice(at,0,it);
+  const it=w.items;
+  if(at==null){const ai=activeIdx(it);if(ai>=0)at=blockEnd(it,ai);}
+  const item={k:newK(),ex:id,sets:3,reps:'8',rest:'90s',note:'',grp:''};
+  if(at==null||at>=it.length)it.push(item);else it.splice(at,0,item);
   save();
 }
 function groupSelected(){
@@ -1095,11 +1127,18 @@ function groupSelected(){
   const chosen=idx.map(i=>it[i]),first=idx[0];
   idx.slice().reverse().forEach(i=>it.splice(i,1));
   const parent=first>0?blockOf(it,first-1):-1,parentTitle=parent>=0?it[parent].title:'';
-  it.splice(first,0,{k:newK(),type:'block',title:'Block '+(it.filter(isBlk).length+1),time:'',notes:'',collapsed:false},...chosen);
+  const blk=mkBlock(it);
+  it.splice(first,0,blk,...chosen);
   const after=first+1+chosen.length;
-  // a block runs until the next block header, so give the rest a header of its own instead of absorbing it
-  if(after<it.length&&!isBlk(it[after]))it.splice(after,0,{k:newK(),type:'block',title:parentTitle?parentTitle+' (cont.)':'Block '+(it.filter(isBlk).length+1),time:'',notes:'',collapsed:false});
-  ui.sel.clear();save();
+  // a block runs until the next block header, so the rest gets a header of its own instead of being absorbed
+  if(after<it.length&&!isBlk(it[after]))it.splice(after,0,mkBlock(it,parentTitle?parentTitle+' (cont.)':'Rest of workout'));
+  ui.activeBlock=blk.k;ui.sel.clear();save();
+}
+function makeSuperset(){
+  const it=curW().items,idx=it.map((x,i)=>ui.sel.has(x.k)&&!isBlk(x)?i:-1).filter(i=>i>=0);if(idx.length<2)return;
+  const used=new Set(it.filter(x=>x.grp).map(x=>x.grp.trim().toUpperCase().charAt(0)));
+  let L='A';for(let c=65;c<91;c++){const ch=String.fromCharCode(c);if(!used.has(ch)){L=ch;break;}}
+  idx.forEach((i,n)=>{it[i].grp=L+(n+1);});ui.sel.clear();save();
 }
 function moveBlock(n,dir){
   const it=curW().items,e=blockEnd(it,n),chunk=it.splice(n,e-n);let dest;
@@ -1107,12 +1146,78 @@ function moveBlock(n,dir){
   else{dest=n<it.length?blockEnd(it,n):n;}
   it.splice(dest,0,...chunk);save();
 }
-function dropOn(v,tr){
-  const w=curW();if(!w)return;const it=w.items,ti=tr?+tr.dataset.ri:it.length,onHead=!!tr&&isBlk(it[ti]);
-  if(v.startsWith('ex:')){addToWorkout(v.slice(3),onHead?ti+1:ti);return;}
-  if(v.startsWith('row:')){const n=+v.slice(4);let dest=onHead?ti+1:ti;if(dest===n||dest===n+1)return;const[x]=it.splice(n,1);if(dest>n)dest--;it.splice(dest,0,x);save();return;}
-  if(v.startsWith('blk:')){const n=+v.slice(4),e=blockEnd(it,n);let dest=!tr?it.length:onHead?ti:Math.max(0,blockOf(it,ti));if(dest>=n&&dest<=e)return;const len=e-n,chunk=it.splice(n,len);if(dest>n)dest-=len;it.splice(dest,0,...chunk);save();}
+/* ---- drop logic (shared by the pointer drag below) ---- */
+function applyDrop(v,t){
+  const w=curW();if(!w)return;const it=w.items;
+  let dest;
+  const firstHead=it.findIndex(isBlk);
+  if(!t.tr)dest=it.length;
+  else if(t.newBlock)dest=it.length;
+  else if(v.startsWith('blk:')){
+    const b=blockOf(it,t.ri),start=b<0?0:b,end=b<0?(firstHead<0?it.length:firstHead):blockEnd(it,b);
+    dest=t.pos==='above'?start:end;
+  }
+  else if(t.head)dest=t.ri+1;
+  else dest=t.pos==='above'?t.ri:t.ri+1;
+  let chunk=[],remove=[];
+  if(v.startsWith('ex:'))chunk=[{k:newK(),ex:v.slice(3),sets:3,reps:'8',rest:'90s',note:'',grp:''}];
+  else if(v.startsWith('row:')){const n=+v.slice(4);chunk=[it[n]];remove=[n];}
+  else if(v==='sel:'){it.forEach((x,i)=>{if(ui.sel.has(x.k)&&!isBlk(x)){remove.push(i);chunk.push(x);}});}
+  else if(v.startsWith('blk:')){const n=+v.slice(4),e=blockEnd(it,n);for(let i=n;i<e;i++){remove.push(i);chunk.push(it[i]);}if(dest>=n&&dest<=e)return;}
+  if(!chunk.length||chunk.some(x=>!x))return;
+  if(remove.length){const before=remove.filter(i=>i<dest).length;remove.slice().sort((a,b)=>b-a).forEach(i=>it.splice(i,1));dest-=before;}
+  if(t.newBlock&&!v.startsWith('blk:')){const b=mkBlock(it);it.push(b);dest=it.length;ui.activeBlock=b.k;}
+  it.splice(dest,0,...chunk);save();
 }
+/* ---- pointer-based drag (mouse, pen and touch) ---- */
+let DR=null,_suppress=false;
+function dragLabel(v){const it=(curW()||{items:[]}).items;
+  if(v.startsWith('ex:'))return (exById(v.slice(3))||{}).name||'Exercise';
+  if(v.startsWith('row:')){const x=it[+v.slice(4)];return x&&exById(x.ex)?exById(x.ex).name:'Exercise';}
+  if(v==='sel:')return ui.sel.size+' exercises';
+  const b=it[+v.slice(4)];return b?(b.title||'Block'):'Block';}
+function dtClear(){document.querySelectorAll('.dt-above,.dt-below,.dt-in').forEach(e=>e.classList.remove('dt-above','dt-below','dt-in'));const z=document.querySelector('#wzone');if(z)z.classList.remove('over');}
+function dtTarget(x,y,ghost){
+  ghost.style.display='none';const el=document.elementFromPoint(x,y);ghost.style.display='';
+  if(!el||!el.closest)return null;const z=el.closest('#wzone');if(!z)return null;
+  const tr=el.closest('tr[data-ri],tr.newzone');
+  if(!tr)return {z};
+  if(tr.classList.contains('newzone'))return {z,tr,newBlock:true};
+  const r=tr.getBoundingClientRect();
+  return {z,tr,ri:+tr.dataset.ri,head:tr.classList.contains('blk'),pos:(y-r.top)<r.height/2?'above':'below'};
+}
+document.addEventListener('pointerdown',ev=>{
+  if(DR||!ev.target.closest)return;
+  const h=ev.target.closest('[data-dragrow],[data-dragblk],[data-dragex]');if(!h)return;
+  if(ev.pointerType==='mouse'&&ev.button!==0)return;
+  const grip=ev.target.closest('.grab,.sbgrip');
+  if(!grip&&ev.target.closest('button,input,textarea,select,label'))return;
+  if(ev.pointerType==='touch'&&!grip)return;
+  const d=h.dataset;let v=d.dragex?'ex:'+d.dragex:d.dragrow!==undefined?'row:'+d.dragrow:'blk:'+d.dragblk;
+  if(v.startsWith('row:')){const x=curW().items[+v.slice(4)];if(x&&ui.sel.has(x.k)&&ui.sel.size>1)v='sel:';}
+  DR={v,sx:ev.clientX,sy:ev.clientY,active:false,ghost:null,tgt:null};
+});
+document.addEventListener('pointermove',ev=>{
+  if(!DR)return;
+  if(!DR.active){
+    if(Math.hypot(ev.clientX-DR.sx,ev.clientY-DR.sy)<6)return;
+    DR.active=true;const g=document.createElement('div');g.className='dghost';g.textContent=dragLabel(DR.v);document.body.appendChild(g);DR.ghost=g;document.body.classList.add('dragging');
+  }
+  ev.preventDefault();
+  DR.ghost.style.left=(ev.clientX+14)+'px';DR.ghost.style.top=(ev.clientY+10)+'px';
+  dtClear();const t=dtTarget(ev.clientX,ev.clientY,DR.ghost);DR.tgt=t;
+  if(t){t.z.classList.add('over');
+    if(t.tr){if(t.newBlock||(t.head&&!DR.v.startsWith('blk:')))t.tr.classList.add('dt-in');else t.tr.classList.add(t.pos==='above'?'dt-above':'dt-below');}}
+  if(ev.clientY<70)window.scrollBy(0,-18);else if(ev.clientY>innerHeight-70)window.scrollBy(0,18);
+},{passive:false});
+function endDrag(drop){
+  if(!DR)return;const d=DR;DR=null;dtClear();document.body.classList.remove('dragging');if(d.ghost)d.ghost.remove();
+  if(d.active){_suppress=true;setTimeout(()=>{_suppress=false;},0);if(drop&&d.tgt){applyDrop(d.v,d.tgt);render();}}
+}
+document.addEventListener('pointerup',()=>endDrag(true));
+document.addEventListener('pointercancel',()=>endDrag(false));
+document.addEventListener('click',ev=>{if(_suppress){ev.stopPropagation();ev.preventDefault();}},true);
+
 function viewWorkouts(){
   const w=curW();if(w)ui.wid=w.id;
   const sel=`<select id="wsel" style="max-width:260px">${S.workouts.map(x=>`<option value="${x.id}" ${w&&x.id===w.id?'selected':''}>${esc(x.name)}</option>`).join('')}</select>`;
@@ -1121,19 +1226,29 @@ function viewWorkouts(){
     const items=wItems(w);
     const cov={},mcov={};
     items.forEach(i=>{const e=exById(i.ex);if(!e)return;if(e.traits[0])cov[e.traits[0]]=(cov[e.traits[0]]||0)+1;if(e.move&&!e.phase)mcov[e.move]=(mcov[e.move]||0)+1;});
-    let num=0,hidden=false,totalSets=0,totalMin=0,nEx=0,nBlk=0;
+    let num=0,hidden=false,totalSets=0,totalMin=0,nEx=0,bn=0,curCol='transparent';
     const rows=items.map((i,n)=>{
       if(isBlk(i)){
-        nBlk++;totalMin+=parseMin(i.time);hidden=!!i.collapsed;
+        bn++;const col=i.color||BLK_COL[(bn-1)%BLK_COL.length];curCol=col;totalMin+=blockMin(i);hidden=!!i.collapsed;
         const end=blockEnd(items,n),inBlk=items.slice(n+1,end).filter(x=>!isBlk(x));
         const sets=inBlk.reduce((a,x)=>a+(+x.sets||0),0);
-        return `<tr class="blk" data-ri="${n}"><td colspan="9"><div class="bh"><span class="grab noprint" draggable="true" data-dragblk="${n}" title="Drag the whole block">⠇</span>
-          <button class="noprint" data-bcol="${n}" title="Collapse / expand">${i.collapsed?'▸':'▾'}</button>
+        const f=i.fmt||'';
+        const ff=f==='circuit'?`<label class="bl">Rounds<input class="bff" value="${esc(i.rounds)}" data-bf="${n}:rounds"></label>`
+          :f==='emom'||f==='amrap'?`<label class="bl">${f==='emom'?'Minutes':'Cap (min)'}<input class="bff" value="${esc(i.rounds)}" data-bf="${n}:rounds"></label>`
+          :f==='every'?`<label class="bl">Every<input class="bff" value="${esc(i.interval)}" placeholder="2:30" data-bf="${n}:interval"></label><label class="bl">×<input class="bff" value="${esc(i.rounds)}" placeholder="6" data-bf="${n}:rounds"></label>`:'';
+        const auto=!parseMin(i.time)&&blockMin(i)?` placeholder="${Math.round(blockMin(i)*10)/10} min (auto)"`:' placeholder="e.g. 20 min"';
+        const noteLine=(i.notes||'').split('\n')[0];
+        return `<tr class="blk${i.k===ui.activeBlock?' act':''}" data-ri="${n}" style="--bc:${col}"><td colspan="9" data-bact="${n}"><div class="bh1">
+          <span class="grab noprint" data-dragblk="${n}" title="Drag the whole block">⠇</span><span class="bnum">${bn}</span>
           <input class="bt" value="${esc(i.title)}" placeholder="Block title" data-bf="${n}:title">
-          <label class="meta">Time <input class="bm" value="${esc(i.time)}" placeholder="e.g. 20 min" data-bf="${n}:time"></label>
-          <span class="meta">${inBlk.length} exercise${inBlk.length===1?'':'s'} · ${sets} sets</span><span class="sp"></span>
-          <span class="noprint"><button data-bmv="${n}:-1" title="Move block up">↑</button><button data-bmv="${n}:1" title="Move block down">↓</button><button class="danger" data-bdel="${n}" title="Remove block header (keeps the exercises)">✕</button></span></div>
-          <textarea class="bn" data-bf="${n}:notes" placeholder="Block notes: format, cues, e.g. every 2:30 x 6, log your top set">${esc(i.notes)}</textarea></td></tr>`;
+          <label class="bl">Time<input class="bm" value="${esc(i.time)}"${auto} data-bf="${n}:time"></label>
+          <select class="bf noprint" data-bf="${n}:fmt">${FMTS.map(([k,l])=>`<option value="${k}" ${f===k?'selected':''}>${l}</option>`).join('')}</select>${ff}
+          <span class="meta bsum">${inBlk.length} exercise${inBlk.length===1?'':'s'} · ${sets} sets</span>
+          <span class="bctl noprint"><input type="color" class="bcol" value="${col}" data-bf="${n}:color" title="Block colour">
+            <button data-bnotes="${n}" title="Block notes">Notes${i.notes?' •':''}</button><button data-bcol="${n}" title="Collapse / expand">${i.collapsed?'▸':'▾'}</button>
+            <button data-bmv="${n}:-1" title="Move block up">↑</button><button data-bmv="${n}:1" title="Move block down">↓</button><button class="danger" data-bdel="${n}" title="Remove block header (keeps the exercises)">✕</button></span></div>
+          ${i.notesOpen?`<textarea class="bn" data-bf="${n}:notes" placeholder="Block notes: format, cues, e.g. log your top set">${esc(i.notes)}</textarea>`
+            :(noteLine?`<div class="npre" data-bnotes="${n}" title="Click to edit notes">${esc(noteLine)}</div>`:'')}</td></tr>`;
       }
       const e=exById(i.ex);if(!e)return '';
       nEx++;totalSets+=(+i.sets||0);
@@ -1141,8 +1256,9 @@ function viewWorkouts(){
       num++;
       const up=progOf(e.id),dn=regOf(e.id);
       const sw=ui.swap&&ui.swap.n===n?`<tr><td colspan="9" class="swap">Swap <b>${esc(e.name)}</b> for: ${(ui.swap.dir==='up'?up:dn).map(id=>`<button data-doswap="${n}:${id}">${esc(exById(id).name)}</button>`).join('')}</td></tr>`:'';
-      return `<tr class="xr" data-ri="${n}" style="--g:${grpColor(i.grp)}"><td class="gc"><span class="grab noprint" draggable="true" data-dragrow="${n}" title="Drag to reorder">⠇</span><input type="checkbox" class="noprint" data-sel="${i.k}" ${ui.sel.has(i.k)?'checked':''}></td>
-      <td>${num}</td><td class="nm"><b>${esc(e.name)}</b><div>${chips(e)}</div><span class="lvl">${lvl(e.level)}</span></td>
+      const gb=i.grp?`<span class="gb" style="--gc:${grpColor(i.grp)}">${esc(i.grp.toUpperCase())}</span>`:'';
+      return `<tr class="xr" data-ri="${n}" style="--g:${curCol}"><td class="gc"><span class="grab noprint" data-dragrow="${n}" title="Drag to reorder (drag several ticked ones together)">⠇</span><input type="checkbox" class="noprint" data-sel="${i.k}" ${ui.sel.has(i.k)?'checked':''}></td>
+      <td>${num}</td><td class="nm" data-ract="${n}">${gb}<b>${esc(e.name)}</b><div>${chips(e)}</div><span class="lvl">${lvl(e.level)}</span></td>
       <td><input class="grp" maxlength="3" value="${esc(i.grp||'')}" placeholder="A1" data-wf="${n}:grp" title="Superset / group label"></td>
       <td><input type="number" min="1" value="${i.sets}" data-wf="${n}:sets"></td><td><input value="${esc(i.reps)}" data-wf="${n}:reps"></td>
       <td><input value="${esc(i.rest)}" data-wf="${n}:rest"></td><td><input style="width:140px" value="${esc(i.note)}" placeholder="note" data-wf="${n}:note"></td>
@@ -1152,10 +1268,10 @@ function viewWorkouts(){
     const nsel=[...ui.sel].filter(k=>items.some(x=>x.k===k)).length;
     main=`<div class="bar noprint" style="margin-bottom:10px">${sel}<input id="wname" value="${esc(w.name)}" style="max-width:300px">
       <button data-wnew>+ New</button><button data-wdup>Duplicate</button><button data-wprint>Print</button><button class="danger" data-wdel>Delete</button></div>
-      <div class="bar noprint" style="margin-bottom:8px"><button data-bnew>+ Block</button><button data-bgroup ${nsel?'':'disabled'}>Group ${nsel||''} selected into a block</button>
-        <span class="meta">Tick exercises to group them, or drag ⠇ to reorder. Drag a block header to move the whole block.</span></div>
-      <div id="wzone" class="wzone">${items.length?`<table><thead><tr><th></th><th>#</th><th>Exercise</th><th>Grp</th><th>Sets</th><th>Reps</th><th>Rest</th><th>Note</th><th class="noprint">Progress</th></tr></thead><tbody>${rows}</tbody></table>`:'<div class="empty">Empty. Drag exercises here from the database, or press + beside one.</div>'}</div>
-      <div class="meta" style="margin:10px 0"><b>${nEx}</b> exercises · <b>${totalSets}</b> sets · <b>${nBlk}</b> blocks${totalMin?` · block time <b>${totalMin} min</b>`:''}</div>
+      <div class="bar noprint" style="margin-bottom:8px"><button data-bnew>+ Block</button><button data-bgroup ${nsel?'':'disabled'}>Group ${nsel||''} into a block</button><button data-bsuper ${nsel>1?'':'disabled'}>Superset ${nsel>1?nsel:''}</button>
+        <span class="meta">Tick exercises to group them or make a superset. Drag ⠇ to reorder; drop on a block header to join it, or on the strip at the bottom to start a new block. Click a block to make it the target for +.</span></div>
+      <div id="wzone" class="wzone">${items.length?`<table><thead><tr><th></th><th>#</th><th>Exercise</th><th>Grp</th><th>Sets</th><th>Reps</th><th>Rest</th><th>Note</th><th class="noprint">Progress</th></tr></thead><tbody>${rows}<tr class="newzone noprint"><td colspan="9">Drop an exercise here to start a new block</td></tr></tbody></table>`:'<div class="empty">Empty. Drag exercises here from the database, or press + beside one.</div>'}</div>
+      <div class="meta" style="margin:10px 0"><b>${nEx}</b> exercises · <b>${totalSets}</b> sets · <b>${bn}</b> blocks${totalMin?` · block time <b>${Math.round(totalMin*10)/10} min</b>`:''}</div>
       <div class="meta" style="margin:10px 0">Trait coverage (primary): ${Object.keys(cov).map(k=>chip(trById(k)).replace('</span>',` ×${cov[k]}</span>`)).join('')||'—'}</div>
       <div class="meta" style="margin-bottom:10px">Movement coverage (training only): ${Object.keys(mcov).map(k=>`<span class="chip" style="--c:${MOVES.find(m=>m.id===k)?.color||'#888'}">${esc(k)} ×${mcov[k]}</span>`).join('')||'—'}</div>`;
   }
@@ -1229,10 +1345,14 @@ function deleteEx(id){
 
 /* ---------- events ---------- */
 document.addEventListener('click',ev=>{
-  const t=ev.target.closest('[data-tab],[data-bnew],[data-bgroup],[data-bcol],[data-bmv],[data-bdel],[data-sbtrait],[data-sbby],[data-sbgrp],[data-sbmore],[data-sbmode],[data-sbclear],[data-by],[data-trait],[data-open],[data-new],[data-ttog],[data-unlink],[data-exsave],[data-exdel],[data-mclose],[data-tadd],[data-tdel],[data-wsel],[data-wnew],[data-wdup],[data-wdel],[data-wprint],[data-add],[data-swap],[data-doswap],[data-mv],[data-rm],[data-ovclose],[data-pickadd]');
+  const t=ev.target.closest('[data-tab],[data-bact],[data-ract],[data-bnotes],[data-bsuper],[data-bnew],[data-bgroup],[data-bcol],[data-bmv],[data-bdel],[data-sbtrait],[data-sbby],[data-sbgrp],[data-sbmore],[data-sbmode],[data-sbclear],[data-by],[data-trait],[data-open],[data-new],[data-ttog],[data-unlink],[data-exsave],[data-exdel],[data-mclose],[data-tadd],[data-tdel],[data-wsel],[data-wnew],[data-wdup],[data-wdel],[data-wprint],[data-add],[data-swap],[data-doswap],[data-mv],[data-rm],[data-ovclose],[data-pickadd]');
   if(!t)return;const d=t.dataset;
   if(d.ovclose!==undefined){if(ev.target===t)closeModal();return;}
-  if(d.bnew!==undefined){curW().items.push({k:newK(),type:'block',title:'Block '+(curW().items.filter(isBlk).length+1),time:'',notes:'',collapsed:false});save();render();}
+  if(d.bact!==undefined){if(ev.target.closest('input,textarea,select,label'))return;ui.activeBlock=curW().items[+d.bact].k;render();}
+  else if(d.ract!==undefined){const it=curW().items,bi=blockOf(it,+d.ract);ui.activeBlock=bi>=0?it[bi].k:null;render();}
+  else if(d.bnotes!==undefined){const b=curW().items[+d.bnotes];b.notesOpen=!b.notesOpen;save();render();}
+  else if(d.bsuper!==undefined){makeSuperset();render();}
+  else if(d.bnew!==undefined){const it=curW().items,b=mkBlock(it);it.push(b);ui.activeBlock=b.k;save();render();}
   else if(d.bgroup!==undefined){groupSelected();render();}
   else if(d.bcol!==undefined){const b=curW().items[+d.bcol];b.collapsed=!b.collapsed;save();render();}
   else if(d.bmv!==undefined){const[n,dr]=d.bmv.split(':').map(Number);moveBlock(n,dr);render();}
@@ -1289,7 +1409,7 @@ document.addEventListener('input',ev=>{
 document.addEventListener('change',ev=>{
   const t=ev.target;
   if(t.dataset.sel){t.checked?ui.sel.add(t.dataset.sel):ui.sel.delete(t.dataset.sel);render();}
-  else if(t.dataset.bf&&/:time$/.test(t.dataset.bf)){render();}
+  else if(t.dataset.bf&&/:(time|fmt|rounds|interval|color)$/.test(t.dataset.bf)){render();}
   else if(t.dataset.wf&&/:(sets|grp)$/.test(t.dataset.wf)){render();}
   else if(t.id==='grp'){ui.group=t.checked;render();}
   else if(t.id==='show'){ui.show=t.value;render();}
@@ -1303,14 +1423,7 @@ document.addEventListener('change',ev=>{
   else if(t.id==='addtrait'){ui.addT=t.value;render();}
   else if(t.dataset.tname||t.dataset.tcolor)render();
 });
-document.addEventListener('dragstart',ev=>{const t=ev.target.closest&&ev.target.closest('[data-dragex],[data-dragrow],[data-dragblk]');if(!t)return;const d=t.dataset;
-  ev.dataTransfer.setData('text/plain',d.dragex?'ex:'+d.dragex:d.dragrow!==undefined?'row:'+d.dragrow:'blk:'+d.dragblk);ev.dataTransfer.effectAllowed='copyMove';});
-document.addEventListener('dragover',ev=>{const z=ev.target.closest&&ev.target.closest('#wzone');if(!z)return;ev.preventDefault();z.classList.add('over');
-  document.querySelectorAll('tr.dtgt').forEach(r=>r.classList.remove('dtgt'));const tr=ev.target.closest('tr[data-ri]');if(tr)tr.classList.add('dtgt');});
-document.addEventListener('dragleave',ev=>{const z=document.querySelector('#wzone');if(z&&!z.contains(ev.relatedTarget)){z.classList.remove('over');document.querySelectorAll('tr.dtgt').forEach(r=>r.classList.remove('dtgt'));}});
-document.addEventListener('drop',ev=>{const z=ev.target.closest&&ev.target.closest('#wzone');if(!z)return;ev.preventDefault();z.classList.remove('over');
-  const v=ev.dataTransfer.getData('text/plain');if(!v)return;dropOn(v,ev.target.closest('tr[data-ri]'));render();});
-document.addEventListener('keydown',ev=>{if(ev.key==='Escape'&&D)closeModal();});
+document.addEventListener('keydown',ev=>{if(ev.key==='Escape'){if(typeof DR!=='undefined'&&DR)endDrag(false);else if(D)closeModal();}});
 
 $('#btnExport').onclick=()=>{const a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob([JSON.stringify(S,null,2)],{type:'application/json'}));
