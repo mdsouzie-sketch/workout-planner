@@ -108,6 +108,7 @@ td input.bcol{width:34px;height:30px;padding:1px}
 .xr td:first-child{border-left:8px solid var(--g,transparent)}
 .gb{display:inline-block;font-size:11px;font-weight:700;color:#fff;border-radius:4px;padding:0 6px;margin-right:6px;background:var(--gc,#888)}
 .grab{font-size:22px;padding:2px 6px;touch-action:none;cursor:grab}
+.xr td.gc,.xr td.nm,.xr td:nth-child(2){cursor:grab;user-select:none}tr.blk td{user-select:none}tr.blk td input,tr.blk td textarea{user-select:text}
 .sbgrip{color:var(--muted);cursor:grab;padding:0 6px 0 2px;touch-action:none;font-size:18px}
 .sbrow{user-select:none}.sbrow .sbn{flex:1;text-align:left}
 .addto{margin:4px 0 8px}
@@ -1104,6 +1105,7 @@ const parseIv=t=>{const m=String(t||'').match(/^\s*(\d+):(\d{1,2})\s*$/);return 
 const BLK_COL=['#2f8fb3','#3f8f5a','#d98b1f','#b3452f','#7a4fb3','#b34f8a','#6b7f8f','#8a7a2f'];
 const GRP_COL=BLK_COL;
 const grpColor=g=>{g=(g||'').trim();return g?GRP_COL[(g.toUpperCase().charCodeAt(0)+160)%GRP_COL.length]:'transparent';};
+const blockLetter=n=>String.fromCharCode(65+((n-1)%26));
 const FMTS=[['','No format'],['straight','Straight sets'],['circuit','Circuit'],['emom','EMOM'],['amrap','AMRAP'],['every','Every X min']];
 const blockMin=b=>{const m=parseMin(b.time);if(m)return m;
   if(b.fmt==='emom'||b.fmt==='amrap')return parseMin(b.rounds);
@@ -1226,10 +1228,10 @@ function viewWorkouts(){
     const items=wItems(w);
     const cov={},mcov={};
     items.forEach(i=>{const e=exById(i.ex);if(!e)return;if(e.traits[0])cov[e.traits[0]]=(cov[e.traits[0]]||0)+1;if(e.move&&!e.phase)mcov[e.move]=(mcov[e.move]||0)+1;});
-    let num=0,hidden=false,totalSets=0,totalMin=0,nEx=0,bn=0,curCol='transparent';
+    let num=0,hidden=false,totalSets=0,totalMin=0,nEx=0,bn=0,curCol='transparent',bLet='',pos=0;
     const rows=items.map((i,n)=>{
       if(isBlk(i)){
-        bn++;const col=i.color||BLK_COL[(bn-1)%BLK_COL.length];curCol=col;totalMin+=blockMin(i);hidden=!!i.collapsed;
+        bn++;const col=i.color||BLK_COL[(bn-1)%BLK_COL.length];curCol=col;totalMin+=blockMin(i);hidden=!!i.collapsed;bLet=blockLetter(bn);pos=0;
         const end=blockEnd(items,n),inBlk=items.slice(n+1,end).filter(x=>!isBlk(x));
         const sets=inBlk.reduce((a,x)=>a+(+x.sets||0),0);
         const f=i.fmt||'';
@@ -1238,7 +1240,7 @@ function viewWorkouts(){
           :f==='every'?`<label class="bl">Every<input class="bff" value="${esc(i.interval)}" placeholder="2:30" data-bf="${n}:interval"></label><label class="bl">×<input class="bff" value="${esc(i.rounds)}" placeholder="6" data-bf="${n}:rounds"></label>`:'';
         const auto=!parseMin(i.time)&&blockMin(i)?` placeholder="${Math.round(blockMin(i)*10)/10} min (auto)"`:' placeholder="e.g. 20 min"';
         const noteLine=(i.notes||'').split('\n')[0];
-        return `<tr class="blk${i.k===ui.activeBlock?' act':''}" data-ri="${n}" style="--bc:${col}"><td colspan="9" data-bact="${n}"><div class="bh1">
+        return `<tr class="blk${i.k===ui.activeBlock?' act':''}" data-ri="${n}" data-dragblk="${n}" style="--bc:${col}"><td colspan="9" data-bact="${n}"><div class="bh1">
           <span class="grab noprint" data-dragblk="${n}" title="Drag the whole block">⠇</span><span class="bnum">${bn}</span>
           <input class="bt" value="${esc(i.title)}" placeholder="Block title" data-bf="${n}:title">
           <label class="bl">Time<input class="bm" value="${esc(i.time)}"${auto} data-bf="${n}:time"></label>
@@ -1251,15 +1253,15 @@ function viewWorkouts(){
             :(noteLine?`<div class="npre" data-bnotes="${n}" title="Click to edit notes">${esc(noteLine)}</div>`:'')}</td></tr>`;
       }
       const e=exById(i.ex);if(!e)return '';
-      nEx++;totalSets+=(+i.sets||0);
+      nEx++;totalSets+=(+i.sets||0);pos++;const autoG=bLet?bLet+pos:'';
       if(hidden)return '';
       num++;
       const up=progOf(e.id),dn=regOf(e.id);
       const sw=ui.swap&&ui.swap.n===n?`<tr><td colspan="9" class="swap">Swap <b>${esc(e.name)}</b> for: ${(ui.swap.dir==='up'?up:dn).map(id=>`<button data-doswap="${n}:${id}">${esc(exById(id).name)}</button>`).join('')}</td></tr>`:'';
-      const gb=i.grp?`<span class="gb" style="--gc:${grpColor(i.grp)}">${esc(i.grp.toUpperCase())}</span>`:'';
-      return `<tr class="xr" data-ri="${n}" style="--g:${curCol}"><td class="gc"><span class="grab noprint" data-dragrow="${n}" title="Drag to reorder (drag several ticked ones together)">⠇</span><input type="checkbox" class="noprint" data-sel="${i.k}" ${ui.sel.has(i.k)?'checked':''}></td>
+      const lab=(i.grp||'').trim().toUpperCase()||autoG;const gb=lab?`<span class="gb" style="--gc:${curCol}">${esc(lab)}</span>`:'';
+      return `<tr class="xr" data-ri="${n}" data-dragrow="${n}" style="--g:${curCol}"><td class="gc"><span class="grab noprint" data-dragrow="${n}" title="Drag to reorder (drag several ticked ones together)">⠇</span><input type="checkbox" class="noprint" data-sel="${i.k}" ${ui.sel.has(i.k)?'checked':''}></td>
       <td>${num}</td><td class="nm" data-ract="${n}">${gb}<b>${esc(e.name)}</b><div>${chips(e)}</div><span class="lvl">${lvl(e.level)}</span></td>
-      <td><input class="grp" maxlength="3" value="${esc(i.grp||'')}" placeholder="A1" data-wf="${n}:grp" title="Superset / group label"></td>
+      <td><input class="grp" maxlength="3" value="${esc(i.grp||'')}" placeholder="${esc(autoG||'-')}" data-wf="${n}:grp" title="Group label: follows the block automatically (A1, A2 for block A, B1, B2 for block B). Type to override, clear to go back to automatic."></td>
       <td><input type="number" min="1" value="${i.sets}" data-wf="${n}:sets"></td><td><input value="${esc(i.reps)}" data-wf="${n}:reps"></td>
       <td><input value="${esc(i.rest)}" data-wf="${n}:rest"></td><td><input style="width:140px" value="${esc(i.note)}" placeholder="note" data-wf="${n}:note"></td>
       <td class="noprint" style="white-space:nowrap"><button data-swap="${n}:dn" ${dn.length?'':'disabled'} title="Regress">↓</button>
@@ -1268,8 +1270,8 @@ function viewWorkouts(){
     const nsel=[...ui.sel].filter(k=>items.some(x=>x.k===k)).length;
     main=`<div class="bar noprint" style="margin-bottom:10px">${sel}<input id="wname" value="${esc(w.name)}" style="max-width:300px">
       <button data-wnew>+ New</button><button data-wdup>Duplicate</button><button data-wprint>Print</button><button class="danger" data-wdel>Delete</button></div>
-      <div class="bar noprint" style="margin-bottom:8px"><button data-bnew>+ Block</button><button data-bgroup ${nsel?'':'disabled'}>Group ${nsel||''} into a block</button><button data-bsuper ${nsel>1?'':'disabled'}>Superset ${nsel>1?nsel:''}</button>
-        <span class="meta">Tick exercises to group them or make a superset. Drag ⠇ to reorder; drop on a block header to join it, or on the strip at the bottom to start a new block. Click a block to make it the target for +.</span></div>
+      <div class="bar noprint" style="margin-bottom:8px"><button data-bnew>+ Block</button><button data-bgroup ${nsel?'':'disabled'}>Group ${nsel||''} into a block</button>
+        <span class="meta">Tick exercises to group them. Each exercise’s Grp label follows its block (A1, A2 in the first block, B1, B2 in the second). Drag any exercise to reorder; drop on a block header to join it, or on the strip at the bottom to start a new block. Click a block to make it the target for +.</span></div>
       <div id="wzone" class="wzone">${items.length?`<table><thead><tr><th></th><th>#</th><th>Exercise</th><th>Grp</th><th>Sets</th><th>Reps</th><th>Rest</th><th>Note</th><th class="noprint">Progress</th></tr></thead><tbody>${rows}<tr class="newzone noprint"><td colspan="9">Drop an exercise here to start a new block</td></tr></tbody></table>`:'<div class="empty">Empty. Drag exercises here from the database, or press + beside one.</div>'}</div>
       <div class="meta" style="margin:10px 0"><b>${nEx}</b> exercises · <b>${totalSets}</b> sets · <b>${bn}</b> blocks${totalMin?` · block time <b>${Math.round(totalMin*10)/10} min</b>`:''}</div>
       <div class="meta" style="margin:10px 0">Trait coverage (primary): ${Object.keys(cov).map(k=>chip(trById(k)).replace('</span>',` ×${cov[k]}</span>`)).join('')||'—'}</div>
