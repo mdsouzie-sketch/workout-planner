@@ -241,6 +241,62 @@ tr.xr td:nth-child(8) input{width:100%}
 .bar input.wt{flex:1 1 380px;max-width:none}
 #wsel{max-width:210px}
 /* ===== end modern look ===== */
+/* ===== print layout ===== */
+select option,select optgroup{background:var(--card);color:var(--ink)}
+select,select.bf{color:var(--ink)}
+#printView{display:none}
+.pv{--bg:#fff;--ink:#16161a;--mut:#6b6b76;--rule:#dcdce1;--soft:#f4f3f0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif;font-size:10pt;line-height:1.35;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.pv.dark{--bg:#121316;--ink:#f1f1f3;--mut:#9a9aa6;--rule:#2a2c34;--soft:#1b1c22}
+.pv-wrap{width:100%;border-collapse:collapse;border-spacing:0}
+.pv-wrap>tbody>tr>td{padding:0 12mm;border:0;background:none}
+.pv-wrap>thead>tr>td,.pv-wrap>tfoot>tr>td{padding:0;border:0;background:none}
+.pv-sp{height:11mm}
+.pv-head{display:flex;justify-content:space-between;align-items:flex-end;gap:10mm;border-bottom:.6mm solid var(--ink);padding-bottom:3mm;margin-bottom:5mm}
+.pv-brand{font-size:7.5pt;letter-spacing:.2em;text-transform:uppercase;color:var(--mut);font-weight:600}
+.pv h1{font-size:20pt;font-weight:700;letter-spacing:-.02em;line-height:1.1;margin-top:1mm}
+.pv-sum{font-size:9pt;color:var(--mut);text-align:right;white-space:nowrap}.pv-sum b{color:var(--ink)}
+.pv.c2 .pv-blocks{column-count:2;column-gap:9mm}
+.pv-blk{margin-bottom:5mm}
+.pv-bh{display:flex;align-items:center;gap:3mm;background:var(--soft);border-left:1.2mm solid var(--bc);padding:2mm 3mm;border-radius:1.5mm;break-after:avoid;break-inside:avoid}
+.pv-num{display:inline-flex;align-items:center;justify-content:center;width:6mm;height:6mm;border-radius:50%;background:var(--bc);color:#fff;font-weight:700;font-size:8.5pt;flex:none}
+.pv-bt{font-size:12pt;font-weight:700;letter-spacing:-.01em;flex:1}
+.pv-pill{font-size:8pt;font-weight:600;padding:.6mm 2.4mm;border-radius:99px;background:color-mix(in srgb,var(--bc) 20%,transparent);white-space:nowrap}
+.pv-notes{font-size:8.5pt;color:var(--mut);padding:1.5mm 3mm 0 4.5mm;white-space:pre-wrap;break-after:avoid}
+.pv-ch,.pv-row{display:grid;grid-template-columns:9mm 1fr 20mm 16mm;gap:0 3mm;align-items:start;padding:0 3mm 0 1.5mm}
+.pv.withlog .pv-ch,.pv.withlog .pv-row{grid-template-columns:9mm 1fr 20mm 16mm 34mm}
+.pv-ch{font-size:6.8pt;letter-spacing:.08em;text-transform:uppercase;color:var(--mut);font-weight:600;padding-top:1.8mm;padding-bottom:.6mm;break-after:avoid}
+.pv-row{padding-top:1.7mm;padding-bottom:1.7mm;border-bottom:.2mm solid var(--rule);break-inside:avoid}
+.pv-g{font-weight:700;font-size:8.5pt;color:var(--bc);padding-top:.5mm}
+.pv-n b{font-size:10.5pt;font-weight:650;display:block}
+.pv-n small{display:block;font-size:7pt;color:var(--mut);margin-top:.3mm}
+.pv-n em{display:block;font-size:8pt;color:var(--mut);margin-top:.5mm;font-style:italic}
+.pv-rx{font-weight:650;font-size:10.5pt;font-variant-numeric:tabular-nums;white-space:nowrap}
+.pv-rs{color:var(--mut);font-size:9pt}
+.pv-log{border-bottom:.25mm solid var(--mut);height:6mm}
+/* print dialog */
+.prmodal{max-width:1120px}
+.prgrid{display:grid;grid-template-columns:250px 1fr;gap:22px}
+.propts .sec-h{margin:14px 0 6px}.propts .sec-h:first-child{margin-top:0}
+.prseg{display:flex;gap:3px;background:var(--bg2);padding:3px;border-radius:11px;margin-bottom:6px}
+.prseg button{flex:1;background:transparent;padding:6px 8px;border-radius:9px;color:var(--muted)}
+.prseg button.on{background:var(--card);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.14)}
+.prtog{display:flex;justify-content:space-between;align-items:center;width:100%;background:transparent;padding:7px 4px;border-radius:8px}
+.prtog:hover{background:var(--bg2)}
+.prtog i{width:34px;height:20px;border-radius:99px;background:var(--bg2);position:relative;transition:background .12s}
+.prtog i::after{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.3);transition:left .12s}
+.prtog.on i{background:var(--accent)}.prtog.on i::after{left:16px}
+.prtog:disabled{opacity:.4}
+.prprev{max-height:68vh;overflow:auto;border-radius:14px;background:color-mix(in srgb,var(--ink) 10%,transparent);padding:14px}
+.pvprev{width:216mm;zoom:.78;margin:0 auto;box-shadow:0 6px 24px rgba(0,0,0,.3)}
+.pvprev.land{width:279mm;zoom:.56}
+.pv.c2 .pv-blk{break-inside:avoid}
+@media print{
+  body>*:not(#printView){display:none!important}
+  #printView{display:block!important}
+  html.pdark,html.pdark body{background:#121316!important}
+  html,body{margin:0;padding:0}
+}
+/* ===== end print layout ===== */
 /* large screens: scale type and use the width (built for 2560 x 1440) */
 @media (min-width:1700px){
   body{font-size:16px}
@@ -1406,6 +1462,60 @@ function viewWorkouts(){
   return `<div class="wb"><div>${main}</div>${sbPanel()}</div>`;
 }
 
+/* ---------- print layout ---------- */
+const PR_DEF={theme:'light',cols:1,orient:'portrait',paper:'letter',tags:true,notes:true,log:true};
+ui.pr={...PR_DEF};try{Object.assign(ui.pr,JSON.parse(localStorage.getItem('wp_print')||'{}'));}catch(e){}
+function fmtLabel(b){const f=b.fmt||'';
+  if(f==='straight')return 'Straight sets';
+  if(f==='circuit')return 'Circuit'+(b.rounds?' \u00b7 '+b.rounds+' rounds':'');
+  if(f==='emom')return 'EMOM'+(b.rounds?' \u00b7 '+b.rounds+' min':'');
+  if(f==='amrap')return 'AMRAP'+(b.rounds?' \u00b7 '+b.rounds+' min cap':'');
+  if(f==='every')return 'Every '+(b.interval||'?')+(b.rounds?' \u00d7 '+b.rounds:'');
+  return '';}
+function printHtml(w,o){
+  const items=wItems(w),secs=[];let cur={blk:null,rows:[]};secs.push(cur);
+  items.forEach(i=>{if(isBlk(i)){cur={blk:i,rows:[]};secs.push(cur);}else if(exById(i.ex))cur.rows.push(i);});
+  const log=o.log&&o.cols===1;let bn=0,totalSets=0,nEx=0,totalMin=0;
+  const body=secs.filter(sc=>sc.blk||sc.rows.length).map(sc=>{
+    let head='',col='#8a8f99',letter='';
+    if(sc.blk){bn++;const b=sc.blk;col=b.color||BLK_COL[(bn-1)%BLK_COL.length];letter=blockLetter(bn);totalMin+=blockMin(b);
+      const f=fmtLabel(b),tm=b.time||(blockMin(b)?Math.round(blockMin(b)*10)/10+' min':'');
+      head=`<div class="pv-bh"><span class="pv-num">${bn}</span><span class="pv-bt">${esc(b.title||'Block '+bn)}</span>${f?`<span class="pv-pill">${esc(f)}</span>`:''}${tm?`<span class="pv-pill">${esc(tm)}</span>`:''}</div>${o.notes&&b.notes?`<div class="pv-notes">${esc(b.notes)}</div>`:''}`;}
+    const rows=sc.rows.map((i,n)=>{const e=exById(i.ex);nEx++;totalSets+=(+i.sets||0);
+      const g=(i.grp||'').trim().toUpperCase()||(letter?letter+(n+1):'');
+      const tags=o.tags?e.traits.map(id=>trById(id)).filter(Boolean).map(t=>t.name).join(' \u00b7 '):'';
+      return `<div class="pv-row"><span class="pv-g">${esc(g)}</span><div class="pv-n"><b>${esc(e.name)}</b>${tags?`<small>${esc(tags)}</small>`:''}${o.notes&&i.note?`<em>${esc(i.note)}</em>`:''}</div><span class="pv-rx">${esc(i.sets)} \u00d7 ${esc(i.reps)}</span><span class="pv-rs">${esc(i.rest)}</span>${log?'<span class="pv-log"></span>':''}</div>`;}).join('');
+    const chead=`<div class="pv-ch"><span></span><span>Exercise</span><span>Sets \u00d7 reps</span><span>Rest</span>${log?'<span>Log</span>':''}</div>`;
+    return `<section class="pv-blk" style="--bc:${col}">${head}${rows?chead+rows:''}</section>`;}).join('');
+  const mins=Math.round(totalMin*10)/10;
+  return `<div class="pv ${o.theme==='dark'?'dark':''} c${o.cols}${log?' withlog':''}"><table class="pv-wrap"><thead><tr><td><div class="pv-sp"></div></td></tr></thead><tbody><tr><td>
+    <div class="pv-head"><div><div class="pv-brand">Exercise Library</div><h1>${esc(w.name)}</h1></div><div class="pv-sum"><b>${nEx}</b> exercises \u00b7 <b>${totalSets}</b> sets \u00b7 <b>${bn}</b> blocks${mins?` \u00b7 <b>${mins}</b> min`:''}</div></div>
+    <div class="pv-blocks">${body}</div></td></tr></tbody><tfoot><tr><td><div class="pv-sp"></div></td></tr></tfoot></table></div>`;
+}
+function showPrintDialog(){
+  const w=curW();if(!w)return;const o=ui.pr;
+  const seg=(k,opts)=>`<div class="prseg">${opts.map(([v,l])=>`<button data-pro="${k}:${v}" class="${String(o[k])===String(v)?'on':''}">${l}</button>`).join('')}</div>`;
+  const tog=(k,l,dis)=>`<button class="prtog ${o[k]&&!dis?'on':''}" data-pro="${k}:t" ${dis?'disabled':''}><span>${l}</span><i></i></button>`;
+  $('#modalHost').innerHTML=`<div class="ov" data-ovclose><div class="modal prmodal"><h2>Print workout</h2>
+    <div class="prgrid"><div class="propts">
+      <div class="sec-h">Theme</div>${seg('theme',[['light','Light'],['dark','Dark']])}
+      <div class="sec-h">Layout</div>${seg('cols',[[1,'1 column'],[2,'2 columns']])}
+      <div class="sec-h">Page</div>${seg('orient',[['portrait','Portrait'],['landscape','Landscape']])}${seg('paper',[['letter','Letter'],['a4','A4']])}
+      <div class="sec-h">Show</div>${tog('tags','Trait tags')}${tog('notes','Notes')}${tog('log','Blank log column'+(o.cols===2?' (1 column only)':''),o.cols===2)}
+      <p class="meta" style="margin-top:12px">In the browser's print window turn on Background graphics so colours and the dark theme print.</p>
+    </div><div class="prprev"><div class="pvprev ${o.orient==='landscape'?'land':''}">${printHtml(w,o)}</div></div></div>
+    <div class="foot"><button data-mclose>Cancel</button><button class="pri" data-printgo>Print</button></div></div></div>`;
+}
+function doPrint(){
+  const w=curW();if(!w)return;const o=ui.pr;
+  let st=document.getElementById('printPage');if(!st){st=document.createElement('style');st.id='printPage';document.head.appendChild(st);}
+  st.textContent='@page{size:'+(o.paper==='a4'?'A4':'letter')+' '+o.orient+';margin:0}';
+  let pv=document.getElementById('printView');if(!pv){pv=document.createElement('div');pv.id='printView';document.body.appendChild(pv);}
+  pv.innerHTML=printHtml(w,o);document.documentElement.classList.toggle('pdark',o.theme==='dark');
+  closeModal();setTimeout(()=>window.print(),80);
+}
+window.addEventListener('afterprint',()=>{document.documentElement.classList.remove('pdark');const pv=document.getElementById('printView');if(pv)pv.innerHTML='';});
+
 /* ---------- exercise modal ---------- */
 let D=null; // draft
 function openEx(id){
@@ -1473,10 +1583,12 @@ function deleteEx(id){
 
 /* ---------- events ---------- */
 document.addEventListener('click',ev=>{
-  const t=ev.target.closest('[data-tab],[data-bact],[data-ract],[data-bnotes],[data-bsuper],[data-bnew],[data-bgroup],[data-bcol],[data-bmv],[data-bdel],[data-sbtrait],[data-sbby],[data-sbgrp],[data-sbmore],[data-sbmode],[data-sbclear],[data-by],[data-trait],[data-open],[data-new],[data-ttog],[data-unlink],[data-exsave],[data-exdel],[data-mclose],[data-tadd],[data-tdel],[data-wsel],[data-wnew],[data-wdup],[data-wdel],[data-wprint],[data-add],[data-swap],[data-doswap],[data-mv],[data-rm],[data-ovclose],[data-pickadd]');
+  const t=ev.target.closest('[data-tab],[data-pro],[data-printgo],[data-bact],[data-ract],[data-bnotes],[data-bsuper],[data-bnew],[data-bgroup],[data-bcol],[data-bmv],[data-bdel],[data-sbtrait],[data-sbby],[data-sbgrp],[data-sbmore],[data-sbmode],[data-sbclear],[data-by],[data-trait],[data-open],[data-new],[data-ttog],[data-unlink],[data-exsave],[data-exdel],[data-mclose],[data-tadd],[data-tdel],[data-wsel],[data-wnew],[data-wdup],[data-wdel],[data-wprint],[data-add],[data-swap],[data-doswap],[data-mv],[data-rm],[data-ovclose],[data-pickadd]');
   if(!t)return;const d=t.dataset;
   if(d.ovclose!==undefined){if(ev.target===t)closeModal();return;}
-  if(d.bact!==undefined){if(ev.target.closest('input,textarea,select,label'))return;ui.activeBlock=curW().items[+d.bact].k;render();}
+  if(d.pro!==undefined){const[k,v]=d.pro.split(':');ui.pr[k]=k==='cols'?+v:(v==='t'?!ui.pr[k]:v);try{localStorage.setItem('wp_print',JSON.stringify(ui.pr));}catch(e){}showPrintDialog();}
+  else if(d.printgo!==undefined){doPrint();}
+  else if(d.bact!==undefined){if(ev.target.closest('input,textarea,select,label'))return;ui.activeBlock=curW().items[+d.bact].k;render();}
   else if(d.ract!==undefined){const it=curW().items,bi=blockOf(it,+d.ract);ui.activeBlock=bi>=0?it[bi].k:null;render();}
   else if(d.bnotes!==undefined){const b=curW().items[+d.bnotes];b.notesOpen=!b.notesOpen;save();render();}
   else if(d.bsuper!==undefined){makeSuperset();render();}
@@ -1510,7 +1622,7 @@ document.addEventListener('click',ev=>{
   else if(d.wnew!==undefined){const w={id:uid('w_'),name:'New workout',items:[]};S.workouts.push(w);ui.wid=w.id;save();render();}
   else if(d.wdup!==undefined){const w=curW(),c=JSON.parse(JSON.stringify(w));c.id=uid('w_');c.name+=' (copy)';S.workouts.push(c);ui.wid=c.id;save();render();}
   else if(d.wdel!==undefined){const w=curW();if(confirm(`Delete workout "${w.name}"?`)){S.workouts=S.workouts.filter(x=>x!==w);ui.wid=null;save();render();}}
-  else if(d.wprint!==undefined)window.print();
+  else if(d.wprint!==undefined)showPrintDialog();
   else if(d.add){addToWorkout(d.add);render();}
   else if(d.swap){const[n,dir]=d.swap.split(':');const e=exById(curW().items[+n].ex);const opts=dir==='up'?progOf(e.id):regOf(e.id);
     if(opts.length===1){curW().items[+n].ex=opts[0];ui.swap=null;save();}else ui.swap={n:+n,dir};render();}
