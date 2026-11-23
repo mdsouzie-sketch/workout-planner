@@ -366,6 +366,31 @@ select,select.bf{color:var(--ink)}
 }
 /* end large screens */
 @media print{details.menu{display:none!important}tr.xr{filter:none}table{border-spacing:0}td input{background:none!important}.wb{display:block}.bn{border:0;background:none;resize:none}header,.noprint,.side{display:none!important}main{padding:0}.layout{display:block}body{background:#fff;color:#000}td input{border:0;background:none}}
+/* templates + web */
+.sbtabs{margin-bottom:10px}.sbtabs button{flex:1}
+.sbh span{display:flex;gap:6px}
+.tplrow{display:flex;gap:8px;align-items:flex-start;justify-content:space-between;padding:10px 6px;border-bottom:1px solid var(--rule)}
+.tplrow .sbn{flex:1;min-width:0}.tplex{margin-top:3px;opacity:.8}
+.tplbtn{display:flex;gap:4px;flex:none}.tplbtn button{padding:5px 9px;width:auto;height:auto;border-radius:3px;font-size:11px}
+.webwrap{display:grid;grid-template-columns:280px minmax(0,1fr);gap:18px;align-items:start}
+@media(max-width:900px){.webwrap{grid-template-columns:1fr}}
+.webside{position:sticky;top:64px;max-height:calc(100vh - 80px);overflow:auto;padding-right:4px}
+.webinfo{border:1px solid var(--rule);border-left:2px solid var(--gold);padding:10px 12px;margin:8px 0;background:var(--card)}
+.webinfo>b{font-weight:600;font-size:15px}
+.webbtns{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+.weblg{display:flex;flex-direction:column;gap:5px;margin-top:14px;font-size:12px;color:var(--muted)}
+.weblg .ln{display:inline-block;width:26px;border-top:2px solid var(--gold);vertical-align:middle;margin-right:6px}
+.weblg .ln.dash{border-top:2px dashed var(--muted)}
+.webbox{position:relative;border:1px solid var(--rule);background:var(--card);height:calc(100vh - 130px);min-height:480px;overflow:hidden}
+#webSvg{width:100%;height:100%;touch-action:none;cursor:grab;display:block;user-select:none}
+.webz{position:absolute;right:10px;top:10px;display:flex;gap:4px}.webz button{padding:4px 10px}
+.wn{cursor:pointer}.wn rect{fill:var(--bg2);stroke:var(--c);stroke-width:1.5}
+.wn.rel rect{stroke-dasharray:4 3;fill:var(--card)}
+.wn.cur rect{fill:color-mix(in srgb,var(--gold) 16%,var(--card));stroke:var(--gold);stroke-width:2.5}
+.wn text{fill:var(--ink);font-size:13px;pointer-events:none}.wn text.s{fill:var(--muted);font-size:9px;letter-spacing:.1em}
+.wn:hover rect{stroke:var(--gold)}
+.wh rect{fill:color-mix(in srgb,var(--c) 28%,var(--card));stroke:var(--c);stroke-width:1.2}
+.wh text{fill:var(--ink);font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;pointer-events:none}
 /* ILIAD print */
 .pv{--bg:#fff;--ink:#141414;--mut:#6f6b63;--rule:#d9d5cc;--soft:#f4f1ea;font-family:"Helvetica Neue",Helvetica,Arial,sans-serif}
 .pv.dark{--bg:#0C0C0C;--ink:#F1EFEA;--mut:#8B8983;--rule:rgba(255,255,255,.14);--soft:#151514}
@@ -439,6 +464,7 @@ const moveFor=e=>MOVE_OVERRIDE[e.name]||PATTERN_MAP[e.pattern]||'';
 const isUpperRea=e=>/push|pull|press/i.test(e.move||'')||/upper/i.test(e.pattern||'')||/push-?up|pushup|clap|throw|slam|chest pass|catch|medicine ball|med ball|ball/i.test(e.name);
 const splitRea=e=>e.traits=e.traits.map(t=>t==='t_rea'?(isUpperRea(e)?'t_rea_up':'t_rea_lo'):t).filter((t,i,a)=>a.indexOf(t)===i);
 const migrate=()=>{
+  if(!Array.isArray(S.templates))S.templates=[];
   S.exercises.forEach(e=>{if(e.move===undefined)e.move=moveFor(e);if(e.phase===undefined)e.phase=PHASE_OVERRIDE[e.name]||'';});
   const old=S.traits.findIndex(t=>t.id==='t_rea');
   if(old>=0){const o=S.traits[old];
@@ -528,7 +554,7 @@ async function sbFetch(path,opt={}){
   try{return await r.json();}catch(e){return null;}
 }
 async function sbAll(table){let out=[],off=0;for(;;){const rows=await sbFetch(`${table}?select=id,data&order=id&limit=1000&offset=${off}`);out=out.concat(rows||[]);if(!rows||rows.length<1000)break;off+=1000;}return out;}
-function hashState(){const t=JSON.stringify({t:S.traits,e:S.exercises,w:S.workouts});let h=2166136261;for(let i=0;i<t.length;i++){h^=t.charCodeAt(i);h=Math.imul(h,16777619);}return (h>>>0).toString(36)+'-'+t.length;}
+function hashState(){const t=JSON.stringify(Object.assign({t:S.traits,e:S.exercises,w:S.workouts},(S.templates&&S.templates.length)?{p:S.templates}:{}));let h=2166136261;for(let i=0;i<t.length;i++){h^=t.charCodeAt(i);h=Math.imul(h,16777619);}return (h>>>0).toString(36)+'-'+t.length;}
 function cloudSchedule(){if(!cloudReady)return;clearTimeout(cloudTimer);setSync('unsaved\u2026');cloudTimer=setTimeout(cloudPush,1500);}
 async function cloudLoad(){
   setSync('connecting\u2026');
@@ -544,7 +570,7 @@ async function cloudLoad(){
     cloudSnap.exercises=new Map(e.map(r=>[r.id,JSON.stringify(r.data)]));
     cloudSnap.workouts=new Map(w.map(r=>[r.id,JSON.stringify(r.data)]));
     if(useRemote){
-      S={traits:t.map(r=>r.data),exercises:e.map(r=>r.data),workouts:w.map(r=>r.data)};
+      S={traits:t.map(r=>r.data),exercises:e.map(r=>r.data),workouts:w.map(r=>r.data).filter(x=>!x.tpl),templates:w.map(r=>r.data).filter(x=>x.tpl)};
       if(!S.traits.length)S.traits=seed().traits;
       migrate();applyVariations();enhanceTbx();
       try{localStorage.setItem(KEY,JSON.stringify(S));}catch(x){}
@@ -561,7 +587,7 @@ async function cloudPush(){
   try{
     do{
       cloudAgain=false;
-      const cur={traits:S.traits,exercises:S.exercises,workouts:S.workouts};
+      const cur={traits:S.traits,exercises:S.exercises,workouts:S.workouts.concat(S.templates||[])};
       for(const [k,table] of Object.entries(SB_TABLES)){
         const snap=cloudSnap[k],ids=new Set(),up=[],now=new Date().toISOString();
         cur[k].forEach(item=>{ids.add(item.id);const j=JSON.stringify(item);if(snap.get(item.id)!==j){const row={id:item.id,data:item,updated_at:now};if(k==='exercises')row.name=item.name;up.push({row,j});}});
@@ -1215,10 +1241,11 @@ const lvl=n=>'●'.repeat(n)+'○'.repeat(5-n);
 /* ---------- render ---------- */
 function render(){
   const _sb=document.querySelector('.exsb'),_st=_sb?_sb.scrollTop:0;
-  $('#nav').innerHTML=[['library','Library'],['workouts','Workouts'],['traits','Traits']]
+  $('#nav').innerHTML=[['library','Library'],['workouts','Workouts'],['web','Web'],['traits','Traits']]
     .map(([k,l])=>`<button data-tab="${k}" class="${ui.tab===k?'on':''}">${l}</button>`).join('');
-  $('#app').innerHTML=ui.tab==='library'?viewLibrary():ui.tab==='workouts'?viewWorkouts():viewTraits();
+  $('#app').innerHTML=ui.tab==='library'?viewLibrary():ui.tab==='workouts'?viewWorkouts():ui.tab==='web'?viewWeb():viewTraits();
   const _n=document.querySelector('.exsb');if(_n)_n.scrollTop=_st;
+  if(ui.tab==='web')webMount();
 }
 
 const MODES={
@@ -1305,11 +1332,20 @@ function sbList(){
     const open=active||f.open[g.id]||f.by==='none';const cap=f.cap;
     return `<div class="sbg"><button class="sbgh" data-sbgrp="${esc(g.id)}"><span>${open?'▾':'▸'} <i class="dot" style="--c:${g.color}"></i>${esc(g.name)}</span><span>${g.items.length}</span></button>
       ${open?g.items.slice(0,cap).map(e=>sbRow(e,inW.has(e.id))).join('')+(g.items.length>cap?`<button class="sbmore" data-sbmore>Show ${Math.min(60,g.items.length-cap)} more of ${g.items.length-cap}</button>`:''):''}</div>`;}).join('');
-  return `<div class="meta" id="sbcount" style="padding:0 2px 6px">${list.length} of ${S.exercises.length} exercises</div>${body||'<div class="empty">No exercises match these filters.</div>'}`;
+  return `<div class="meta" id="sbcount" style="padding:0 2px 6px">${list.length} of ${S.exercises.length} exercises</div>${body||`<div class="empty">No exercises match these filters.${f.q.trim()?` <button data-newq>Create “${esc(f.q.trim())}”</button>`:''}</div>`}`;
+}
+function tplPanel(){
+  const T=S.templates||[];
+  return `<div class="meta addto">Insert after: <b>${esc(addTarget())}</b></div>`+(T.length?T.map(t=>{const f=fmtLabel(t.blk||{}),names=t.items.map(i=>exById(i.ex)?exById(i.ex).name:'').filter(Boolean);
+    return `<div class="tplrow"><div class="sbn"><b>${esc(t.name)}</b><div class="meta">${[f,t.blk&&t.blk.time,names.length+' exercises'].filter(Boolean).map(esc).join(' \u00b7 ')}</div><div class="meta tplex">${esc(names.slice(0,6).join(', '))}${names.length>6?'\u2026':''}</div></div>
+      <div class="tplbtn"><button class="pri" data-tplins="${t.id}">Insert</button><button data-tplren="${t.id}" title="Rename">\u270e</button><button class="danger" data-tpldel="${t.id}" title="Delete template">\u2715</button></div></div>`;}).join('')
+    :'<div class="empty">No templates yet. Press <b>Template</b> on a block header to save that block (title, format, notes and exercises) for reuse.</div>');
 }
 function sbPanel(){
-  const f=ui.sb;
-  return `<aside class="exsb noprint"><div class="sbh"><b>Exercise database</b><button data-sbclear title="Reset filters">Reset filters</button></div>
+  const f=ui.sb,tab=ui.sbTab||'ex';
+  const top=`<div class="sbseg sbtabs"><button data-sbtab="ex" class="${tab==='ex'?'on':''}">Exercises</button><button data-sbtab="tpl" class="${tab==='tpl'?'on':''}">Templates (${(S.templates||[]).length})</button></div>`;
+  if(tab==='tpl')return `<aside class="exsb noprint">${top}${tplPanel()}</aside>`;
+  return `<aside class="exsb noprint">${top}<div class="sbh"><b>Exercise database</b><span><button data-newsb title="Create a new exercise and add it to this workout">+ New</button><button data-sbclear title="Reset filters">Reset</button></span></div>
     <div class="meta addto">Adding to: <b>${esc(addTarget())}</b></div>
     <input type="search" id="sbq" placeholder="Search name, movement, equipment…" value="${esc(f.q)}">
     <div class="sec-h" style="margin:10px 0 4px">Organize by</div>
@@ -1475,7 +1511,7 @@ function viewWorkouts(){
           <select class="bf noprint" data-bf="${n}:fmt">${FMTS.map(([k,l])=>`<option value="${k}" ${f===k?'selected':''}>${l}</option>`).join('')}</select>${ff}
           <span class="meta bsum">${inBlk.length} exercise${inBlk.length===1?'':'s'} · ${sets} sets</span>
           <span class="bctl noprint"><input type="color" class="bcol" value="${col}" data-bf="${n}:color" title="Block colour">
-            <button data-bnotes="${n}" title="Block notes">Notes${i.notes?' •':''}</button><button data-bcol="${n}" title="Collapse / expand">${i.collapsed?'▸':'▾'}</button>
+            <button data-btpl="${n}" title="Save this block as a reusable template">Template</button><button data-bnotes="${n}" title="Block notes">Notes${i.notes?' •':''}</button><button data-bcol="${n}" title="Collapse / expand">${i.collapsed?'▸':'▾'}</button>
             <button data-bmv="${n}:-1" title="Move block up">↑</button><button data-bmv="${n}:1" title="Move block down">↓</button><button class="danger" data-bdel="${n}" title="Remove block header (keeps the exercises)">✕</button></span></div>
           ${i.notesOpen?`<textarea class="bn" data-bf="${n}:notes" placeholder="Block notes: format, cues, e.g. log your top set">${esc(i.notes)}</textarea>`
             :(noteLine?`<div class="npre" data-bnotes="${n}" title="Click to edit notes">${esc(noteLine)}</div>`:'')}</td></tr>`;
@@ -1492,7 +1528,7 @@ function viewWorkouts(){
       <td><input class="grp" maxlength="3" value="${esc(i.grp||'')}" placeholder="${esc(autoG||'-')}" data-wf="${n}:grp" title="Group label: follows the block automatically (A1, A2 for block A, B1, B2 for block B). Type to override, clear to go back to automatic."></td>
       <td><input type="number" min="1" value="${i.sets}" data-wf="${n}:sets"></td><td><input value="${esc(i.reps)}" data-wf="${n}:reps"></td>
       <td><input value="${esc(i.rest)}" data-wf="${n}:rest"></td><td><input value="${esc(i.note)}" placeholder="Add a note" data-wf="${n}:note"></td>
-      <td class="noprint" style="white-space:nowrap"><button data-swap="${n}:dn" ${dn.length?'':'disabled'} title="Regress">↓</button>
+      <td class="noprint" style="white-space:nowrap"><button data-webc="${e.id}" title="Show this exercise in the web">⌖</button><button data-swap="${n}:dn" ${dn.length?'':'disabled'} title="Regress">↓</button>
        <button data-swap="${n}:up" ${up.length?'':'disabled'} title="Progress">↑</button>
        <button class="danger" data-rm="${n}">✕</button></td></tr>${sw}`;}).join('');
     const nsel=[...ui.sel].filter(k=>items.some(x=>x.k===k)).length;
@@ -1616,23 +1652,25 @@ function drawModal(){
     <div class="row"><div><label class="l">Key cues</label><textarea id="f_cues">${esc(D.cues)}</textarea></div>
       <div><label class="l">Notes</label><textarea id="f_notes">${esc(D.notes)}</textarea></div></div>
     <div class="row one"><div><label class="l">Variations (one per line: implement, loading or tempo versions of this exercise)</label><textarea id="f_vars" style="min-height:72px">${esc((D.variations||[]).join('\n'))}</textarea></div></div>
-    <div class="foot">${isNew?'':'<button class="danger" data-exdel style="margin-right:auto">Delete exercise</button>'}
+    <div class="foot">${isNew?'':'<button class="danger" data-exdel style="margin-right:auto">Delete exercise</button>'}${!isNew?`<button data-webc="${D.id}" style="margin-right:auto">View in web</button>`:''}${isNew&&D.fromW?`<label class="meta" style="margin-right:auto;display:flex;gap:6px;align-items:center"><input type="checkbox" id="f_addw" style="width:auto" ${D.addW!==false?'checked':''}> Add to ${esc(addTarget())}</label>`:''}
       <button data-mclose>Cancel</button><button class="pri" data-exsave>Save</button></div></div></div>`;
 }
 function readDraft(){
   ['name','pattern','equipment','cues','notes','move','phase'].forEach(k=>{const el=$('#f_'+k);if(el)D[k]=el.value;});
   const l=$('#f_level');if(l)D.level=+l.value;
+  const aw=$('#f_addw');if(aw)D.addW=aw.checked;
   const vv=$('#f_vars');if(vv)D.variations=vv.value.split('\n').map(t=>t.trim()).filter(Boolean);
 }
 function saveDraft(){
   readDraft();
   if(!D.name.trim()){alert('Name is required.');return;}
-  let e;
+  let e;D._existed=!!D.id;
   if(D.id)e=exById(D.id);else{e={id:uid('e_')};S.exercises.push(e);D.id=e.id;}
   Object.assign(e,{name:D.name.trim(),variations:D.variations||[],move:D.move||'',phase:D.phase||'',traits:D.traits,pattern:D.pattern.trim(),equipment:D.equipment.trim(),level:D.level,cues:D.cues,notes:D.notes,prog:D.prog.filter(x=>x!==e.id)});
   // keep regressions consistent: other exercises link to this one iff chosen as a regression
   S.exercises.forEach(x=>{if(x.id===e.id)return;const has=x.prog.includes(e.id),want=D.reg.includes(x.id);
     if(want&&!has)x.prog.push(e.id);if(!want&&has)x.prog=x.prog.filter(y=>y!==e.id);});
+  if(D.fromW&&D.addW!==false&&!D._existed)addToWorkout(e.id);
   save();closeModal();render();
 }
 function closeModal(){$('#modalHost').innerHTML='';D=null;}
@@ -1640,14 +1678,169 @@ function deleteEx(id){
   const e=exById(id);if(!confirm(`Delete "${e.name}"? It will be removed from all ladders and workouts.`))return;
   S.exercises=S.exercises.filter(x=>x.id!==id);
   S.exercises.forEach(x=>x.prog=x.prog.filter(y=>y!==id));
-  S.workouts.forEach(w=>w.items=w.items.filter(i=>i.ex!==id));
+  S.workouts.forEach(w=>w.items=w.items.filter(i=>i.ex!==id));(S.templates||[]).forEach(t=>t.items=t.items.filter(i=>i.ex!==id));
   save();closeModal();render();
 }
 
+
+/* ---------- block templates ---------- */
+function tplFromBlock(n){
+  const it=curW().items,b=it[n],e=blockEnd(it,n);
+  return {id:uid('tp_'),tpl:true,name:(b.title||'Block').trim()||'Block',
+    blk:{title:b.title||'',time:b.time||'',notes:b.notes||'',fmt:b.fmt||'',rounds:b.rounds||'',interval:b.interval||'',color:b.color||''},
+    items:it.slice(n+1,e).filter(x=>!isBlk(x)&&exById(x.ex)).map(x=>({ex:x.ex,sets:x.sets,reps:x.reps,rest:x.rest,note:x.note||'',grp:x.grp||''})),made:Date.now()};
+}
+function insertTemplate(id){
+  const t=(S.templates||[]).find(x=>x.id===id),w=curW();if(!t||!w)return;
+  const it=w.items;let at=null;const ai=activeIdx(it);if(ai>=0)at=blockEnd(it,ai);
+  const b=mkBlock(it,t.blk.title||t.name);
+  Object.assign(b,{time:t.blk.time||'',notes:t.blk.notes||'',fmt:t.blk.fmt||'',rounds:t.blk.rounds||'',interval:t.blk.interval||'',notesOpen:false});
+  const rows=t.items.filter(x=>exById(x.ex)).map(x=>({k:newK(),ex:x.ex,sets:x.sets,reps:x.reps,rest:x.rest,note:x.note||'',grp:x.grp||''}));
+  if(at==null||at>=it.length)it.push(b,...rows);else it.splice(at,0,b,...rows);
+  ui.activeBlock=b.k;save();
+}
+function newExFromBuilder(name){
+  openEx(null);D.fromW=true;D.addW=true;
+  if(name)D.name=name;
+  D.traits=ui.sb.traits.slice();if(ui.sb.move)D.move=ui.sb.move;
+  if(ui.sb.kind==='warm'&&PHASES[0])D.phase=PHASES[0].id;
+  drawModal();setTimeout(()=>{const f=$('#f_name');if(f)f.focus();},30);
+}
+
+/* ---------- web view: exercises linked by progressions and by shared purpose ---------- */
+ui.web={c:null,depth:2,rel:'both',k:6,tx:0,ty:0,sc:1,g:null,key:''};
+function webDefault(){const e=S.exercises.find(x=>x.prog.length&&regOf(x.id).length&&!x.phase)||S.exercises.find(x=>x.prog.length)||S.exercises[0];return e?e.id:null;}
+function webBuild(){
+  const W=ui.web,c=exById(W.c),nodes=[],edges=[],idx=new Map();
+  const addN=o=>{idx.set(o.id,o);nodes.push(o);return o;};
+  const mk=(e,kind,px)=>{const nm=e.name.length>27?e.name.slice(0,26)+'\u2026':e.name;
+    return addN({id:e.id,kind,name:nm,full:e.name,w:Math.min(200,Math.max(90,nm.length*7.3+26)),h:42,lv:e.level,col:(trById(e.traits[0])||{}).color||'#888',px,x:0,y:0});};
+  const hop=new Map([[c.id,0]]),pos=new Map([[c.id,0]]);let front=[c.id];
+  for(let d=1;d<=W.depth&&front.length;d++){const nx=[];
+    for(const id of front){
+      for(const y of progOf(id))if(!hop.has(y)&&hop.size<70){hop.set(y,d);pos.set(y,pos.get(id)+1);nx.push(y);}
+      for(const y of regOf(id))if(!hop.has(y)&&hop.size<70){hop.set(y,d);pos.set(y,pos.get(id)-1);nx.push(y);}
+    }front=nx;}
+  hop.forEach((d,id)=>mk(exById(id),id===c.id?'cur':'chain',pos.get(id)));
+  const hubs=[];
+  if(W.rel==='both'||W.rel==='trait')c.traits.slice(0,3).forEach(t=>{const tr=trById(t);if(tr)hubs.push({id:'h:t:'+t,kind:'hub',name:tr.name,col:tr.color,test:e=>e.traits.includes(t)});});
+  if((W.rel==='both'||W.rel==='move')&&c.move){const m=MOVES.find(x=>x.id===c.move);hubs.push({id:'h:m:'+c.move,kind:'hub',name:c.move,col:m?m.color:'#888',test:e=>e.move===c.move});}
+  hubs.forEach(h=>addN({id:h.id,kind:'hub',name:h.name,col:h.col,w:Math.max(76,h.name.length*7.2+28),h:26,x:0,y:0,px:null}));
+  const seen=new Set(),addE=(a,b,t,col)=>{const k=a+'>'+b;if(seen.has(k))return;seen.add(k);edges.push({a,b,t,col});};
+  hubs.forEach(h=>nodes.forEach(n=>{if((n.kind==='chain'||n.kind==='cur')&&hop.get(n.id)<=1&&h.test(exById(n.id)))addE(n.id,h.id,'attr',h.col);}));
+  hubs.forEach(h=>{
+    const cand=S.exercises.filter(e=>!hop.has(e.id)&&!!e.phase===!!c.phase&&h.test(e))
+      .map(e=>({e,s:hubs.filter(q=>q.test(e)).length*10-Math.abs(e.level-c.level)*2+(e.pattern&&e.pattern===c.pattern?3:0)+((e.prog.length||regOf(e.id).length)?1:0)}))
+      .sort((a,b)=>b.s-a.s||a.e.name.localeCompare(b.e.name));
+    let n=0;for(const q of cand){if(n>=W.k)break;if(!idx.has(q.e.id))mk(q.e,'rel',null);addE(q.e.id,h.id,'attr',h.col);n++;}
+  });
+  nodes.forEach(n=>{if(n.kind==='hub')return;progOf(n.id).forEach(y=>{if(idx.has(y)&&idx.get(y).kind!=='hub')addE(n.id,y,'prog');});});
+  // layout: force simulation, progression flows left (easier) to right (harder)
+  const hn=nodes.filter(n=>n.kind==='hub'),en=nodes.filter(n=>n.kind!=='hub');
+  hn.forEach((h,i)=>{h.x=(i-(hn.length-1)/2)*280;h.y=(i%2?1:-1)*200;});
+  en.forEach((n,i)=>{const a=i*2.4;if(n.px!=null){n.x=n.px*230;n.y=((i%5)-2)*80;}else{n.x=Math.cos(a)*320+(i%3)*10;n.y=Math.sin(a)*320;}});
+  const cur=idx.get(c.id);cur.x=0;cur.y=0;
+  const N=nodes.length;
+  for(let it=0;it<360;it++){const al=Math.max(.05,1-it/360);
+    for(let i=0;i<N;i++)for(let j=i+1;j<N;j++){const a=nodes[i],b=nodes[j];let dx=b.x-a.x,dy=b.y-a.y;if(!dx&&!dy){dx=.1;dy=.1;}
+      const rx=(a.w+b.w)/2+18,ry=(a.h+b.h)/2+16,q=Math.hypot(dx/rx,dy/ry);
+      if(q<2.4){const dist=Math.hypot(dx,dy)||1,f=(2.4-q)*(q<1?30:9)*al,ux=dx/dist,uy=dy/dist;a.x-=ux*f;a.y-=uy*f;b.x+=ux*f;b.y+=uy*f;}}
+    edges.forEach(e=>{const a=idx.get(e.a),b=idx.get(e.b);const dx=b.x-a.x,dy=b.y-a.y,d=Math.hypot(dx,dy)||1;
+      const L=e.t==='prog'?190:150,k=e.t==='prog'?.05:.012,f=(d-L)*k*al,ux=dx/d,uy=dy/d;a.x+=ux*f;a.y+=uy*f;b.x-=ux*f;b.y-=uy*f;});
+    en.forEach(n=>{if(n.px!=null)n.x+=(n.px*230-n.x)*.07;else{n.x*=1-.004*al;n.y*=1-.004*al;}});
+    hn.forEach((h,i)=>{h.y+=((i%2?1:-1)*200-h.y)*.03;});
+    cur.x=0;cur.y=0;
+  }
+  return {nodes,edges,idx};
+}
+function webFit(){
+  const W=ui.web,g=W.g,svg=$('#webSvg');if(!g||!g.nodes.length)return;
+  const r=svg?svg.getBoundingClientRect():{width:1000,height:600};const vw=r.width||1000,vh=r.height||600;
+  let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;g.nodes.forEach(n=>{x0=Math.min(x0,n.x-n.w/2);x1=Math.max(x1,n.x+n.w/2);y0=Math.min(y0,n.y-n.h/2);y1=Math.max(y1,n.y+n.h/2);});
+  const sc=Math.min(1.4,Math.min((vw-60)/(x1-x0||1),(vh-60)/(y1-y0||1)));
+  W.sc=sc;W.tx=vw/2-sc*(x0+x1)/2;W.ty=vh/2-sc*(y0+y1)/2;
+}
+function webXf(){const g=$('#webG');if(g)g.setAttribute('transform',`translate(${ui.web.tx},${ui.web.ty}) scale(${ui.web.sc})`);}
+function webClip(n,dx,dy){const t=Math.min((n.w/2)/(Math.abs(dx)||1e-6),(n.h/2)/(Math.abs(dy)||1e-6));return {x:n.x+dx*Math.min(t,1),y:n.y+dy*Math.min(t,1)};}
+function webDraw(){
+  const g=ui.web.g,G=$('#webG');if(!g||!G)return;
+  const ed=g.edges.map(e=>{const a=g.idx.get(e.a),b=g.idx.get(e.b),dx=b.x-a.x,dy=b.y-a.y;
+    const p=webClip(a,dx,dy),q=webClip(b,-dx,-dy);
+    return e.t==='prog'?`<line x1="${p.x.toFixed(1)}" y1="${p.y.toFixed(1)}" x2="${q.x.toFixed(1)}" y2="${q.y.toFixed(1)}" stroke="#C9A66B" stroke-width="2" marker-end="url(#warr)"/>`
+      :`<line x1="${p.x.toFixed(1)}" y1="${p.y.toFixed(1)}" x2="${q.x.toFixed(1)}" y2="${q.y.toFixed(1)}" stroke="${e.col}" stroke-opacity=".5" stroke-width="1.2" stroke-dasharray="4 4"/>`;}).join('');
+  const nd=g.nodes.map(n=>{
+    if(n.kind==='hub')return `<g class="wh" style="--c:${n.col}" transform="translate(${n.x.toFixed(1)},${n.y.toFixed(1)})"><rect x="${-n.w/2}" y="${-n.h/2}" width="${n.w}" height="${n.h}" rx="13"/><text text-anchor="middle" dy="4">${esc(n.name)}</text></g>`;
+    return `<g class="wn ${n.kind}" data-wn="${n.id}" style="--c:${n.col}" transform="translate(${n.x.toFixed(1)},${n.y.toFixed(1)})"><title>${esc(n.full)}</title><rect x="${-n.w/2}" y="${-n.h/2}" width="${n.w}" height="${n.h}" rx="3"/><text text-anchor="middle" dy="-3">${esc(n.name)}</text><text class="s" text-anchor="middle" dy="12">${lvl(n.lv)}</text></g>`;}).join('');
+  G.innerHTML=ed+nd;webXf();
+}
+function webMount(){
+  const W=ui.web,key=[W.c,W.depth,W.rel,W.k,S.exercises.length].join('|');
+  if(!exById(W.c))return;
+  if(!W.g||W.key!==key){W.g=webBuild();W.key=key;webFit();}
+  webDraw();
+}
+function viewWeb(){
+  const W=ui.web;if(!exById(W.c))W.c=webDefault();const c=exById(W.c);
+  if(!c)return '<div class="empty">No exercises yet.</div>';
+  const seg=(attr,cur,opts)=>`<div class="prseg">${opts.map(([v,l])=>`<button ${attr}="${v}" class="${String(cur)===String(v)?'on':''}">${l}</button>`).join('')}</div>`;
+  const up=progOf(c.id).length,dn=regOf(c.id).length;
+  return `<div class="webwrap"><aside class="webside">
+    <div class="sec-h" style="margin-top:0">Centre exercise</div>
+    <div class="picker"><input id="webq" placeholder="Search to centre on\u2026" autocomplete="off"><div class="pickres" id="webres" hidden></div></div>
+    <div class="webinfo"><b>${esc(c.name)}</b><div>${chips(c)}</div><div class="meta">${esc([c.move,c.pattern&&c.pattern!==c.move?c.pattern:'',c.equipment].filter(Boolean).join(' \u00b7 '))}</div>
+      <div class="meta"><span class="lvl">${lvl(c.level)}</span> \u00b7 \u2193${dn} regress \u00b7 \u2191${up} progress</div>${c.cues?`<div class="meta" style="margin-top:6px">${esc(c.cues)}</div>`:''}
+      <div class="webbtns"><button data-webopen="${c.id}">Edit</button><button data-webadd="${c.id}">+ Add to workout</button></div></div>
+    <div class="sec-h">Progression reach</div>${seg('data-webd',W.depth,[[1,'1 hop'],[2,'2'],[3,'3'],[8,'All']])}
+    <div class="sec-h">Connect by purpose</div>${seg('data-webr',W.rel,[['both','Trait + move'],['trait','Trait'],['move','Move'],['none','Off']])}
+    <div class="sec-h">Related per attribute</div>${seg('data-webk',W.k,[[3,'3'],[6,'6'],[10,'10'],[15,'15']])}
+    <div class="weblg"><span><i class="ln"></i>progression (easier \u2192 harder)</span><span><i class="ln dash"></i>shares a trait or movement pattern</span><span>Click an exercise to re-centre \u00b7 double-click to edit \u00b7 drag to move \u00b7 scroll to zoom</span></div>
+  </aside><div class="webbox"><svg id="webSvg" xmlns="http://www.w3.org/2000/svg"><defs><marker id="warr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#C9A66B"/></marker></defs><g id="webG"></g></svg>
+    <div class="webz"><button data-webz="in">+</button><button data-webz="out">\u2212</button><button data-webz="fit">Fit</button></div></div></div>`;
+}
+function webZoom(f){const W=ui.web,svg=$('#webSvg');if(!svg)return;const r=svg.getBoundingClientRect();webZoomAt(f,r.width/2,r.height/2);}
+function webZoomAt(f,px,py){const W=ui.web,ns=Math.max(.15,Math.min(3,W.sc*f)),k=ns/W.sc;W.tx=px-(px-W.tx)*k;W.ty=py-(py-W.ty)*k;W.sc=ns;webXf();}
+function extraClick(d,t,ev){
+  if(d.btpl!==undefined){const tp=tplFromBlock(+d.btpl);if(!tp.items.length){alert('That block has no exercises yet.');return true;}
+    const nm=prompt('Template name',tp.name);if(nm===null)return true;tp.name=nm.trim()||tp.name;
+    const old=S.templates.findIndex(x=>x.name.toLowerCase()===tp.name.toLowerCase());
+    if(old>=0){if(!confirm('A template named "'+tp.name+'" exists. Replace it?'))return true;tp.id=S.templates[old].id;S.templates[old]=tp;}else S.templates.push(tp);
+    save();ui.sbTab='tpl';render();return true;}
+  if(d.tplins){insertTemplate(d.tplins);render();return true;}
+  if(d.tplren){const tp=S.templates.find(x=>x.id===d.tplren);const nm=tp&&prompt('Rename template',tp.name);if(nm){tp.name=nm.trim()||tp.name;save();render();}return true;}
+  if(d.tpldel){const tp=S.templates.find(x=>x.id===d.tpldel);if(tp&&confirm('Delete template "'+tp.name+'"?')){S.templates=S.templates.filter(x=>x!==tp);save();render();}return true;}
+  if(d.sbtab){ui.sbTab=d.sbtab;render();return true;}
+  if(d.newsb!==undefined){newExFromBuilder('');return true;}
+  if(d.newq!==undefined){newExFromBuilder(ui.sb.q.trim());return true;}
+  if(d.webc!==undefined){if(D)closeModal();ui.tab='web';ui.web.c=d.webc;render();return true;}
+  if(d.webz){if(d.webz==='fit'){webFit();webXf();}else webZoom(d.webz==='in'?1.25:.8);return true;}
+  if(d.webd){ui.web.depth=+d.webd;render();return true;}
+  if(d.webr){ui.web.rel=d.webr;render();return true;}
+  if(d.webk){ui.web.k=+d.webk;render();return true;}
+  if(d.webopen){openEx(d.webopen);return true;}
+  if(d.webadd){addToWorkout(d.webadd);t.textContent='\u2713 Added';t.disabled=true;return true;}
+  return false;
+}
+document.addEventListener('input',ev=>{const t=ev.target;if(t.id!=='webq')return;
+  const q=t.value.trim().toLowerCase(),box=$('#webres');if(!box)return;
+  const r=q?S.exercises.filter(e=>e.name.toLowerCase().includes(q)).sort((a,b)=>(b.prog.length+regOf(b.id).length>0)-(a.prog.length+regOf(a.id).length>0)||a.name.length-b.name.length).slice(0,10):[];
+  box.hidden=!r.length;box.innerHTML=r.map(e=>`<div data-webc="${e.id}">${esc(e.name)} <span class="meta">${lvl(e.level)}</span></div>`).join('');});
+let WD=null;
+document.addEventListener('pointerdown',ev=>{const svg=ev.target.closest&&ev.target.closest('#webSvg');if(!svg||ev.button)return;
+  const n=ev.target.closest('[data-wn]'),W=ui.web;const node=n?W.g.idx.get(n.dataset.wn):null;
+  WD={x:ev.clientX,y:ev.clientY,moved:false,id:n?n.dataset.wn:null,node,tx:W.tx,ty:W.ty,nx:node?node.x:0,ny:node?node.y:0};});
+document.addEventListener('pointermove',ev=>{if(!WD)return;const W=ui.web,dx=ev.clientX-WD.x,dy=ev.clientY-WD.y;
+  if(Math.abs(dx)+Math.abs(dy)>4)WD.moved=true;if(!WD.moved)return;
+  if(WD.node){WD.node.x=WD.nx+dx/W.sc;WD.node.y=WD.ny+dy/W.sc;webDraw();}else{W.tx=WD.tx+dx;W.ty=WD.ty+dy;webXf();}});
+document.addEventListener('pointerup',()=>{if(!WD)return;const d=WD;WD=null;if(!d.moved&&d.id){ui.web.c=d.id;render();}});
+document.addEventListener('dblclick',ev=>{const n=ev.target.closest&&ev.target.closest('#webSvg [data-wn]');if(n)openEx(n.dataset.wn);});
+document.addEventListener('wheel',ev=>{const svg=ev.target.closest&&ev.target.closest('#webSvg');if(!svg)return;ev.preventDefault();
+  const r=svg.getBoundingClientRect();webZoomAt(ev.deltaY<0?1.12:.89,ev.clientX-r.left,ev.clientY-r.top);},{passive:false});
+
 /* ---------- events ---------- */
 document.addEventListener('click',ev=>{
-  const t=ev.target.closest('[data-tab],[data-pro],[data-printgo],[data-bact],[data-ract],[data-bnotes],[data-bsuper],[data-bnew],[data-bgroup],[data-bcol],[data-bmv],[data-bdel],[data-sbtrait],[data-sbby],[data-sbgrp],[data-sbmore],[data-sbmode],[data-sbclear],[data-by],[data-trait],[data-open],[data-new],[data-ttog],[data-unlink],[data-exsave],[data-exdel],[data-mclose],[data-tadd],[data-tdel],[data-wsel],[data-wnew],[data-wdup],[data-wdel],[data-wprint],[data-add],[data-swap],[data-doswap],[data-mv],[data-rm],[data-ovclose],[data-pickadd]');
+  const t=ev.target.closest('[data-btpl],[data-tplins],[data-tplren],[data-tpldel],[data-sbtab],[data-newsb],[data-newq],[data-webc],[data-webz],[data-webd],[data-webr],[data-webk],[data-webopen],[data-webadd],[data-tab],[data-pro],[data-printgo],[data-bact],[data-ract],[data-bnotes],[data-bsuper],[data-bnew],[data-bgroup],[data-bcol],[data-bmv],[data-bdel],[data-sbtrait],[data-sbby],[data-sbgrp],[data-sbmore],[data-sbmode],[data-sbclear],[data-by],[data-trait],[data-open],[data-new],[data-ttog],[data-unlink],[data-exsave],[data-exdel],[data-mclose],[data-tadd],[data-tdel],[data-wsel],[data-wnew],[data-wdup],[data-wdel],[data-wprint],[data-add],[data-swap],[data-doswap],[data-mv],[data-rm],[data-ovclose],[data-pickadd]');
   if(!t)return;const d=t.dataset;
+  if(extraClick(d,t,ev))return;
   if(d.ovclose!==undefined){if(ev.target===t)closeModal();return;}
   if(d.pro!==undefined){const[k,v]=d.pro.split(':');ui.pr[k]=k==='cols'?+v:(v==='t'?!ui.pr[k]:v);try{localStorage.setItem('wp_print',JSON.stringify(ui.pr));}catch(e){}showPrintDialog();}
   else if(d.printgo!==undefined){doPrint();}
@@ -1736,14 +1929,14 @@ $('#btnImport').onclick=()=>$('#file').click();
 $('#file').onchange=async ev=>{const f=ev.target.files[0];if(!f)return;
   try{const j=JSON.parse(await f.text());if(!j.exercises||!j.traits)throw 0;
     if(!confirm('Replace the current library with this file?'))return;
-    S={traits:j.traits,exercises:j.exercises,workouts:j.workouts||[]};save();render();}
+    S={traits:j.traits,exercises:j.exercises,workouts:j.workouts||[],templates:j.templates||[]};migrate();save();render();}
   catch(e){alert('That file is not a valid library export.');}ev.target.value='';};
 $('#btnMerge').onclick=()=>{const n=mergeStarter();save();render();alert(n?`Added ${n} exercises. Your existing exercises were not changed.`:'Nothing new to add.');};
 $('#btnOpen').onclick=()=>{if(!confirm('Add exercises from free-exercise-db (public domain)? Ones you already have are skipped, and nothing you have edited is changed.'))return;const a=mergeOpenDb();save();render();showAdded(a);};
 $('#btnTbx').onclick=()=>{if(!confirm('Add the reviewed TeamBuildr exercises? Ones you already have are skipped and nothing you have edited changes.'))return;const a=mergeTbxNew();save();render();showAdded(a);};
 $('#btnCov').onclick=showCoverage;
 $('#btnSync').onclick=cloudSyncNow;
-$('#btnReset').onclick=()=>{if(confirm('Replace everything with the starter set? This also replaces the cloud copy. Export first if you want a backup.')){S=seed();ui.wid=null;ui.sel={trait:'all',move:'all',phase:'all'};save();render();}};
+$('#btnReset').onclick=()=>{if(confirm('Replace everything with the starter set? This also replaces the cloud copy. Export first if you want a backup.')){S=seed();migrate();ui.wid=null;ui.sel={trait:'all',move:'all',phase:'all'};save();render();}};
 
 /* theme: auto | light | dark */
 let theme='auto';try{theme=localStorage.getItem('wp_theme')||'dark'}catch(e){}
