@@ -247,7 +247,7 @@ select,select.bf{color:var(--ink)}
 #printView{display:none}
 .pv{--bg:#fff;--ink:#16161a;--mut:#6b6b76;--rule:#dcdce1;--soft:#f4f3f0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif;font-size:10pt;line-height:1.35;-webkit-print-color-adjust:exact;print-color-adjust:exact}
 .pv.dark{--bg:#121316;--ink:#f1f1f3;--mut:#9a9aa6;--rule:#2a2c34;--soft:#1b1c22}
-.pv-wrap{width:100%;border-collapse:collapse;border-spacing:0}
+.pv-wrap{width:100%;table-layout:fixed;border-collapse:collapse;border-spacing:0}
 .pv-wrap>tbody>tr>td{padding:0 12mm;border:0;background:none}
 .pv-wrap>thead>tr>td,.pv-wrap>tfoot>tr>td{padding:0;border:0;background:none}
 .pv-sp{height:11mm}
@@ -289,7 +289,7 @@ select,select.bf{color:var(--ink)}
 .prprev{max-height:68vh;overflow:auto;border-radius:14px;background:color-mix(in srgb,var(--ink) 10%,transparent);padding:14px}
 .pvprev{width:216mm;zoom:.78;margin:0 auto;box-shadow:0 6px 24px rgba(0,0,0,.3)}
 .pvprev.land{width:279mm;zoom:.56}
-.pv.c2 .pv-blk{break-inside:avoid}
+.pv.c2 .pv-blk{break-inside:auto}
 .pv.c2 .pv-ch,.pv.c2 .pv-row{grid-template-columns:7mm 1fr 21mm 13mm;gap:0 2mm;padding:0 1.5mm 0 1mm}
 @media print{
   body>*:not(#printView){display:none!important}
@@ -1473,7 +1473,21 @@ function fmtLabel(b){const f=b.fmt||'';
   if(f==='amrap')return 'AMRAP'+(b.rounds?' \u00b7 '+b.rounds+' min cap':'');
   if(f==='every')return 'Every '+(b.interval||'?')+(b.rounds?' \u00d7 '+b.rounds:'');
   return '';}
+function paperMM(o){const a=o.paper==='a4'?[210,297]:[215.9,279.4];return o.orient==='landscape'?[a[1],a[0]]:a;}
+function fitZoom(w,o){
+  const [W,H]=paperMM(o),mm=96/25.4,avail=(H-22)*mm*.93;
+  const host=document.createElement('div');host.style.cssText='position:fixed;left:-99999px;top:0;visibility:hidden;width:'+W+'mm';
+  host.innerHTML=printHtml(w,Object.assign({},o,{_z:1}));document.body.appendChild(host);
+  const z=host.querySelector('.pv-z');
+  const pages=k=>{z.style.zoom=k;return Math.max(1,Math.ceil(z.getBoundingClientRect().height/avail-.001));};
+  const n1=pages(1);let target=n1;
+  if(n1>1){const h1=z.getBoundingClientRect().height;const last=(h1/avail)-(n1-1);if(last<.35&&pages(.8)<n1)target=n1-1;}
+  const mx=o.cols===2?(o.orient==='landscape'?1.12:1):1.3;let best=target<n1?.8:1;
+  for(let k=best;k<=mx+.0001;k+=.02){if(pages(k)<=target)best=k;else break;}
+  host.remove();return Math.round(best*100)/100;
+}
 function printHtml(w,o){
+  const zf=o._z!==undefined?o._z:fitZoom(w,o);
   const items=wItems(w),secs=[];let cur={blk:null,rows:[]};secs.push(cur);
   items.forEach(i=>{if(isBlk(i)){cur={blk:i,rows:[]};secs.push(cur);}else if(exById(i.ex))cur.rows.push(i);});
   const log=o.log&&o.cols===1;let bn=0,totalSets=0,nEx=0,totalMin=0;
@@ -1489,9 +1503,9 @@ function printHtml(w,o){
     const chead=`<div class="pv-ch"><span></span><span>Exercise</span><span>Sets \u00d7 reps</span><span>Rest</span>${log?'<span>Log</span>':''}</div>`;
     return `<section class="pv-blk" style="--bc:${col}">${head}${rows?chead+rows:''}</section>`;}).join('');
   const mins=Math.round(totalMin*10)/10;
-  return `<div class="pv ${o.theme==='dark'?'dark':''} c${o.cols}${log?' withlog':''}"><table class="pv-wrap"><thead><tr><td><div class="pv-sp"></div></td></tr></thead><tbody><tr><td>
+  return `<div class="pv ${o.theme==='dark'?'dark':''} c${o.cols}${log?' withlog':''}"><table class="pv-wrap"><thead><tr><td><div class="pv-sp"></div></td></tr></thead><tbody><tr><td><div class="pv-z" style="zoom:${zf}">
     <div class="pv-head"><div><div class="pv-brand">Exercise Library</div><h1>${esc(w.name)}</h1></div><div class="pv-sum"><b>${nEx}</b> exercises \u00b7 <b>${totalSets}</b> sets \u00b7 <b>${bn}</b> blocks${mins?` \u00b7 <b>${mins}</b> min`:''}</div></div>
-    <div class="pv-blocks">${body}</div></td></tr></tbody><tfoot><tr><td><div class="pv-sp"></div></td></tr></tfoot></table></div>`;
+    <div class="pv-blocks">${body}</div></div></td></tr></tbody><tfoot><tr><td><div class="pv-sp"></div></td></tr></tfoot></table></div>`;
 }
 function showPrintDialog(){
   const w=curW();if(!w)return;const o=ui.pr;
@@ -1504,7 +1518,7 @@ function showPrintDialog(){
       <div class="sec-h">Page</div>${seg('orient',[['portrait','Portrait'],['landscape','Landscape']])}${seg('paper',[['letter','Letter'],['a4','A4']])}
       <div class="sec-h">Show</div>${tog('tags','Trait tags')}${tog('notes','Notes')}${tog('log','Blank log column'+(o.cols===2?' (1 column only)':''),o.cols===2)}
       <p class="meta" style="margin-top:12px">In the browser's print window turn on Background graphics so colours and the dark theme print.</p>
-    </div><div class="prprev"><div class="pvprev ${o.orient==='landscape'?'land':''}">${printHtml(w,o)}</div></div></div>
+    </div><div class="prprev"><div class="pvprev ${o.orient==='landscape'?'land':''}" style="width:${paperMM(o)[0]}mm">${printHtml(w,o)}</div></div></div>
     <div class="foot"><button data-mclose>Cancel</button><button class="pri" data-printgo>Print</button></div></div></div>`;
 }
 function doPrint(){
