@@ -100,7 +100,7 @@ tr.blk td{background:color-mix(in srgb,var(--bc,var(--accent)) 16%,var(--bg2));b
 tr.blk.act td{box-shadow:inset 0 0 0 2px var(--bc,var(--accent))}
 .bh1{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 .bnum{display:inline-flex;align-items:center;justify-content:center;min-width:30px;height:30px;border-radius:50%;background:var(--bc);color:#fff;font-weight:700}
-.bt{flex:1 1 320px;min-width:240px;font-size:16px;font-weight:700}
+.bt{flex:1 1 220px;min-width:160px;font-size:16px;font-weight:700}
 .bl{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
 td input.bm{width:120px}td input.bff,.bff{width:84px}select.bf{width:auto}
 .bsum{margin-left:auto}.bctl{display:flex;gap:6px;align-items:center}
@@ -236,8 +236,6 @@ input.wt:hover{background:var(--bg2)}input.wt:focus{background:var(--card)}
 .trow{border:0;border-radius:14px;box-shadow:var(--shadow)}
 td input[data-wf$=":rest"]{width:150px}
 td input[data-wf$=":sets"],td input[data-wf$=":reps"]{width:64px}
-tr.xr td:nth-child(8){min-width:240px;width:30%}
-tr.xr td:nth-child(8) input{width:100%}
 .bar input.wt{flex:1 1 380px;max-width:none}
 #wsel{max-width:210px}
 /* ===== end modern look ===== */
@@ -391,6 +389,61 @@ select,select.bf{color:var(--ink)}
 .wn:hover rect{stroke:var(--gold)}
 .wh rect{fill:color-mix(in srgb,var(--c) 28%,var(--card));stroke:var(--c);stroke-width:1.2}
 .wh text{fill:var(--ink);font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;pointer-events:none}
+/* responsive builder rows, sheet sidebar, toast */
+#wzone{container-type:inline-size;overflow:visible;padding:0}
+#wzone table,#wzone tbody{display:block;width:100%;border:0;background:none}
+#wzone tr{display:block}
+#wzone td{display:block;padding:0;border:0}
+#wzone tr.xr{display:grid;grid-template-columns:50px 22px minmax(0,1fr) 64px 80px 96px auto;grid-template-areas:"gc num nm sets reps rest act" "gc num nm note note note act";gap:2px 8px;align-items:center;margin:0 0 8px;padding:8px 8px 8px 0;border-radius:14px;background:var(--card);box-shadow:inset 6px 0 0 var(--g,transparent),0 1px 2px rgba(0,0,0,.2);filter:none}
+#wzone tr.xr:hover{background:color-mix(in srgb,var(--ink) 4%,var(--card))}
+#wzone tr.xr td{background:none!important;border-radius:0!important;border-left:0!important;padding:0!important;min-width:0!important;width:auto!important}
+#wzone tr.xr td.gc{grid-area:gc;padding-left:16px!important;display:flex!important;align-items:center;gap:2px}
+#wzone tr.xr td.c-num{grid-area:num;text-align:center;color:var(--muted)}
+#wzone tr.xr td.nm{grid-area:nm;padding:2px 0!important}
+#wzone tr.xr td.nm>div{display:inline}#wzone tr.xr td.nm .lvl{margin-left:6px}#wzone tr.xr td.nm b{display:inline;margin-right:4px}
+#wzone tr.xr td.c-sets{grid-area:sets}#wzone tr.xr td.c-reps{grid-area:reps}#wzone tr.xr td.c-rest{grid-area:rest}
+#wzone tr.xr td.c-note{grid-area:note}
+#wzone tr.xr td.c-act{grid-area:act;display:flex!important;gap:0;align-items:center}
+#wzone td[data-l]::before{content:attr(data-l);display:block;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);text-align:center}
+#wzone .c-sets input,#wzone .c-reps input,#wzone .c-rest input,#wzone .c-note input{width:100%!important;min-width:0}
+#wzone tr.xr td.c-act button{padding:5px 8px}
+#wzone tr.blk{margin:16px 0 8px}
+#wzone tr.blk td{display:block}
+#wzone tr.newzone{margin-top:6px}
+#wzone td.swap{margin:-4px 0 8px;border-radius:12px;background:var(--bg2);padding:10px 14px}
+.bopts{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.bctl{margin-left:auto}
+tr.flash{animation:flashrow 1.6s ease-out}
+@keyframes flashrow{0%{background:color-mix(in srgb,var(--gold) 38%,var(--card))}100%{background:var(--card)}}
+@container (max-width:640px){
+  #wzone tr.xr{grid-template-columns:40px repeat(3,minmax(0,1fr)) auto;grid-template-areas:"gc nm nm nm act" "gc sets reps rest act" "gc note note note note"}
+  #wzone tr.xr td.c-num{display:none!important}
+  #wzone tr.xr td.gc{padding-left:10px!important;flex-direction:column;align-items:flex-start}
+  #wzone tr.xr td.c-act{flex-wrap:wrap;width:76px}
+  .bt{flex-basis:100%!important;min-width:0!important}
+}
+.wmore{position:relative;display:inline-block}
+.wmore summary{list-style:none;cursor:pointer;border:1px solid var(--rule);border-radius:3px;padding:6px 12px;font-size:16px;line-height:1.2}
+.wmore summary::-webkit-details-marker{display:none}
+.wmore summary:hover{border-color:var(--gold);color:var(--gold)}
+.wpop{position:absolute;left:0;top:calc(100% + 6px);z-index:30;min-width:190px;background:var(--card);border:1px solid var(--rule);border-radius:10px;padding:6px;display:flex;flex-direction:column;gap:2px;box-shadow:0 10px 30px rgba(0,0,0,.4)}
+.wpop button{text-align:left;border:0;background:transparent;padding:8px 10px}.wpop button:hover{background:var(--bg2)}
+#toast{position:fixed;left:20px;bottom:20px;z-index:90;background:var(--card);color:var(--ink);border:1px solid var(--gold);border-radius:10px;padding:10px 14px;display:flex;gap:14px;align-items:center;opacity:0;transform:translateY(10px);pointer-events:none;transition:opacity .2s,transform .2s;max-width:calc(100vw - 40px);box-shadow:0 10px 30px rgba(0,0,0,.45)}
+#toast.show{opacity:1;transform:none;pointer-events:auto}
+#toast button{padding:4px 12px;color:var(--gold);border-color:var(--gold)}
+.sbfab,.sbclose{display:none}
+@media (min-width:1101px) and (max-width:1400px){.wb{grid-template-columns:minmax(0,1fr) 320px}}
+@media (max-width:1100px){
+  .wb{grid-template-columns:1fr}
+  .sbfab{display:block;position:fixed;right:16px;bottom:16px;z-index:40;border-radius:99px;padding:12px 20px;background:var(--gold);border-color:var(--gold);color:#0C0C0C;font-weight:600;box-shadow:0 6px 20px rgba(0,0,0,.45)}
+  .exsb{position:fixed!important;left:0;right:0;bottom:0;top:auto!important;max-height:78vh!important;border-radius:18px 18px 0 0!important;z-index:60;transform:translateY(110%);transition:transform .2s;border:1px solid var(--rule)!important;box-shadow:0 -10px 40px rgba(0,0,0,.5)!important}
+  .exsb.open{transform:none}
+  .sbclose{display:block;margin-left:auto;margin-bottom:8px;border-color:var(--gold);color:var(--gold)}
+}
+@media (max-width:900px){
+  .webwrap{grid-template-columns:1fr}.webbox{order:-1;height:62vh;min-height:360px}.webside{position:static;max-height:none}
+  header{padding:8px 14px}
+}
 /* ILIAD print */
 .pv{--bg:#fff;--ink:#141414;--mut:#6f6b63;--rule:#d9d5cc;--soft:#f4f1ea;font-family:"Helvetica Neue",Helvetica,Arial,sans-serif}
 .pv.dark{--bg:#0C0C0C;--ink:#F1EFEA;--mut:#8B8983;--rule:rgba(255,255,255,.14);--soft:#151514}
@@ -1246,6 +1299,7 @@ function render(){
   $('#app').innerHTML=ui.tab==='library'?viewLibrary():ui.tab==='workouts'?viewWorkouts():ui.tab==='web'?viewWeb():viewTraits();
   const _n=document.querySelector('.exsb');if(_n)_n.scrollTop=_st;
   if(ui.tab==='web')webMount();
+  if(ui.flashK){const r=document.querySelector('tr[data-k="'+ui.flashK+'"]');if(r){r.scrollIntoView({block:'nearest',behavior:'smooth'});r.classList.add('flash');}ui.flashK=null;}
 }
 
 const MODES={
@@ -1344,8 +1398,8 @@ function tplPanel(){
 function sbPanel(){
   const f=ui.sb,tab=ui.sbTab||'ex';
   const top=`<div class="sbseg sbtabs"><button data-sbtab="ex" class="${tab==='ex'?'on':''}">Exercises</button><button data-sbtab="tpl" class="${tab==='tpl'?'on':''}">Templates (${(S.templates||[]).length})</button></div>`;
-  if(tab==='tpl')return `<aside class="exsb noprint">${top}${tplPanel()}</aside>`;
-  return `<aside class="exsb noprint">${top}<div class="sbh"><b>Exercise database</b><span><button data-newsb title="Create a new exercise and add it to this workout">+ New</button><button data-sbclear title="Reset filters">Reset</button></span></div>
+  if(tab==='tpl')return `<aside class="exsb noprint ${ui.sbOpen?'open':''}"><button class="sbclose" data-sbclose>Done</button>${top}${tplPanel()}</aside>`;
+  return `<aside class="exsb noprint ${ui.sbOpen?'open':''}"><button class="sbclose" data-sbclose>Done</button>${top}<div class="sbh"><b>Exercise database</b><span><button data-newsb title="Create a new exercise and add it to this workout">+ New</button><button data-sbclear title="Reset filters">Reset</button></span></div>
     <div class="meta addto">Adding to: <b>${esc(addTarget())}</b></div>
     <input type="search" id="sbq" placeholder="Search name, movement, equipment…" value="${esc(f.q)}">
     <div class="sec-h" style="margin:10px 0 4px">Organize by</div>
@@ -1384,13 +1438,14 @@ function addToWorkout(id,at){
   const it=w.items;
   if(at==null){const ai=activeIdx(it);if(ai>=0)at=blockEnd(it,ai);}
   const item={k:newK(),ex:id,sets:3,reps:'8',rest:'90s',note:'',grp:''};
+  pushUndo('Added '+exById(id).name);ui.flashK=item.k;
   if(at==null||at>=it.length)it.push(item);else it.splice(at,0,item);
   save();
 }
 function groupSelected(){
   const w=curW(),it=w.items;
   const idx=it.map((x,i)=>ui.sel.has(x.k)&&!isBlk(x)?i:-1).filter(i=>i>=0);if(!idx.length)return;
-  const chosen=idx.map(i=>it[i]),first=idx[0];
+  pushUndo('Grouped into a block');const chosen=idx.map(i=>it[i]),first=idx[0];
   idx.slice().reverse().forEach(i=>it.splice(i,1));
   const parent=first>0?blockOf(it,first-1):-1,parentTitle=parent>=0?it[parent].title:'';
   const blk=mkBlock(it);
@@ -1401,12 +1456,13 @@ function groupSelected(){
   ui.activeBlock=blk.k;ui.sel.clear();save();
 }
 function makeSuperset(){
-  const it=curW().items,idx=it.map((x,i)=>ui.sel.has(x.k)&&!isBlk(x)?i:-1).filter(i=>i>=0);if(idx.length<2)return;
+  const it=curW().items,idx=it.map((x,i)=>ui.sel.has(x.k)&&!isBlk(x)?i:-1).filter(i=>i>=0);if(idx.length<2)return;pushUndo('Made a superset');
   const used=new Set(it.filter(x=>x.grp).map(x=>x.grp.trim().toUpperCase().charAt(0)));
   let L='A';for(let c=65;c<91;c++){const ch=String.fromCharCode(c);if(!used.has(ch)){L=ch;break;}}
   idx.forEach((i,n)=>{it[i].grp=L+(n+1);});ui.sel.clear();save();
 }
 function moveBlock(n,dir){
+  pushUndo('Moved block');
   const it=curW().items,e=blockEnd(it,n),chunk=it.splice(n,e-n);let dest;
   if(dir<0){dest=n>0?Math.max(0,blockOf(it,n-1)):0;}
   else{dest=n<it.length?blockEnd(it,n):n;}
@@ -1431,6 +1487,7 @@ function applyDrop(v,t){
   else if(v==='sel:'){it.forEach((x,i)=>{if(ui.sel.has(x.k)&&!isBlk(x)){remove.push(i);chunk.push(x);}});}
   else if(v.startsWith('blk:')){const n=+v.slice(4),e=blockEnd(it,n);for(let i=n;i<e;i++){remove.push(i);chunk.push(it[i]);}if(dest>=n&&dest<=e)return;}
   if(!chunk.length||chunk.some(x=>!x))return;
+  pushUndo(v.startsWith('ex:')?'Added '+dragLabel(v):'Moved '+dragLabel(v));
   if(remove.length){const before=remove.filter(i=>i<dest).length;remove.slice().sort((a,b)=>b-a).forEach(i=>it.splice(i,1));dest-=before;}
   if(t.newBlock&&!v.startsWith('blk:')){const b=mkBlock(it);it.push(b);dest=it.length;ui.activeBlock=b.k;}
   it.splice(dest,0,...chunk);save();
@@ -1507,12 +1564,12 @@ function viewWorkouts(){
         return `<tr class="blk${i.k===ui.activeBlock?' act':''}" data-ri="${n}" data-dragblk="${n}" style="--bc:${col}"><td colspan="9" data-bact="${n}"><div class="bh1">
           <span class="grab noprint" data-dragblk="${n}" title="Drag the whole block">⠇</span><span class="bnum">${bn}</span>
           <input class="bt" value="${esc(i.title)}" placeholder="Block title" data-bf="${n}:title">
-          <label class="bl">Time<input class="bm" value="${esc(i.time)}"${auto} data-bf="${n}:time"></label>
-          <select class="bf noprint" data-bf="${n}:fmt">${FMTS.map(([k,l])=>`<option value="${k}" ${f===k?'selected':''}>${l}</option>`).join('')}</select>${ff}
+          <div class="bopts"><label class="bl">Time<input class="bm" value="${esc(i.time)}"${auto} data-bf="${n}:time"></label>
+          <select class="bf noprint" data-bf="${n}:fmt">${FMTS.map(([k,l])=>`<option value="${k}" ${f===k?'selected':''}>${l}</option>`).join('')}</select>${ff}</div>
           <span class="meta bsum">${inBlk.length} exercise${inBlk.length===1?'':'s'} · ${sets} sets</span>
           <span class="bctl noprint"><input type="color" class="bcol" value="${col}" data-bf="${n}:color" title="Block colour">
             <button data-btpl="${n}" title="Save this block as a reusable template">Template</button><button data-bnotes="${n}" title="Block notes">Notes${i.notes?' •':''}</button><button data-bcol="${n}" title="Collapse / expand">${i.collapsed?'▸':'▾'}</button>
-            <button data-bmv="${n}:-1" title="Move block up">↑</button><button data-bmv="${n}:1" title="Move block down">↓</button><button class="danger" data-bdel="${n}" title="Remove block header (keeps the exercises)">✕</button></span></div>
+            <button data-bmv="${n}:-1" title="Move block up">↑</button><button data-bmv="${n}:1" title="Move block down">↓</button><button class="danger" data-bdel="${n}" title="Remove this block header. Its exercises join the block above (Undo available)">✕</button></span></div>
           ${i.notesOpen?`<textarea class="bn" data-bf="${n}:notes" placeholder="Block notes: format, cues, e.g. log your top set">${esc(i.notes)}</textarea>`
             :(noteLine?`<div class="npre" data-bnotes="${n}" title="Click to edit notes">${esc(noteLine)}</div>`:'')}</td></tr>`;
       }
@@ -1523,25 +1580,25 @@ function viewWorkouts(){
       const up=progOf(e.id),dn=regOf(e.id);
       const sw=ui.swap&&ui.swap.n===n?`<tr><td colspan="9" class="swap">Swap <b>${esc(e.name)}</b> for: ${(ui.swap.dir==='up'?up:dn).map(id=>`<button data-doswap="${n}:${id}">${esc(exById(id).name)}</button>`).join('')}</td></tr>`:'';
       const lab=(i.grp||'').trim().toUpperCase()||autoG;const gb=lab?`<span class="gb" style="--gc:${curCol}">${esc(lab)}</span>`:'';
-      return `<tr class="xr" data-ri="${n}" data-dragrow="${n}" style="--g:${curCol}"><td class="gc"><span class="grab noprint" data-dragrow="${n}" title="Drag to reorder (drag several ticked ones together)">⠇</span><input type="checkbox" class="noprint" data-sel="${i.k}" ${ui.sel.has(i.k)?'checked':''}></td>
-      <td>${num}</td><td class="nm" data-ract="${n}">${gb}<b>${esc(e.name)}</b><div>${chips(e)}</div><span class="lvl">${lvl(e.level)}</span></td>
-      <td><input class="grp" maxlength="3" value="${esc(i.grp||'')}" placeholder="${esc(autoG||'-')}" data-wf="${n}:grp" title="Group label: follows the block automatically (A1, A2 for block A, B1, B2 for block B). Type to override, clear to go back to automatic."></td>
-      <td><input type="number" min="1" value="${i.sets}" data-wf="${n}:sets"></td><td><input value="${esc(i.reps)}" data-wf="${n}:reps"></td>
-      <td><input value="${esc(i.rest)}" data-wf="${n}:rest"></td><td><input value="${esc(i.note)}" placeholder="Add a note" data-wf="${n}:note"></td>
-      <td class="noprint" style="white-space:nowrap"><button data-webc="${e.id}" title="Show this exercise in the web">⌖</button><button data-swap="${n}:dn" ${dn.length?'':'disabled'} title="Regress">↓</button>
-       <button data-swap="${n}:up" ${up.length?'':'disabled'} title="Progress">↑</button>
-       <button class="danger" data-rm="${n}">✕</button></td></tr>${sw}`;}).join('');
+      const nmA=esc(e.name);
+      return `<tr class="xr" data-ri="${n}" data-dragrow="${n}" data-k="${i.k}" style="--g:${curCol}"><td class="gc"><span class="grab noprint" data-dragrow="${n}" title="Drag to reorder (drag several ticked ones together)">\u2807</span><input type="checkbox" class="noprint" data-sel="${i.k}" aria-label="Select ${nmA}" ${ui.sel.has(i.k)?'checked':''}></td>
+      <td class="c-num">${num}</td><td class="nm" data-ract="${n}">${lab?`<span class="gb" data-grpedit="${n}" title="Click to change the group label (A1, B2\u2026)" style="--gc:${curCol}">${esc(lab)}</span>`:''}<b>${nmA}</b><div>${chips(e)}</div><span class="lvl">${lvl(e.level)}</span></td>
+      <td class="c-sets" data-l="Sets"><input type="number" min="1" value="${i.sets}" aria-label="Sets for ${nmA}" data-wf="${n}:sets"></td><td class="c-reps" data-l="Reps"><input value="${esc(i.reps)}" aria-label="Reps for ${nmA}" data-wf="${n}:reps"></td>
+      <td class="c-rest" data-l="Rest"><input value="${esc(i.rest)}" aria-label="Rest for ${nmA}" data-wf="${n}:rest"></td><td class="c-note"><input value="${esc(i.note)}" placeholder="Add a note" aria-label="Note for ${nmA}" data-wf="${n}:note"></td>
+      <td class="noprint c-act"><button data-webc="${e.id}" title="Show this exercise in the web">\u2316</button><button data-swap="${n}:dn" ${dn.length?'':'disabled'} title="Swap for an easier option (regression)">\u2193</button>
+       <button data-swap="${n}:up" ${up.length?'':'disabled'} title="Swap for a harder option (progression)">\u2191</button>
+       <button class="danger" data-rm="${n}" title="Remove from workout (Undo available)">\u2715</button></td></tr>${sw}`;}).join('');
     const nsel=[...ui.sel].filter(k=>items.some(x=>x.k===k)).length;
     main=`<div class="bar noprint" style="margin-bottom:10px">${sel}<input id="wname" class="wt" value="${esc(w.name)}">
-      <button data-wnew>+ New</button><button data-wdup>Duplicate</button><button data-wprint>Print</button><button class="danger" data-wdel>Delete</button></div>
+      <button data-wnew>+ New</button><button data-wprint>Print</button><details class="wmore"><summary title="More">⋯</summary><div class="wpop"><button data-wdup>Duplicate workout</button><button class="danger" data-wdel>Delete workout</button></div></details></div>
       <div class="bar noprint" style="margin-bottom:8px"><button data-bnew>+ Block</button><button data-bgroup ${nsel?'':'disabled'}>Group ${nsel||''} into a block</button>
         <span class="meta">Tick exercises to group them. Each exercise’s Grp label follows its block (A1, A2 in the first block, B1, B2 in the second). Drag any exercise to reorder; drop on a block header to join it, or on the strip at the bottom to start a new block. Click a block to make it the target for +.</span></div>
-      <div id="wzone" class="wzone">${items.length?`<table><thead><tr><th></th><th>#</th><th>Exercise</th><th>Grp</th><th>Sets</th><th>Reps</th><th>Rest</th><th>Note</th><th class="noprint">Progress</th></tr></thead><tbody>${rows}<tr class="newzone noprint"><td colspan="9">Drop an exercise here to start a new block</td></tr></tbody></table>`:'<div class="empty">Empty. Drag exercises here from the database, or press + beside one.</div>'}</div>
+      <div id="wzone" class="wzone">${items.length?`<table><tbody>${rows}<tr class="newzone noprint"><td colspan="9">Drop an exercise here to start a new block</td></tr></tbody></table>`:'<div class="empty">Empty. Drag exercises here from the database, or press + beside one.</div>'}</div>
       <div class="meta" style="margin:10px 0"><b>${nEx}</b> exercises · <b>${totalSets}</b> sets · <b>${bn}</b> blocks${totalMin?` · block time <b>${Math.round(totalMin*10)/10} min</b>`:''}</div>
       <div class="meta" style="margin:10px 0">Trait coverage (primary): ${Object.keys(cov).map(k=>chip(trById(k)).replace('</span>',` ×${cov[k]}</span>`)).join('')||'—'}</div>
       <div class="meta" style="margin-bottom:10px">Movement coverage (training only): ${Object.keys(mcov).map(k=>`<span class="chip" style="--c:${MOVES.find(m=>m.id===k)?.color||'#888'}">${esc(k)} ×${mcov[k]}</span>`).join('')||'—'}</div>`;
   }
-  return `<div class="wb"><div>${main}</div>${sbPanel()}</div>`;
+  return `<div class="wb"><div>${main}</div>${sbPanel()}</div><button class="sbfab noprint" data-sbopen>+ Add exercise</button>`;
 }
 
 /* ---------- print layout ---------- */
@@ -1683,6 +1740,22 @@ function deleteEx(id){
 }
 
 
+/* ---------- undo + toast ---------- */
+const UNDO=[];
+function toast(msg,canUndo){let t=document.getElementById('toast');if(!t){t=document.createElement('div');t.id='toast';document.body.appendChild(t);}
+  t.innerHTML='<span>'+esc(msg)+'</span>'+(canUndo&&UNDO.length?'<button data-undo>Undo</button>':'');t.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('show'),8000);}
+function pushUndo(msg){UNDO.push({msg,w:JSON.stringify(S.workouts),t:JSON.stringify(S.templates||[]),wid:ui.wid});if(UNDO.length>40)UNDO.shift();toast(msg,true);}
+function doUndo(){const u=UNDO.pop();if(!u){toast('Nothing to undo',false);return;}
+  S.workouts=JSON.parse(u.w);S.templates=JSON.parse(u.t);ui.wid=u.wid;ui.activeBlock=null;ui.sel.clear();ui.swap=null;save();render();toast('Undone: '+u.msg,false);}
+document.addEventListener('keydown',ev=>{if((ev.ctrlKey||ev.metaKey)&&!ev.shiftKey&&ev.key.toLowerCase()==='z'){const a=document.activeElement;if(a&&(a.tagName==='TEXTAREA'||(a.tagName==='INPUT'&&!/checkbox|button/.test(a.type))))return;ev.preventDefault();doUndo();}});
+/* re-render after a field edit without losing the keyboard position */
+function renderKeep(){setTimeout(()=>{const a=document.activeElement,sy=window.scrollY;let sel=null,ss=null,se=null;
+  if(a&&a!==document.body&&a.dataset){if(a.dataset.wf)sel='[data-wf="'+a.dataset.wf+'"]';else if(a.dataset.bf)sel='[data-bf="'+a.dataset.bf+'"]';else if(a.dataset.sel)sel='[data-sel="'+a.dataset.sel+'"]';else if(a.id)sel='#'+a.id;
+    try{ss=a.selectionStart;se=a.selectionEnd;}catch(e){}}
+  render();
+  if(sel){const n=document.querySelector(sel);if(n){n.focus({preventScroll:true});try{if(ss!=null&&n.type!=='number')n.setSelectionRange(ss,se);else if(n.select)n.select();}catch(e){}}}
+  window.scrollTo(0,sy);},0);}
+
 /* ---------- block templates ---------- */
 function tplFromBlock(n){
   const it=curW().items,b=it[n],e=blockEnd(it,n);
@@ -1693,6 +1766,7 @@ function tplFromBlock(n){
 function insertTemplate(id){
   const t=(S.templates||[]).find(x=>x.id===id),w=curW();if(!t||!w)return;
   const it=w.items;let at=null;const ai=activeIdx(it);if(ai>=0)at=blockEnd(it,ai);
+  pushUndo('Inserted template "'+t.name+'"');
   const b=mkBlock(it,t.blk.title||t.name);
   Object.assign(b,{time:t.blk.time||'',notes:t.blk.notes||'',fmt:t.blk.fmt||'',rounds:t.blk.rounds||'',interval:t.blk.interval||'',notesOpen:false});
   const rows=t.items.filter(x=>exById(x.ex)).map(x=>({k:newK(),ex:x.ex,sets:x.sets,reps:x.reps,rest:x.rest,note:x.note||'',grp:x.grp||''}));
@@ -1800,6 +1874,10 @@ function viewWeb(){
 function webZoom(f){const W=ui.web,svg=$('#webSvg');if(!svg)return;const r=svg.getBoundingClientRect();webZoomAt(f,r.width/2,r.height/2);}
 function webZoomAt(f,px,py){const W=ui.web,ns=Math.max(.15,Math.min(3,W.sc*f)),k=ns/W.sc;W.tx=px-(px-W.tx)*k;W.ty=py-(py-W.ty)*k;W.sc=ns;webXf();}
 function extraClick(d,t,ev){
+  if(d.undo!==undefined){doUndo();return true;}
+  if(d.grpedit!==undefined){const i=curW().items[+d.grpedit];const v=prompt('Group label for this exercise (for example A1 or B2). Leave empty for automatic.',(i.grp||'').trim());if(v!==null){pushUndo('Changed group label');i.grp=v.trim().toUpperCase().slice(0,3);save();render();}return true;}
+  if(d.sbopen!==undefined){ui.sbOpen=true;render();return true;}
+  if(d.sbclose!==undefined){ui.sbOpen=false;render();return true;}
   if(d.btpl!==undefined){const tp=tplFromBlock(+d.btpl);if(!tp.items.length){alert('That block has no exercises yet.');return true;}
     const nm=prompt('Template name',tp.name);if(nm===null)return true;tp.name=nm.trim()||tp.name;
     const old=S.templates.findIndex(x=>x.name.toLowerCase()===tp.name.toLowerCase());
@@ -1838,7 +1916,7 @@ document.addEventListener('wheel',ev=>{const svg=ev.target.closest&&ev.target.cl
 
 /* ---------- events ---------- */
 document.addEventListener('click',ev=>{
-  const t=ev.target.closest('[data-btpl],[data-tplins],[data-tplren],[data-tpldel],[data-sbtab],[data-newsb],[data-newq],[data-webc],[data-webz],[data-webd],[data-webr],[data-webk],[data-webopen],[data-webadd],[data-tab],[data-pro],[data-printgo],[data-bact],[data-ract],[data-bnotes],[data-bsuper],[data-bnew],[data-bgroup],[data-bcol],[data-bmv],[data-bdel],[data-sbtrait],[data-sbby],[data-sbgrp],[data-sbmore],[data-sbmode],[data-sbclear],[data-by],[data-trait],[data-open],[data-new],[data-ttog],[data-unlink],[data-exsave],[data-exdel],[data-mclose],[data-tadd],[data-tdel],[data-wsel],[data-wnew],[data-wdup],[data-wdel],[data-wprint],[data-add],[data-swap],[data-doswap],[data-mv],[data-rm],[data-ovclose],[data-pickadd]');
+  const t=ev.target.closest('[data-undo],[data-grpedit],[data-sbopen],[data-sbclose],[data-btpl],[data-tplins],[data-tplren],[data-tpldel],[data-sbtab],[data-newsb],[data-newq],[data-webc],[data-webz],[data-webd],[data-webr],[data-webk],[data-webopen],[data-webadd],[data-tab],[data-pro],[data-printgo],[data-bact],[data-ract],[data-bnotes],[data-bsuper],[data-bnew],[data-bgroup],[data-bcol],[data-bmv],[data-bdel],[data-sbtrait],[data-sbby],[data-sbgrp],[data-sbmore],[data-sbmode],[data-sbclear],[data-by],[data-trait],[data-open],[data-new],[data-ttog],[data-unlink],[data-exsave],[data-exdel],[data-mclose],[data-tadd],[data-tdel],[data-wsel],[data-wnew],[data-wdup],[data-wdel],[data-wprint],[data-add],[data-swap],[data-doswap],[data-mv],[data-rm],[data-ovclose],[data-pickadd]');
   if(!t)return;const d=t.dataset;
   if(extraClick(d,t,ev))return;
   if(d.ovclose!==undefined){if(ev.target===t)closeModal();return;}
@@ -1852,7 +1930,7 @@ document.addEventListener('click',ev=>{
   else if(d.bgroup!==undefined){groupSelected();render();}
   else if(d.bcol!==undefined){const b=curW().items[+d.bcol];b.collapsed=!b.collapsed;save();render();}
   else if(d.bmv!==undefined){const[n,dr]=d.bmv.split(':').map(Number);moveBlock(n,dr);render();}
-  else if(d.bdel!==undefined){curW().items.splice(+d.bdel,1);save();render();}
+  else if(d.bdel!==undefined){pushUndo('Removed block header');curW().items.splice(+d.bdel,1);save();render();}
   else if(d.sbtrait){const i=ui.sb.traits.indexOf(d.sbtrait);i<0?ui.sb.traits.push(d.sbtrait):ui.sb.traits.splice(i,1);ui.sb.cap=60;render();}
   else if(d.sbby){ui.sb.by=d.sbby;ui.sb.cap=60;render();}
   else if(d.sbgrp!==undefined){ui.sb.open[d.sbgrp]=!ui.sb.open[d.sbgrp];sbRefresh();}
@@ -1877,14 +1955,14 @@ document.addEventListener('click',ev=>{
   else if(d.wsel){ui.wid=d.wsel;ui.swap=null;render();}
   else if(d.wnew!==undefined){const w={id:uid('w_'),name:'New workout',items:[]};S.workouts.push(w);ui.wid=w.id;save();render();}
   else if(d.wdup!==undefined){const w=curW(),c=JSON.parse(JSON.stringify(w));c.id=uid('w_');c.name+=' (copy)';S.workouts.push(c);ui.wid=c.id;save();render();}
-  else if(d.wdel!==undefined){const w=curW();if(confirm(`Delete workout "${w.name}"?`)){S.workouts=S.workouts.filter(x=>x!==w);ui.wid=null;save();render();}}
+  else if(d.wdel!==undefined){const w=curW();{pushUndo('Deleted workout "'+w.name+'"');S.workouts=S.workouts.filter(x=>x!==w);ui.wid=null;save();render();}}
   else if(d.wprint!==undefined)showPrintDialog();
   else if(d.add){addToWorkout(d.add);render();}
   else if(d.swap){const[n,dir]=d.swap.split(':');const e=exById(curW().items[+n].ex);const opts=dir==='up'?progOf(e.id):regOf(e.id);
-    if(opts.length===1){curW().items[+n].ex=opts[0];ui.swap=null;save();}else ui.swap={n:+n,dir};render();}
-  else if(d.doswap){const[n,id]=d.doswap.split(':');curW().items[+n].ex=id;ui.swap=null;save();render();}
+    if(opts.length===1){pushUndo('Swapped exercise');curW().items[+n].ex=opts[0];ui.swap=null;save();}else ui.swap={n:+n,dir};render();}
+  else if(d.doswap){pushUndo('Swapped exercise');const[n,id]=d.doswap.split(':');curW().items[+n].ex=id;ui.swap=null;save();render();}
   else if(d.mv){const[n,s]=d.mv.split(':').map(Number);const a=curW().items;[a[n],a[n+s]]=[a[n+s],a[n]];save();render();}
-  else if(d.rm){curW().items.splice(+d.rm,1);ui.swap=null;save();render();}
+  else if(d.rm){pushUndo('Removed exercise');curW().items.splice(+d.rm,1);ui.swap=null;save();render();}
 });
 document.addEventListener('input',ev=>{
   const t=ev.target;
@@ -1904,9 +1982,9 @@ document.addEventListener('input',ev=>{
 });
 document.addEventListener('change',ev=>{
   const t=ev.target;
-  if(t.dataset.sel){t.checked?ui.sel.add(t.dataset.sel):ui.sel.delete(t.dataset.sel);render();}
-  else if(t.dataset.bf&&/:(time|fmt|rounds|interval|color)$/.test(t.dataset.bf)){render();}
-  else if(t.dataset.wf&&/:(sets|grp)$/.test(t.dataset.wf)){render();}
+  if(t.dataset.sel){t.checked?ui.sel.add(t.dataset.sel):ui.sel.delete(t.dataset.sel);renderKeep();}
+  else if(t.dataset.bf&&/:(time|fmt|rounds|interval|color)$/.test(t.dataset.bf)){renderKeep();}
+  else if(t.dataset.wf&&/:(sets|grp)$/.test(t.dataset.wf)){renderKeep();}
   else if(t.id==='grp'){ui.group=t.checked;render();}
   else if(t.id==='show'){ui.show=t.value;render();}
   else if(t.id==='wsel'){ui.wid=t.value;ui.swap=null;render();}
@@ -1919,6 +1997,7 @@ document.addEventListener('change',ev=>{
   else if(t.id==='addtrait'){ui.addT=t.value;render();}
   else if(t.dataset.tname||t.dataset.tcolor)render();
 });
+document.addEventListener('click',ev=>{document.querySelectorAll('details.wmore[open]').forEach(m=>{if(!ev.target.closest('details.wmore')||ev.target.closest('.wpop button'))m.open=false;});});
 document.addEventListener('click',ev=>{const m=document.getElementById('dataMenu');if(!m||!m.open)return;if(ev.target.closest('#dataMenu .pop button')||!ev.target.closest('#dataMenu'))m.open=false;});
 document.addEventListener('keydown',ev=>{if(ev.key==='Escape'){if(typeof DR!=='undefined'&&DR)endDrag(false);else if(D)closeModal();}});
 
