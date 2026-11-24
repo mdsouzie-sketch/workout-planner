@@ -408,7 +408,9 @@ select,select.bf{color:var(--ink)}
 #wzone .c-sets input,#wzone .c-reps input,#wzone .c-rest input,#wzone .c-note input{width:100%!important;min-width:0}
 #wzone tr.xr td.c-act button{padding:5px 8px}
 #wzone tr.blk{margin:16px 0 8px}
-#wzone tr.blk td{display:block}
+#wzone tr.blk td{display:block;border-radius:14px!important;overflow:hidden;box-shadow:inset 6px 0 0 var(--bc,var(--gold)),0 1px 2px rgba(0,0,0,.2)!important}
+#wzone tr.blk.act td{box-shadow:inset 6px 0 0 var(--bc,var(--gold)),0 0 0 2px var(--bc,var(--gold))!important}
+tr.dt-in td,tr.dt-above td,tr.dt-below td{border-radius:14px}
 #wzone tr.newzone{margin-top:6px}
 #wzone td.swap{margin:-4px 0 8px;border-radius:12px;background:var(--bg2);padding:10px 14px}
 .bopts{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
