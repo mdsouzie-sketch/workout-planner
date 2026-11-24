@@ -446,6 +446,59 @@ tr.flash{animation:flashrow 1.6s ease-out}
   .webwrap{grid-template-columns:1fr}.webbox{order:-1;height:62vh;min-height:360px}.webside{position:static;max-height:none}
   header{padding:8px 14px}
 }
+/* ===== look pass: header, compact rows, chips, restrained gold ===== */
+:root{--gold:#8f6f3a;--accent:#8f6f3a;--on-gold:#fff}
+:root[data-theme=dark]{--gold:#C9A66B;--accent:#C9A66B;--on-gold:#0C0C0C}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--gold:#C9A66B;--accent:#C9A66B;--on-gold:#0C0C0C}}
+button.pri,button.pri:hover,.dghost,.sbfab,.adtag{color:var(--on-gold)!important}
+button:hover{border-color:var(--ink);color:var(--ink)}
+button.pri:hover{border-color:var(--gold)}
+nav button.on{color:var(--ink);border-color:transparent;box-shadow:inset 0 -2px 0 var(--gold)}
+.seg button.on,.sbseg button.on,.sbmode button.on,.lnode.cur{background:var(--card);color:var(--ink);border-color:var(--rule);box-shadow:inset 0 -2px 0 var(--gold)}
+.lvl{color:var(--muted)}
+.sbrow button{color:var(--muted)}.sbrow button:hover{background:var(--gold);color:var(--on-gold)}
+/* chips: outlined until selected */
+.chip.tog{opacity:1;background:transparent;border:1px solid color-mix(in srgb,var(--c) 60%,transparent);color:var(--ink);font-weight:500}
+.chip.tog:hover{background:color-mix(in srgb,var(--c) 18%,transparent)}
+.chip.tog.on{background:color-mix(in srgb,var(--c) 78%,#000);border-color:var(--c);color:#fff;font-weight:600}
+/* active block cue */
+.addto{border-left:2px solid var(--gold);border-radius:3px;background:var(--bg2)}
+.addto b{color:var(--ink)}
+.adtag{display:inline-block;margin-left:10px;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;background:var(--gold);padding:1px 9px;border-radius:99px;vertical-align:1px}
+#wzone tr.blk.act td{box-shadow:inset 6px 0 0 var(--bc,var(--gold)),0 0 0 1.5px var(--gold)!important}
+/* block header: one row */
+.bh1{flex-wrap:nowrap;align-items:center;gap:10px}
+.btw{flex:1 1 200px;min-width:170px;display:flex;flex-direction:column;gap:0}
+.btw .bt{flex:none;width:100%;min-width:0}
+.btw .bsum{padding:0 8px;font-size:12px;white-space:nowrap}
+.bopts{flex:none;flex-wrap:nowrap}
+.bctl{margin-left:0;flex:none;gap:0}
+.bctl button{padding:5px 8px;border:0;position:relative}
+.bctl .ndot{position:absolute;right:3px;top:4px;width:6px;height:6px;border-radius:50%;background:var(--gold)}
+.bctl .bcol{opacity:0;transition:opacity .15s;margin-left:6px}
+tr.blk:hover .bcol,tr.blk.act .bcol,.bctl .bcol:focus{opacity:1}
+@media(hover:none){.bctl .bcol{opacity:1}}
+#wzone input.bm{width:92px}#wzone input.bff{width:62px}.bopts{gap:6px}.bopts select.bf{padding:5px 8px}
+@container (max-width:760px){.bh1{flex-wrap:wrap}.btw{flex-basis:60%}.bopts{order:5;flex-basis:100%}}
+/* compact rows: single line with a column strip per block */
+#wzone tr.xr{grid-template-columns:50px 22px minmax(0,1.3fr) 56px 70px 84px minmax(0,1fr) 124px;grid-template-areas:"gc num nm sets reps rest note act";gap:0 8px;margin:0;padding:6px 8px 6px 0;border-radius:0;background:none;box-shadow:inset 3px 0 0 var(--g,transparent);border-bottom:1px solid var(--rule)}
+#wzone tr.xr:hover{background:color-mix(in srgb,var(--ink) 4%,transparent)}
+#wzone tr.xr td.nm>div{display:inline}
+#wzone tr.xr td.nm b{font-size:14px}
+#wzone tr.xr td.nm>div .chip:nth-child(n+2){display:none}
+#wzone td[data-l]::before{display:none}
+#wzone tr.colhd{display:block}
+#wzone tr.colhd td{display:grid;grid-template-columns:50px 22px minmax(0,1.3fr) 56px 70px 84px minmax(0,1fr) 124px;gap:0 8px;padding:8px 8px 2px 0!important;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-align:center;background:none!important}
+#wzone tr.colhd td .l{text-align:left}
+#wzone tr.blk{margin-top:18px}
+@container (max-width:819px){
+  #wzone tr.xr{grid-template-columns:50px 22px minmax(0,1fr) 64px 80px 96px auto;grid-template-areas:"gc num nm sets reps rest act" "gc num nm note note note act";gap:2px 8px;padding:8px 8px 8px 0}
+  #wzone td[data-l]::before{display:block}
+  #wzone tr.colhd{display:none}
+}
+@container (max-width:640px){
+  #wzone tr.xr{grid-template-columns:40px repeat(3,minmax(0,1fr)) auto;grid-template-areas:"gc nm nm nm act" "gc sets reps rest act" "gc note note note note"}
+}
 /* ILIAD print */
 .pv{--bg:#fff;--ink:#141414;--mut:#6f6b63;--rule:#d9d5cc;--soft:#f4f1ea;font-family:"Helvetica Neue",Helvetica,Arial,sans-serif}
 .pv.dark{--bg:#0C0C0C;--ink:#F1EFEA;--mut:#8B8983;--rule:rgba(255,255,255,.14);--soft:#151514}
@@ -1564,16 +1617,16 @@ function viewWorkouts(){
         const auto=!parseMin(i.time)&&blockMin(i)?` placeholder="${Math.round(blockMin(i)*10)/10} min (auto)"`:' placeholder="e.g. 20 min"';
         const noteLine=(i.notes||'').split('\n')[0];
         return `<tr class="blk${i.k===ui.activeBlock?' act':''}" data-ri="${n}" data-dragblk="${n}" style="--bc:${col}"><td colspan="9" data-bact="${n}"><div class="bh1">
-          <span class="grab noprint" data-dragblk="${n}" title="Drag the whole block">⠇</span><span class="bnum">${bn}</span>
-          <input class="bt" value="${esc(i.title)}" placeholder="Block title" data-bf="${n}:title">
+          <span class="grab noprint" data-dragblk="${n}" title="Drag the whole block">\u2807</span><span class="bnum">${bn}</span>
+          <div class="btw"><input class="bt" value="${esc(i.title)}" placeholder="Block title" data-bf="${n}:title">
+            <span class="meta bsum">${inBlk.length} exercise${inBlk.length===1?'':'s'} \u00b7 ${sets} sets${i.k===ui.activeBlock?'<span class="adtag noprint">Adding here</span>':''}</span></div>
           <div class="bopts"><label class="bl">Time<input class="bm" value="${esc(i.time)}"${auto} data-bf="${n}:time"></label>
           <select class="bf noprint" data-bf="${n}:fmt">${FMTS.map(([k,l])=>`<option value="${k}" ${f===k?'selected':''}>${l}</option>`).join('')}</select>${ff}</div>
-          <span class="meta bsum">${inBlk.length} exercise${inBlk.length===1?'':'s'} · ${sets} sets</span>
-          <span class="bctl noprint"><input type="color" class="bcol" value="${col}" data-bf="${n}:color" title="Block colour">
-            <button data-btpl="${n}" title="Save this block as a reusable template">Template</button><button data-bnotes="${n}" title="Block notes">Notes${i.notes?' •':''}</button><button data-bcol="${n}" title="Collapse / expand">${i.collapsed?'▸':'▾'}</button>
-            <button data-bmv="${n}:-1" title="Move block up">↑</button><button data-bmv="${n}:1" title="Move block down">↓</button><button class="danger" data-bdel="${n}" title="Remove this block header. Its exercises join the block above (Undo available)">✕</button></span></div>
+          <span class="bctl noprint">
+            <button data-btpl="${n}" title="Save this block as a reusable template" aria-label="Save block as template">\u2606</button><button data-bnotes="${n}" title="Block notes" aria-label="Block notes">\u270e${i.notes?'<i class="ndot"></i>':''}</button><button data-bcol="${n}" title="Collapse / expand" aria-label="Collapse or expand">${i.collapsed?'\u25b8':'\u25be'}</button>
+            <button data-bmv="${n}:-1" title="Move block up" aria-label="Move block up">\u2191</button><button data-bmv="${n}:1" title="Move block down" aria-label="Move block down">\u2193</button><button class="danger" data-bdel="${n}" title="Remove this block header. Its exercises join the block above (Undo available)" aria-label="Remove block header">\u2715</button><input type="color" class="bcol" value="${col}" data-bf="${n}:color" title="Block colour" aria-label="Block colour"></span></div>
           ${i.notesOpen?`<textarea class="bn" data-bf="${n}:notes" placeholder="Block notes: format, cues, e.g. log your top set">${esc(i.notes)}</textarea>`
-            :(noteLine?`<div class="npre" data-bnotes="${n}" title="Click to edit notes">${esc(noteLine)}</div>`:'')}</td></tr>`;
+            :(noteLine?`<div class="npre" data-bnotes="${n}" title="Click to edit notes">${esc(noteLine)}</div>`:'')}</td></tr>${inBlk.length&&!i.collapsed?'<tr class="colhd noprint"><td><span></span><span></span><span class="l">Exercise</span><span>Sets</span><span>Reps</span><span>Rest</span><span class="l">Note</span><span></span></td></tr>':''}`;
       }
       const e=exById(i.ex);if(!e)return '';
       nEx++;totalSets+=(+i.sets||0);pos++;const autoG=bLet?bLet+pos:'';
