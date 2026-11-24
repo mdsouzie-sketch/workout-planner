@@ -499,6 +499,37 @@ tr.blk:hover .bcol,tr.blk.act .bcol,.bctl .bcol:focus{opacity:1}
 @container (max-width:640px){
   #wzone tr.xr{grid-template-columns:40px repeat(3,minmax(0,1fr)) auto;grid-template-areas:"gc nm nm nm act" "gc sets reps rest act" "gc note note note note"}
 }
+/* ===== look pass 2 ===== */
+#wzone td input:not([type=checkbox]):not(.bt):not(.bm):not(.bff):not(.bcol){background:color-mix(in srgb,var(--ink) 5%,transparent);border-radius:6px}
+#wzone td input:not([type=checkbox]):hover{background:color-mix(in srgb,var(--ink) 9%,transparent)}
+#wzone td input:not([type=checkbox]):focus{background:var(--card);border-color:var(--gold)}
+.hint{position:relative;display:inline-block}
+.hint summary{list-style:none;cursor:pointer;width:22px;height:22px;border-radius:50%;border:1px solid var(--rule);display:inline-flex;align-items:center;justify-content:center;font-size:12px;color:var(--muted)}
+.hint summary::-webkit-details-marker{display:none}
+.hint summary:hover,.hint[open] summary{color:var(--ink);border-color:var(--ink)}
+.hintpop{position:absolute;z-index:30;left:0;top:30px;width:min(380px,80vw);background:var(--card);border:1px solid var(--rule);border-radius:10px;padding:12px 14px;box-shadow:0 10px 30px rgba(0,0,0,.4);font-size:13px;line-height:1.5}
+.hintpop p{margin:6px 0 0;color:var(--muted)}
+.emptycard{border:1.5px dashed var(--rule);border-radius:14px;padding:36px 20px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:6px}
+.emptycard .eic{width:44px;height:44px;border-radius:50%;border:1px solid var(--rule);display:flex;align-items:center;justify-content:center;font-size:22px;color:var(--gold);margin-bottom:4px}
+.emptycard p{margin:0;color:var(--muted);font-size:13px}
+.emptycard .ebtn{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;justify-content:center}
+.card .chip.more{background:none;border:1px dashed var(--rule);color:var(--muted)}
+.sdot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:7px;background:#999;vertical-align:1px}
+.sdot.ok{background:#4caf7d}.sdot.warn{background:#d9a21f;animation:pulse 1.2s infinite}.sdot.bad{background:#d0443a}
+@keyframes pulse{50%{opacity:.35}}
+#btnSync{font-size:12px;color:var(--muted)}
+@media (max-width:700px){#btnSync span{display:none}#btnSync .sdot{margin:0}.gear+*{}}
+.prnote{margin-top:8px;text-align:center}.prnote.warn{color:#d9a21f}
+.wax text{fill:var(--muted);font-size:11px;letter-spacing:.14em;text-transform:uppercase}
+.wax line{stroke:var(--rule);stroke-width:1}
+#webG line.at{stroke-opacity:.16;transition:stroke-opacity .15s}#webG line.at.hl{stroke-opacity:.9;stroke-width:1.8}
+.wn.cur text{font-size:15px;font-weight:600}
+@media (prefers-reduced-motion:no-preference){
+  button,.chip,.card,.sbrow,#wzone tr.xr,summary{transition:background .15s,border-color .15s,color .15s,box-shadow .15s,transform .15s}
+  .card:hover{transform:translateY(-1px)}
+  tr.blk td{transition:box-shadow .15s}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 /* ILIAD print */
 .pv{--bg:#fff;--ink:#141414;--mut:#6f6b63;--rule:#d9d5cc;--soft:#f4f1ea;font-family:"Helvetica Neue",Helvetica,Arial,sans-serif}
 .pv.dark{--bg:#0C0C0C;--ink:#F1EFEA;--mut:#8B8983;--rule:rgba(255,255,255,.14);--soft:#151514}
@@ -519,9 +550,9 @@ tr.blk:hover .bcol,tr.blk.act .bcol,.bctl .bcol:focus{opacity:1}
   <h1>Exercise Library</h1>
   <nav id="nav"></nav>
   <span class="sp"></span>
-  <button id="btnSync" title="Cloud sync status. Click to sync now.">☁ …</button>
+  <button id="btnSync" title="Cloud sync status. Click to sync now."><i class="sdot warn"></i><span>connecting…</span></button>
   <button id="btnTheme" title="Switch light / dark / auto"></button>
-  <details class="menu" id="dataMenu"><summary>Data ▾</summary><div class="pop">
+  <details class="menu" id="dataMenu"><summary title="Import, export and library tools"><span class="gear">⚙</span> Data</summary><div class="pop">
     <button id="btnExport">Export JSON</button>
     <button id="btnImport">Import JSON</button>
     <hr>
@@ -654,7 +685,7 @@ const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZ
 const SB_TABLES={traits:'wp_traits',exercises:'wp_exercises',workouts:'wp_workouts'};
 let cloudReady=false,cloudBusy=false,cloudAgain=false,cloudTimer=null;
 const cloudSnap={traits:new Map(),exercises:new Map(),workouts:new Map()};
-function setSync(txt){const b=document.querySelector('#btnSync');if(b)b.textContent='\u2601 '+txt;}
+function setSync(txt){const b=document.querySelector('#btnSync');if(!b)return;const k=/^synced/.test(txt)?'ok':/offline|error/.test(txt)?'bad':'warn';b.innerHTML='<i class="sdot '+k+'"></i><span>'+esc(txt)+'</span>';b.title='Cloud sync: '+txt+'. Click to sync now.';}
 async function sbFetch(path,opt={}){
   const r=await fetch(SB_URL+'/rest/v1/'+path,{...opt,headers:{apikey:SB_KEY,Authorization:'Bearer '+SB_KEY,'x-wp-key':cloudKey(),'Content-Type':'application/json',...(opt.headers||{})}});
   if(!r.ok)throw new Error(r.status+' '+(await r.text()).slice(0,200));
@@ -708,7 +739,7 @@ async function cloudPush(){
       }
       try{localStorage.setItem('wp_cloud_hash',hashState());}catch(x){}
     }while(cloudAgain);
-    setSync('synced');
+    setSync('synced '+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}));
   }catch(err){setSync('error (click to retry)');console.warn('cloud save failed',err);}
   cloudBusy=false;
 }
@@ -1380,8 +1411,8 @@ function viewLibrary(){
   const card=e=>{const g=gs.find(x=>x.id===M.primary(e));const up=progOf(e.id).length,dn=regOf(e.id).length;
     const det=[e.move,e.pattern&&e.pattern!==e.move&&e.pattern!==e.phase?e.pattern:'',e.equipment].filter(Boolean).map(esc).join(' · ');
     return `<div class="card" data-open="${e.id}" style="--c:${g?.color||'var(--accent)'}"><b>${esc(e.name)}</b>
-    <div>${e.phase?`<span class="chip" style="--c:#888">Warm-up · ${esc(e.phase)}</span>`:''}${chips(e)}</div><div class="meta">${det}</div>
-    <div class="meta"><span class="lvl">${lvl(e.level)}</span> &nbsp;↓${dn} regress · ↑${up} progress${(e.variations||[]).length?` · ${(e.variations||[]).length} variation${(e.variations||[]).length>1?'s':''}`:''}</div></div>`;};
+    <div>${e.phase?`<span class="chip" style="--c:#888">Warm-up · ${esc(e.phase)}</span>`:''}${e.traits.slice(0,2).map(id=>chip(trById(id))).join('')}${e.traits.length>2?`<span class="chip more" style="--c:#888">+${e.traits.length-2}</span>`:''}</div><div class="meta">${det}</div>
+    <div class="meta"><span class="lvl">${lvl(e.level)}</span>${(dn||up)?` &nbsp;${dn?'↓'+dn:''}${dn&&up?' · ':''}${up?'↑'+up:''}`:''}${(e.variations||[]).length?` &nbsp;· ${(e.variations||[]).length} var.`:''}</div></div>`;};
   let body;
   if(!list.length)body='<div class="empty">No exercises match.</div>';
   else if(ui.group&&sel==='all'&&!q){
@@ -1647,8 +1678,8 @@ function viewWorkouts(){
     main=`<div class="bar noprint" style="margin-bottom:10px">${sel}<input id="wname" class="wt" value="${esc(w.name)}">
       <button data-wnew>+ New</button><button data-wprint>Print</button><details class="wmore"><summary title="More">⋯</summary><div class="wpop"><button data-wdup>Duplicate workout</button><button class="danger" data-wdel>Delete workout</button></div></details></div>
       <div class="bar noprint" style="margin-bottom:8px"><button data-bnew>+ Block</button><button data-bgroup ${nsel?'':'disabled'}>Group ${nsel||''} into a block</button>
-        <span class="meta">Tick exercises to group them. Each exercise’s Grp label follows its block (A1, A2 in the first block, B1, B2 in the second). Drag any exercise to reorder; drop on a block header to join it, or on the strip at the bottom to start a new block. Click a block to make it the target for +.</span></div>
-      <div id="wzone" class="wzone">${items.length?`<table><tbody>${rows}<tr class="newzone noprint"><td colspan="9">Drop an exercise here to start a new block</td></tr></tbody></table>`:'<div class="empty">Empty. Drag exercises here from the database, or press + beside one.</div>'}</div>
+        <span class="meta">Tick exercises to group them · drag to reorder · click a block to add into it</span><details class="hint"><summary title="How the builder works">?</summary><div class="hintpop"><b>How it works</b><p>Tick exercises, then <i>Group into a block</i>. Labels follow the block automatically (A1, A2 in the first block, B1, B2 in the second); click a label to change it.</p><p>Drag any exercise to reorder it. Drop it on a block header to join that block, or on the dashed strip at the bottom to start a new one.</p><p>Click a block to make it the target for <b>+</b> in the sidebar. Ctrl+Z undoes the last change.</p></div></details></div>
+      <div id="wzone" class="wzone">${items.length?`<table><tbody>${rows}<tr class="newzone noprint"><td colspan="9">Drop an exercise here to start a new block</td></tr></tbody></table>`:`<div class="emptycard"><div class="eic">＋</div><b>This workout is empty</b><p>Add exercises from the sidebar, start a block, or reuse one you saved.</p><div class="ebtn"><button class="pri" data-bnew>+ Add a block</button><button data-sbtab="tpl">Start from a template${(S.templates||[]).length?' ('+S.templates.length+')':''}</button></div></div>`}</div>
       <div class="meta" style="margin:10px 0"><b>${nEx}</b> exercises · <b>${totalSets}</b> sets · <b>${bn}</b> blocks${totalMin?` · block time <b>${Math.round(totalMin*10)/10} min</b>`:''}</div>
       <div class="meta" style="margin:10px 0">Trait coverage (primary): ${Object.keys(cov).map(k=>chip(trById(k)).replace('</span>',` ×${cov[k]}</span>`)).join('')||'—'}</div>
       <div class="meta" style="margin-bottom:10px">Movement coverage (training only): ${Object.keys(mcov).map(k=>`<span class="chip" style="--c:${MOVES.find(m=>m.id===k)?.color||'#888'}">${esc(k)} ×${mcov[k]}</span>`).join('')||'—'}</div>`;
@@ -1667,6 +1698,8 @@ function fmtLabel(b){const f=b.fmt||'';
   if(f==='every')return 'Every '+(b.interval||'?')+(b.rounds?' \u00d7 '+b.rounds:'');
   return '';}
 function paperMM(o){const a=o.paper==='a4'?[210,297]:[215.9,279.4];return o.orient==='landscape'?[a[1],a[0]]:a;}
+let _fit={z:1,pages:1};
+function fitNote(o){const [W,H]=paperMM(o);const pg=_fit.pages;let t=(o.paper==='a4'?'A4':'Letter')+' '+o.orient+' \u00b7 '+pg+' page'+(pg>1?'s':'')+' \u00b7 scaled to '+Math.round(_fit.z*100)+'%';if(_fit.z<.6)t+=' \u2014 very small; try 2 columns or landscape';return t;}
 function mxP(o){return o.cols===2?1:1.3;}
 function fitZoom(w,o){
   const [W,H]=paperMM(o),mm=96/25.4,avail=(H-22)*mm*.93;
@@ -1675,12 +1708,12 @@ function fitZoom(w,o){
   const z=host.querySelector('.pv-z');
   const pages=k=>{z.style.zoom=k;return Math.max(1,Math.ceil(z.getBoundingClientRect().height/avail-.001));};
   if(o.orient==='portrait'){let f=0;for(let k=mxP(o);k>=.4;k-=.02){if(pages(k)<=1){f=k;break;}}
-    if(f){host.remove();return Math.round(f*100)/100;}}
+    if(f){_fit={z:Math.round(f*100)/100,pages:1};host.remove();return _fit.z;}}
   const n1=pages(1);let target=n1;
   if(n1>1){const h1=z.getBoundingClientRect().height;const last=(h1/avail)-(n1-1);if(last<.35&&pages(.8)<n1)target=n1-1;}
   const mx=o.cols===2?(o.orient==='landscape'?1.12:1):1.3;let best=target<n1?.8:1;
   for(let k=best;k<=mx+.0001;k+=.02){if(pages(k)<=target)best=k;else break;}
-  host.remove();return Math.round(best*100)/100;
+  _fit={z:Math.round(best*100)/100,pages:pages(best)};host.remove();return _fit.z;
 }
 function printHtml(w,o){
   const zf=o._z!==undefined?o._z:fitZoom(w,o);
@@ -1704,7 +1737,7 @@ function printHtml(w,o){
     <div class="pv-blocks">${body}</div></div></td></tr></tbody><tfoot><tr><td><div class="pv-sp"></div></td></tr></tfoot></table></div>`;
 }
 function showPrintDialog(){
-  const w=curW();if(!w)return;const o=ui.pr;
+  const w=curW();if(!w)return;const o=ui.pr;const ph=printHtml(w,o);const fn=fitNote(o);
   const seg=(k,opts)=>`<div class="prseg">${opts.map(([v,l])=>`<button data-pro="${k}:${v}" class="${String(o[k])===String(v)?'on':''}">${l}</button>`).join('')}</div>`;
   const tog=(k,l,dis)=>`<button class="prtog ${o[k]&&!dis?'on':''}" data-pro="${k}:t" ${dis?'disabled':''}><span>${l}</span><i></i></button>`;
   $('#modalHost').innerHTML=`<div class="ov" data-ovclose><div class="modal prmodal"><h2>Print workout</h2>
@@ -1714,7 +1747,7 @@ function showPrintDialog(){
       <div class="sec-h">Page</div>${seg('orient',[['portrait','Portrait'],['landscape','Landscape']])}${seg('paper',[['letter','Letter'],['a4','A4']])}
       <div class="sec-h">Show</div>${tog('tags','Trait tags')}${tog('notes','Notes')}${tog('log','Blank log column'+(o.cols===2?' (1 column only)':''),o.cols===2)}
       <p class="meta" style="margin-top:12px">In the browser's print window turn on Background graphics so colours and the dark theme print.</p>
-    </div><div class="prprev"><div class="pvprev ${o.orient==='landscape'?'land':''}" style="width:${paperMM(o)[0]}mm">${printHtml(w,o)}</div></div></div>
+    </div><div><div class="prprev"><div class="pvprev ${o.orient==='landscape'?'land':''}" style="width:${paperMM(o)[0]}mm">${ph}</div></div><div class="meta prnote${_fit.z<.6?' warn':''}">${esc(fn)}</div></div></div>
     <div class="foot"><button data-mclose>Cancel</button><button class="pri" data-printgo>Print</button></div></div></div>`;
 }
 function doPrint(){
@@ -1843,7 +1876,7 @@ function webBuild(){
   const W=ui.web,c=exById(W.c),nodes=[],edges=[],idx=new Map();
   const addN=o=>{idx.set(o.id,o);nodes.push(o);return o;};
   const mk=(e,kind,px)=>{const nm=e.name.length>27?e.name.slice(0,26)+'\u2026':e.name;
-    return addN({id:e.id,kind,name:nm,full:e.name,w:Math.min(200,Math.max(90,nm.length*7.3+26)),h:42,lv:e.level,col:(trById(e.traits[0])||{}).color||'#888',px,x:0,y:0});};
+    return addN({id:e.id,kind,name:nm,full:e.name,w:Math.min(200,Math.max(90,nm.length*7.3+26))*(kind==='cur'?1.2:1),h:kind==='cur'?52:42,lv:e.level,col:(trById(e.traits[0])||{}).color||'#888',px,x:0,y:0});};
   const hop=new Map([[c.id,0]]),pos=new Map([[c.id,0]]);let front=[c.id];
   for(let d=1;d<=W.depth&&front.length;d++){const nx=[];
     for(const id of front){
@@ -1895,12 +1928,15 @@ function webDraw(){
   const g=ui.web.g,G=$('#webG');if(!g||!G)return;
   const ed=g.edges.map(e=>{const a=g.idx.get(e.a),b=g.idx.get(e.b),dx=b.x-a.x,dy=b.y-a.y;
     const p=webClip(a,dx,dy),q=webClip(b,-dx,-dy);
-    return e.t==='prog'?`<line x1="${p.x.toFixed(1)}" y1="${p.y.toFixed(1)}" x2="${q.x.toFixed(1)}" y2="${q.y.toFixed(1)}" stroke="#C9A66B" stroke-width="2" marker-end="url(#warr)"/>`
-      :`<line x1="${p.x.toFixed(1)}" y1="${p.y.toFixed(1)}" x2="${q.x.toFixed(1)}" y2="${q.y.toFixed(1)}" stroke="${e.col}" stroke-opacity=".5" stroke-width="1.2" stroke-dasharray="4 4"/>`;}).join('');
+    return e.t==='prog'?`<line data-ea="${e.a}" data-eb="${e.b}" x1="${p.x.toFixed(1)}" y1="${p.y.toFixed(1)}" x2="${q.x.toFixed(1)}" y2="${q.y.toFixed(1)}" stroke="#C9A66B" stroke-width="2" marker-end="url(#warr)"/>`
+      :`<line class="at" data-ea="${e.a}" data-eb="${e.b}" x1="${p.x.toFixed(1)}" y1="${p.y.toFixed(1)}" x2="${q.x.toFixed(1)}" y2="${q.y.toFixed(1)}" stroke="${e.col}" stroke-width="1.2" stroke-dasharray="4 4"/>`;}).join('');
   const nd=g.nodes.map(n=>{
     if(n.kind==='hub')return `<g class="wh" style="--c:${n.col}" transform="translate(${n.x.toFixed(1)},${n.y.toFixed(1)})"><rect x="${-n.w/2}" y="${-n.h/2}" width="${n.w}" height="${n.h}" rx="13"/><text text-anchor="middle" dy="4">${esc(n.name)}</text></g>`;
     return `<g class="wn ${n.kind}" data-wn="${n.id}" style="--c:${n.col}" transform="translate(${n.x.toFixed(1)},${n.y.toFixed(1)})"><title>${esc(n.full)}</title><rect x="${-n.w/2}" y="${-n.h/2}" width="${n.w}" height="${n.h}" rx="3"/><text text-anchor="middle" dy="-3">${esc(n.name)}</text><text class="s" text-anchor="middle" dy="12">${lvl(n.lv)}</text></g>`;}).join('');
-  G.innerHTML=ed+nd;webXf();
+  const ch=g.nodes.filter(n=>n.px!=null);let ax='';
+  if(ch.length>1){const x0=Math.min(...ch.map(n=>n.x-n.w/2)),x1=Math.max(...ch.map(n=>n.x+n.w/2)),y0=Math.min(...g.nodes.map(n=>n.y-n.h/2))-34;
+    ax=`<g class="wax"><text x="${x0}" y="${y0}">\u2190 Easier</text><text x="${x1}" y="${y0}" text-anchor="end">Harder \u2192</text><line x1="${x0}" x2="${x1}" y1="${y0+8}" y2="${y0+8}"/></g>`;}
+  G.innerHTML=ax+ed+nd;webXf();
 }
 function webMount(){
   const W=ui.web,key=[W.c,W.depth,W.rel,W.k,S.exercises.length].join('|');
@@ -1965,6 +2001,8 @@ document.addEventListener('pointermove',ev=>{if(!WD)return;const W=ui.web,dx=ev.
   if(Math.abs(dx)+Math.abs(dy)>4)WD.moved=true;if(!WD.moved)return;
   if(WD.node){WD.node.x=WD.nx+dx/W.sc;WD.node.y=WD.ny+dy/W.sc;webDraw();}else{W.tx=WD.tx+dx;W.ty=WD.ty+dy;webXf();}});
 document.addEventListener('pointerup',()=>{if(!WD)return;const d=WD;WD=null;if(!d.moved&&d.id){ui.web.c=d.id;render();}});
+document.addEventListener('mouseover',ev=>{const n=ev.target.closest&&ev.target.closest('#webSvg [data-wn]');if(!n)return;document.querySelectorAll('#webG line[data-ea="'+n.dataset.wn+'"],#webG line[data-eb="'+n.dataset.wn+'"]').forEach(l=>l.classList.add('hl'));});
+document.addEventListener('mouseout',()=>{document.querySelectorAll('#webG line.hl').forEach(l=>l.classList.remove('hl'));});
 document.addEventListener('dblclick',ev=>{const n=ev.target.closest&&ev.target.closest('#webSvg [data-wn]');if(n)openEx(n.dataset.wn);});
 document.addEventListener('wheel',ev=>{const svg=ev.target.closest&&ev.target.closest('#webSvg');if(!svg)return;ev.preventDefault();
   const r=svg.getBoundingClientRect();webZoomAt(ev.deltaY<0?1.12:.89,ev.clientX-r.left,ev.clientY-r.top);},{passive:false});
