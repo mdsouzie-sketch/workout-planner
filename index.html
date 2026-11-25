@@ -2,7 +2,11 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0C0C0C">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Exercise Library">
+<link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" href="icon-192.png">
 <title>Exercise Library & Programmer</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700&display=swap" rel="stylesheet">
@@ -591,6 +595,49 @@ tr.blk:hover .bcol,tr.blk.act .bcol,.bctl .bcol:focus{opacity:1}
 .btw .bsum{position:absolute;left:0;top:100%;margin-top:-5px!important;padding:0 8px}
 #wzone tr.blk td{padding-top:12px!important;padding-bottom:10px!important}
 .bctl{padding-right:8px}
+/* ===== touch / iPad ===== */
+body{padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right)}
+header{padding-top:max(10px,env(safe-area-inset-top))}
+#toast{bottom:calc(20px + env(safe-area-inset-bottom))}
+.sbfab{bottom:calc(16px + env(safe-area-inset-bottom))!important}
+.drawer{padding-bottom:calc(18px + env(safe-area-inset-bottom))}
+@media (max-width:1100px){@supports (height:1dvh){.exsb{max-height:78dvh!important}}.exsb{padding-bottom:calc(16px + env(safe-area-inset-bottom))!important}}
+@media (hover:none){.last{display:inline-block}}
+html.touch{-webkit-tap-highlight-color:transparent;-webkit-text-size-adjust:100%}
+html.touch button,html.touch select,html.touch input,html.touch summary,html.touch .chip.tog,html.touch .wkitem b,html.touch .sbgh{touch-action:manipulation}
+html.touch input,html.touch select,html.touch textarea{font-size:16px!important}
+html.touch button,html.touch select,html.touch summary{min-height:40px}
+html.touch .wmore summary,html.touch .hint summary{min-height:40px;min-width:40px;display:inline-flex;align-items:center;justify-content:center}
+html.touch .bctl button,html.touch #wzone tr.xr td.c-act button{min-width:40px;min-height:40px;padding:6px 8px;opacity:.9}
+html.touch .grab,html.touch .sbgrip{opacity:.85;font-size:26px;padding:8px 10px;touch-action:none}
+html.touch input[type=checkbox]{width:24px;height:24px}
+html.touch .sbrow{min-height:54px}html.touch .sbrow button{width:44px;height:44px}
+html.touch .chip.tog{padding:7px 13px;font-size:13px}
+html.touch .qa{min-height:46px}
+html.touch .wkctl button{min-width:40px;min-height:36px}
+html.touch #wzone tr.xr,html.touch .sbrow,html.touch .dghost{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
+html.touch #wzone input{-webkit-user-select:text;user-select:text}
+html.touch #wzone tr.xr{grid-template-columns:78px 22px minmax(0,1.3fr) 60px 74px 88px minmax(0,1fr) 214px}
+html.touch #wzone tr.colhd td{grid-template-columns:78px 22px minmax(0,1.3fr) 60px 74px 88px minmax(0,1fr) 214px}
+@container (max-width:819px){html.touch #wzone tr.xr{grid-template-columns:78px 22px minmax(0,1fr) 68px 84px 100px auto}}
+@container (max-width:640px){html.touch #wzone tr.xr{grid-template-columns:64px repeat(3,minmax(0,1fr)) auto}}
+html.touch tr.blk td{padding-top:14px!important;padding-bottom:12px!important}
+html.touch .bm,html.touch .bff,html.touch select.bf{min-height:40px}
+html.touch .dghost{font-size:16px;padding:10px 16px}
+html.touch .qares div{padding:12px 12px}
+html.touch .drawer{width:min(440px,100vw)}
+html.touch .wkadd{min-height:44px}
+@container (max-width:900px){
+  html.touch .bh1{flex-wrap:wrap!important;row-gap:24px}
+  html.touch .btw{flex:1 1 40%!important;min-width:140px}
+  html.touch .bctl{order:2;margin-left:auto}
+  html.touch .bopts{order:3;flex:1 1 100%!important;flex-wrap:wrap}
+}
+html.touch #wzone tr.xr.jx::before{left:107px}
+html.touch #wzone tr.xr.jx::after{left:104px}
+@container (max-width:640px){html.touch #wzone tr.xr.jx::before{left:0;display:none}html.touch #wzone tr.xr.jx::after{display:none}}
+html.touch .sbmode button{min-width:46px;padding:0 10px}
+@container (max-width:900px){html.touch .bopts{padding-left:48px}}
 /* ILIAD print */
 .pv{--bg:#fff;--ink:#141414;--mut:#6f6b63;--rule:#d9d5cc;--soft:#f4f1ea;font-family:"Helvetica Neue",Helvetica,Arial,sans-serif}
 .pv.dark{--bg:#0C0C0C;--ink:#F1EFEA;--mut:#8B8983;--rule:rgba(255,255,255,.14);--soft:#151514}
@@ -1747,7 +1794,7 @@ function viewWorkouts(){
       const jj=jn.get(n),lh=lastOther(i.ex,w);
       return `<tr class="xr${jj?' jx':''}${jj&&jj.p?' jp':''}${jj&&jj.nx?' jnx':''}" data-ri="${n}" data-dragrow="${n}" data-k="${i.k}" style="--g:${curCol}"><td class="gc"><span class="grab noprint" data-dragrow="${n}" title="Drag to reorder (drag several ticked ones together)">\u2807</span><input type="checkbox" class="noprint" data-sel="${i.k}" aria-label="Select ${nmA}" ${ui.sel.has(i.k)?'checked':''}></td>
       <td class="c-num">${num}</td><td class="nm" data-ract="${n}">${lab?`<span class="gb" data-grpedit="${n}" title="Click to change the group label (A1, B2\u2026)" style="--gc:${curCol}">${esc(lab)}</span>`:''}<b data-info="${e.id}:${n}" title="Open exercise details">${nmA}</b><div>${chips(e)}</div><span class="lvl">${lvl(e.level)}</span>${lh?`<span class="last" title="Last used in ${esc(lh.wn)}">last ${esc(lh.sets)}×${esc(lh.reps)}${lh.rest?' · '+esc(lh.rest):''}</span>`:''}</td>
-      <td class="c-sets" data-l="Sets"><input type="number" min="1" value="${i.sets}" aria-label="Sets for ${nmA}" data-wf="${n}:sets"></td><td class="c-reps" data-l="Reps"><input value="${esc(i.reps)}" aria-label="Reps for ${nmA}" data-wf="${n}:reps"></td>
+      <td class="c-sets" data-l="Sets"><input type="number" min="1" inputmode="numeric" enterkeyhint="next" value="${i.sets}" aria-label="Sets for ${nmA}" data-wf="${n}:sets"></td><td class="c-reps" data-l="Reps"><input value="${esc(i.reps)}" aria-label="Reps for ${nmA}" data-wf="${n}:reps"></td>
       <td class="c-rest" data-l="Rest"><input value="${esc(i.rest)}" aria-label="Rest for ${nmA}" data-wf="${n}:rest"></td><td class="c-note"><input value="${esc(i.note)}" placeholder="Add a note" aria-label="Note for ${nmA}" data-wf="${n}:note"></td>
       <td class="noprint c-act"><button data-dup="${n}" title="Duplicate this row" aria-label="Duplicate row">\u29c9</button><button data-webc="${e.id}" title="Show this exercise in the web">\u2316</button><button data-swap="${n}:dn" ${dn.length?'':'disabled'} title="Swap for an easier option (regression)">\u2193</button>
        <button data-swap="${n}:up" ${up.length?'':'disabled'} title="Swap for a harder option (progression)">\u2191</button>
@@ -1757,7 +1804,7 @@ function viewWorkouts(){
     main=`<div class="bar noprint" style="margin-bottom:10px">${sel}<input id="wname" class="wt" value="${esc(w.name)}">
       <button data-wnew>+ New</button><button data-wprint>Print</button><details class="wmore"><summary title="More">⋯</summary><div class="wpop"><button data-wdup>Duplicate workout</button><button data-copyfrom>Insert blocks from another workout…</button><button data-keys>Keyboard shortcuts</button><button class="danger" data-wdel>Delete workout</button></div></details></div>
       <div class="bar noprint" style="margin-bottom:8px"><button data-bnew>+ Block</button><button data-bgroup ${nsel?'':'disabled'}>Group ${nsel||''} into a block</button>
-        <span class="meta">Tick exercises to group them · drag to reorder · click a block to add into it</span><details class="hint"><summary title="How the builder works">?</summary><div class="hintpop"><b>How it works</b><p>Tick exercises, then <i>Group into a block</i>. Labels follow the block automatically (A1, A2 in the first block, B1, B2 in the second); click a label to change it.</p><p>Drag any exercise to reorder it. Drop it on a block header to join that block, or on the dashed strip at the bottom to start a new one.</p><p>Click a block to make it the target for <b>+</b> in the sidebar. Ctrl+Z undoes the last change.</p></div></details></div>
+        <span class="meta">Tick exercises to group them · drag to reorder · click a block to add into it</span><details class="hint"><summary title="How the builder works">?</summary><div class="hintpop"><b>How it works</b><p>Tick exercises, then <i>Group into a block</i>. Labels follow the block automatically (A1, A2 in the first block, B1, B2 in the second); click a label to change it.</p><p>Drag any exercise to reorder it. Drop it on a block header to join that block, or on the dashed strip at the bottom to start a new one.</p><p>Click a block to make it the target for <b>+</b> in the sidebar. Ctrl+Z undoes the last change.</p><p><b>Icons:</b> ☆ save block as template · ✎ notes · ▾ collapse · ⧉ duplicate · ↑ ↓ move or swap · ✕ remove. On iPad, drag from the ⠇ handle to reorder.</p></div></details></div>
       ${nsel?`<div class="bar noprint bulk"><b>${nsel} selected</b><label>Sets<input id="bk_sets" type="number" min="1"></label><label>Reps<input id="bk_reps"></label><label>Rest<input id="bk_rest"></label><button data-bulkapply>Apply</button><button data-bulkp="reps">+1 rep</button><button data-bulkp="sets">+1 set</button><button data-bulkdup>Duplicate</button><button class="danger" data-bulkdel>Remove</button><button data-bulkclear>Clear</button></div>`:''}
       <div id="wzone" class="wzone">${items.length?`<table><tbody>${rowsHtml}<tr class="newzone noprint"><td colspan="9">Drop an exercise here to start a new block</td></tr></tbody></table>`:`<div class="emptycard"><div class="eic">＋</div><b>This workout is empty</b><p>Add exercises from the sidebar, start a block, or reuse one you saved.</p><div class="ebtn"><button class="pri" data-bnew>+ Add a block</button><button data-sbtab="tpl">Start from a template${(S.templates||[]).length?' ('+S.templates.length+')':''}</button></div></div>`}</div>
       <div class="meta" style="margin:10px 0"><b>${nEx}</b> exercises · <b>${totalSets}</b> sets · <b>${bn}</b> blocks${totalMin?` · block time <b>${Math.round(totalMin*10)/10} min</b>`:''}</div>
@@ -1827,7 +1874,7 @@ function showPrintDialog(){
       <div class="sec-h">Layout</div>${seg('cols',[[1,'1 column'],[2,'2 columns']])}
       <div class="sec-h">Page</div>${seg('orient',[['portrait','Portrait'],['landscape','Landscape']])}${seg('paper',[['letter','Letter'],['a4','A4']])}
       <div class="sec-h">Show</div>${tog('tags','Trait tags')}${tog('notes','Notes')}${tog('log','Set boxes to log'+(o.cols===2?' (1 column only)':''),o.cols===2||o.mode==='coach')}
-      <p class="meta" style="margin-top:12px">In the browser's print window turn on Background graphics so colours and the dark theme print.</p>
+      <p class="meta" style="margin-top:12px">In the browser's print window turn on Background graphics so colours and the dark theme print.${document.documentElement.classList.contains('touch')?' On iPad: tap Print, then pinch outward on the preview to open it as a PDF, and use Share to save or send it.':''}</p>
     </div><div><div class="prprev"><div class="pvprev ${o.orient==='landscape'?'land':''}" style="width:${paperMM(o)[0]}mm">${ph}</div></div><div class="meta prnote${_fit.z<.6?' warn':''}">${esc(fn)}</div></div></div>
     <div class="foot"><button data-mclose>Cancel</button><button class="pri" data-printgo>Print</button></div></div></div>`;
 }
@@ -2294,6 +2341,29 @@ function wkAdd(di,val){
   if(val==='__new'){ui.wid=wid;ui.tab='workouts';}
   render();
 }
+
+/* ---------- touch / iPad / offline ---------- */
+(function(){try{if(matchMedia('(pointer:coarse)').matches||(navigator.maxTouchPoints>1&&/Mac|iPad|iPhone/.test(navigator.platform||navigator.userAgent)))document.documentElement.classList.add('touch');}catch(e){}})();
+/* pinch to zoom + two-finger pan in the web */
+const WPT=new Map();let WPINCH=null;
+document.addEventListener('pointerdown',ev=>{const svg=ev.target.closest&&ev.target.closest('#webSvg');if(!svg||ev.pointerType==='mouse')return;
+  WPT.set(ev.pointerId,{x:ev.clientX,y:ev.clientY});
+  if(WPT.size===2){const [a,b]=[...WPT.values()],r=svg.getBoundingClientRect(),W=ui.web;
+    WPINCH={d:Math.hypot(a.x-b.x,a.y-b.y)||1,cx:(a.x+b.x)/2-r.left,cy:(a.y+b.y)/2-r.top,sc:W.sc,tx:W.tx,ty:W.ty};WD=null;}
+});
+document.addEventListener('pointermove',ev=>{if(!WPT.has(ev.pointerId))return;WPT.set(ev.pointerId,{x:ev.clientX,y:ev.clientY});
+  if(!WPINCH||WPT.size<2)return;const svg=$('#webSvg');if(!svg)return;const [a,b]=[...WPT.values()],r=svg.getBoundingClientRect(),W=ui.web;
+  const d=Math.hypot(a.x-b.x,a.y-b.y)||1,cx=(a.x+b.x)/2-r.left,cy=(a.y+b.y)/2-r.top;
+  const ns=Math.max(.15,Math.min(3,WPINCH.sc*d/WPINCH.d)),wx=(WPINCH.cx-WPINCH.tx)/WPINCH.sc,wy=(WPINCH.cy-WPINCH.ty)/WPINCH.sc;
+  W.sc=ns;W.tx=cx-wx*ns;W.ty=cy-wy*ns;webXf();ev.preventDefault();},{passive:false});
+const wpEnd=ev=>{WPT.delete(ev.pointerId);if(WPT.size<2)WPINCH=null;};
+document.addEventListener('pointerup',wpEnd);document.addEventListener('pointercancel',wpEnd);
+/* orientation / split-view changes */
+let _rz=null;window.addEventListener('resize',()=>{clearTimeout(_rz);_rz=setTimeout(()=>{if(ui.tab==='web'&&ui.web.g){webFit();webXf();}},150);});
+/* offline and back online */
+window.addEventListener('offline',()=>setSync('offline'));
+window.addEventListener('online',()=>{setSync('reconnecting\u2026');cloudSyncNow();});
+if('serviceWorker' in navigator&&/^https?:/.test(location.protocol))navigator.serviceWorker.register('sw.js').catch(()=>{});
 
 /* ---------- events ---------- */
 document.addEventListener('click',ev=>{
