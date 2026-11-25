@@ -398,7 +398,7 @@ select,select.bf{color:var(--ink)}
 #wzone table,#wzone tbody{display:block;width:100%;border:0;background:none}
 #wzone tr{display:block}
 #wzone td{display:block;padding:0;border:0}
-#wzone tr.xr{display:grid;grid-template-columns:50px 22px minmax(0,1fr) 64px 80px 96px auto;grid-template-areas:"gc num nm sets reps rest act" "gc num nm note note note act";gap:2px 8px;align-items:center;margin:0 0 8px;padding:8px 8px 8px 0;border-radius:14px;background:var(--card);box-shadow:inset 6px 0 0 var(--g,transparent),0 1px 2px rgba(0,0,0,.2);filter:none}
+#wzone tr.xr{display:grid;grid-template-columns:64px 0px minmax(0,1fr) 64px 80px 96px auto;grid-template-areas:"gc num nm sets reps rest act" "gc num nm note note note act";gap:2px 8px;align-items:center;margin:0 0 8px;padding:8px 8px 8px 0;border-radius:14px;background:var(--card);box-shadow:inset 6px 0 0 var(--g,transparent),0 1px 2px rgba(0,0,0,.2);filter:none}
 #wzone tr.xr:hover{background:color-mix(in srgb,var(--ink) 4%,var(--card))}
 #wzone tr.xr td{background:none!important;border-radius:0!important;border-left:0!important;padding:0!important;min-width:0!important;width:auto!important}
 #wzone tr.xr td.gc{grid-area:gc;padding-left:16px!important;display:flex!important;align-items:center;gap:2px}
@@ -485,18 +485,18 @@ tr.blk:hover .bcol,tr.blk.act .bcol,.bctl .bcol:focus{opacity:1}
 #wzone input.bm{width:92px}#wzone input.bff{width:62px}.bopts{gap:6px}.bopts select.bf{padding:5px 8px}
 @container (max-width:760px){.bh1{flex-wrap:wrap}.btw{flex-basis:60%}.bopts{order:5;flex-basis:100%}}
 /* compact rows: single line with a column strip per block */
-#wzone tr.xr{grid-template-columns:50px 22px minmax(0,1.3fr) 56px 70px 84px minmax(0,1fr) 146px;grid-template-areas:"gc num nm sets reps rest note act";gap:0 8px;margin:0;padding:6px 8px 6px 0;border-radius:0;background:none;box-shadow:inset 3px 0 0 var(--g,transparent);border-bottom:1px solid var(--rule)}
+#wzone tr.xr{grid-template-columns:64px 0px minmax(0,1.3fr) 56px 70px 84px minmax(0,1fr) 146px;grid-template-areas:"gc num nm sets reps rest note act";gap:0 8px;margin:0;padding:6px 8px 6px 0;border-radius:0;background:none;box-shadow:inset 3px 0 0 var(--g,transparent);border-bottom:1px solid var(--rule)}
 #wzone tr.xr:hover{background:color-mix(in srgb,var(--ink) 4%,transparent)}
 #wzone tr.xr td.nm>div{display:inline}
 #wzone tr.xr td.nm b{font-size:14px}
 #wzone tr.xr td.nm>div .chip:nth-child(n+2){display:none}
 #wzone td[data-l]::before{display:none}
 #wzone tr.colhd{display:block}
-#wzone tr.colhd td{display:grid;grid-template-columns:50px 22px minmax(0,1.3fr) 56px 70px 84px minmax(0,1fr) 146px;gap:0 8px;padding:8px 8px 2px 0!important;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-align:center;background:none!important}
+#wzone tr.colhd td{display:grid;grid-template-columns:64px 0px minmax(0,1.3fr) 56px 70px 84px minmax(0,1fr) 146px;gap:0 8px;padding:8px 8px 2px 0!important;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-align:center;background:none!important}
 #wzone tr.colhd td .l{text-align:left}
 #wzone tr.blk{margin-top:18px}
 @container (max-width:819px){
-  #wzone tr.xr{grid-template-columns:50px 22px minmax(0,1fr) 64px 80px 96px auto;grid-template-areas:"gc num nm sets reps rest act" "gc num nm note note note act";gap:2px 8px;padding:8px 8px 8px 0}
+  #wzone tr.xr{grid-template-columns:64px 0px minmax(0,1fr) 64px 80px 96px auto;grid-template-areas:"gc num nm sets reps rest act" "gc num nm note note note act";gap:2px 8px;padding:8px 8px 8px 0}
   #wzone td[data-l]::before{display:block}
   #wzone tr.colhd{display:none}
 }
@@ -549,9 +549,9 @@ tr.blk:hover .bcol,tr.blk.act .bcol,.bctl .bcol:focus{opacity:1}
 .bulk input{width:70px;padding:5px 8px}
 .last{display:inline-block;margin-left:8px;font-size:11px;color:var(--muted);white-space:nowrap}
 #wzone tr.xr.jx{position:relative}
-#wzone tr.xr.jx::before{content:"";position:absolute;left:79px;top:50%;bottom:50%;width:2px;background:var(--g)}
+#wzone tr.xr.jx::before{content:"";position:absolute;left:63px;top:50%;bottom:50%;width:2px;background:var(--g)}
 #wzone tr.xr.jx.jp::before{top:0}#wzone tr.xr.jx.jnx::before{bottom:0}
-#wzone tr.xr.jx::after{content:"";position:absolute;left:76px;top:calc(50% - 3px);width:8px;height:8px;border-radius:50%;background:var(--g)}
+#wzone tr.xr.jx::after{content:"";position:absolute;left:60px;top:calc(50% - 3px);width:8px;height:8px;border-radius:50%;background:var(--g)}
 #wzone tr.xr.jx td.nm{padding-left:12px!important}
 .drawer{position:fixed;top:0;right:0;bottom:0;width:min(400px,100vw);z-index:70;background:var(--card);border-left:1px solid var(--rule);padding:18px;overflow:auto;transform:translateX(105%);transition:transform .2s;box-shadow:-12px 0 40px rgba(0,0,0,.45)}
 .drawer.open{transform:none}
@@ -617,9 +617,9 @@ html.touch .qa{min-height:46px}
 html.touch .wkctl button{min-width:40px;min-height:36px}
 html.touch #wzone tr.xr,html.touch .sbrow,html.touch .dghost{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
 html.touch #wzone input{-webkit-user-select:text;user-select:text}
-html.touch #wzone tr.xr{grid-template-columns:78px 22px minmax(0,1.3fr) 60px 74px 88px minmax(0,1fr) 176px}
-html.touch #wzone tr.colhd td{grid-template-columns:78px 22px minmax(0,1.3fr) 60px 74px 88px minmax(0,1fr) 176px}
-@container (max-width:819px){html.touch #wzone tr.xr{grid-template-columns:78px 22px minmax(0,1fr) 68px 84px 100px auto}}
+html.touch #wzone tr.xr{grid-template-columns:92px 0px minmax(0,1.3fr) 60px 74px 88px minmax(0,1fr) 176px}
+html.touch #wzone tr.colhd td{grid-template-columns:92px 0px minmax(0,1.3fr) 60px 74px 88px minmax(0,1fr) 176px}
+@container (max-width:819px){html.touch #wzone tr.xr{grid-template-columns:92px 0px minmax(0,1fr) 68px 84px 100px auto}}
 @container (max-width:640px){html.touch #wzone tr.xr{grid-template-columns:64px repeat(3,minmax(0,1fr)) auto}}
 html.touch tr.blk td{padding-top:14px!important;padding-bottom:12px!important}
 html.touch .bm,html.touch .bff,html.touch select.bf{min-height:40px}
@@ -633,8 +633,8 @@ html.touch .wkadd{min-height:44px}
   html.touch .bctl{order:2;margin-left:auto}
   html.touch .bopts{order:3;flex:1 1 100%!important;flex-wrap:wrap}
 }
-html.touch #wzone tr.xr.jx::before{left:107px}
-html.touch #wzone tr.xr.jx::after{left:104px}
+html.touch #wzone tr.xr.jx::before{left:91px}
+html.touch #wzone tr.xr.jx::after{left:88px}
 @container (max-width:640px){html.touch #wzone tr.xr.jx::before{left:0;display:none}html.touch #wzone tr.xr.jx::after{display:none}}
 html.touch .sbmode button{min-width:46px;padding:0 10px}
 @container (max-width:800px){html.touch .bopts{padding-left:48px}}
@@ -682,6 +682,14 @@ input[type=checkbox]{accent-color:var(--gold)}
 html.touch #wzone tr.xr td.c-act>*,html.touch .bctl>*{flex:none}
 html.touch .rmore summary,html.touch .bmore summary,html.touch #dataMenu summary,html.touch #wzone tr.xr td.c-act button,html.touch .bctl button{min-width:42px;min-height:42px}
 html.touch #btnSync{min-width:42px}
+/* blend block header with its exercises, no row numbers */
+#wzone tr.blk{margin-bottom:0!important}
+#wzone tr.blk.bopen td{border-radius:14px 14px 0 0!important}
+#wzone tr.colhd td{background:color-mix(in srgb,var(--bc,var(--gold)) 5%,transparent)!important}
+#wzone tr.xr td.c-num{visibility:hidden;overflow:hidden;font-size:0;padding:0!important}
+#wzone tr.xr{box-shadow:inset 6px 0 0 var(--g,transparent)!important;background:color-mix(in srgb,var(--g,transparent) 4%,transparent)}
+#wzone tr.xr:hover{background:color-mix(in srgb,var(--ink) 5%,transparent)}
+#wzone tr.qadd td{background:color-mix(in srgb,var(--g,transparent) 4%,transparent)}
 /* ILIAD print */
 .pv{--bg:#fff;--ink:#141414;--mut:#6f6b63;--rule:#d9d5cc;--soft:#f4f1ea;font-family:"Helvetica Neue",Helvetica,Arial,sans-serif}
 .pv.dark{--bg:#0C0C0C;--ink:#F1EFEA;--mut:#8B8983;--rule:rgba(255,255,255,.14);--soft:#151514}
@@ -1827,7 +1835,7 @@ function viewWorkouts(){
         const auto=!parseMin(i.time)&&blockMin(i)?` placeholder="${Math.round(blockMin(i)*10)/10} min (auto)"`:' placeholder="e.g. 20 min"';
         const noteLine=(i.notes||'').split('\n')[0];
         const pre=(qb>=0&&!qbh)?qaRow(qb):'';qb=n;qbh=!!i.collapsed;
-        return pre+`<tr class="blk${i.k===ui.activeBlock?' act':''}" data-ri="${n}" data-dragblk="${n}" style="--bc:${col}"><td colspan="9" data-bact="${n}"><div class="bh1">
+        return pre+`<tr class="blk${i.k===ui.activeBlock?' act':''}${inBlk.length&&!i.collapsed?' bopen':''}" data-ri="${n}" data-dragblk="${n}" style="--bc:${col}"><td colspan="9" data-bact="${n}"><div class="bh1">
           <span class="grab noprint" data-dragblk="${n}" title="Drag the whole block">\u2807</span><span class="bnum">${bn}</span>
           <div class="btw"><input class="bt" value="${esc(i.title)}" placeholder="Block title" data-bf="${n}:title">
             <span class="meta bsum">${inBlk.length} exercise${inBlk.length===1?'':'s'} \u00b7 ${sets} sets${i.k===ui.activeBlock?'<span class="adtag noprint">Adding here</span>':''}</span></div>
