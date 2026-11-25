@@ -485,14 +485,14 @@ tr.blk:hover .bcol,tr.blk.act .bcol,.bctl .bcol:focus{opacity:1}
 #wzone input.bm{width:92px}#wzone input.bff{width:62px}.bopts{gap:6px}.bopts select.bf{padding:5px 8px}
 @container (max-width:760px){.bh1{flex-wrap:wrap}.btw{flex-basis:60%}.bopts{order:5;flex-basis:100%}}
 /* compact rows: single line with a column strip per block */
-#wzone tr.xr{grid-template-columns:50px 22px minmax(0,1.3fr) 56px 70px 84px minmax(0,1fr) 154px;grid-template-areas:"gc num nm sets reps rest note act";gap:0 8px;margin:0;padding:6px 8px 6px 0;border-radius:0;background:none;box-shadow:inset 3px 0 0 var(--g,transparent);border-bottom:1px solid var(--rule)}
+#wzone tr.xr{grid-template-columns:50px 22px minmax(0,1.3fr) 56px 70px 84px minmax(0,1fr) 146px;grid-template-areas:"gc num nm sets reps rest note act";gap:0 8px;margin:0;padding:6px 8px 6px 0;border-radius:0;background:none;box-shadow:inset 3px 0 0 var(--g,transparent);border-bottom:1px solid var(--rule)}
 #wzone tr.xr:hover{background:color-mix(in srgb,var(--ink) 4%,transparent)}
 #wzone tr.xr td.nm>div{display:inline}
 #wzone tr.xr td.nm b{font-size:14px}
 #wzone tr.xr td.nm>div .chip:nth-child(n+2){display:none}
 #wzone td[data-l]::before{display:none}
 #wzone tr.colhd{display:block}
-#wzone tr.colhd td{display:grid;grid-template-columns:50px 22px minmax(0,1.3fr) 56px 70px 84px minmax(0,1fr) 154px;gap:0 8px;padding:8px 8px 2px 0!important;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-align:center;background:none!important}
+#wzone tr.colhd td{display:grid;grid-template-columns:50px 22px minmax(0,1.3fr) 56px 70px 84px minmax(0,1fr) 146px;gap:0 8px;padding:8px 8px 2px 0!important;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-align:center;background:none!important}
 #wzone tr.colhd td .l{text-align:left}
 #wzone tr.blk{margin-top:18px}
 @container (max-width:819px){
@@ -617,8 +617,8 @@ html.touch .qa{min-height:46px}
 html.touch .wkctl button{min-width:40px;min-height:36px}
 html.touch #wzone tr.xr,html.touch .sbrow,html.touch .dghost{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
 html.touch #wzone input{-webkit-user-select:text;user-select:text}
-html.touch #wzone tr.xr{grid-template-columns:78px 22px minmax(0,1.3fr) 60px 74px 88px minmax(0,1fr) 214px}
-html.touch #wzone tr.colhd td{grid-template-columns:78px 22px minmax(0,1.3fr) 60px 74px 88px minmax(0,1fr) 214px}
+html.touch #wzone tr.xr{grid-template-columns:78px 22px minmax(0,1.3fr) 60px 74px 88px minmax(0,1fr) 176px}
+html.touch #wzone tr.colhd td{grid-template-columns:78px 22px minmax(0,1.3fr) 60px 74px 88px minmax(0,1fr) 176px}
 @container (max-width:819px){html.touch #wzone tr.xr{grid-template-columns:78px 22px minmax(0,1fr) 68px 84px 100px auto}}
 @container (max-width:640px){html.touch #wzone tr.xr{grid-template-columns:64px repeat(3,minmax(0,1fr)) auto}}
 html.touch tr.blk td{padding-top:14px!important;padding-bottom:12px!important}
@@ -627,7 +627,7 @@ html.touch .dghost{font-size:16px;padding:10px 16px}
 html.touch .qares div{padding:12px 12px}
 html.touch .drawer{width:min(440px,100vw)}
 html.touch .wkadd{min-height:44px}
-@container (max-width:900px){
+@container (max-width:800px){
   html.touch .bh1{flex-wrap:wrap!important;row-gap:24px}
   html.touch .btw{flex:1 1 40%!important;min-width:140px}
   html.touch .bctl{order:2;margin-left:auto}
@@ -637,7 +637,48 @@ html.touch #wzone tr.xr.jx::before{left:107px}
 html.touch #wzone tr.xr.jx::after{left:104px}
 @container (max-width:640px){html.touch #wzone tr.xr.jx::before{left:0;display:none}html.touch #wzone tr.xr.jx::after{display:none}}
 html.touch .sbmode button{min-width:46px;padding:0 10px}
-@container (max-width:900px){html.touch .bopts{padding-left:48px}}
+@container (max-width:800px){html.touch .bopts{padding-left:48px}}
+/* ===== phase 1: layout, icons, menus ===== */
+@media (min-width:2200px){main{max-width:1900px}.wb{grid-template-columns:minmax(0,1fr) 520px}.layout{grid-template-columns:300px 1fr}}
+.ic{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:-4px;flex:none}
+.bctl button,#wzone tr.xr td.c-act button,.rmore summary,.bmore summary{display:inline-flex;align-items:center;justify-content:center}
+.rmore,.bmore{position:relative;display:inline-block}
+.rmore summary,.bmore summary{list-style:none;cursor:pointer;padding:5px 8px;border-radius:8px;opacity:.75;color:var(--ink);user-select:none}
+.rmore summary::-webkit-details-marker,.bmore summary::-webkit-details-marker{display:none}
+.rmore summary:hover,.bmore summary:hover,.rmore[open] summary,.bmore[open] summary{opacity:1;background:var(--bg2)}
+.rpop{position:absolute;right:0;top:calc(100% + 4px);z-index:40;min-width:210px;background:var(--card);border:1px solid var(--rule);border-radius:10px;padding:6px;box-shadow:0 12px 32px rgba(0,0,0,.5);display:flex;flex-direction:column;gap:2px}
+.rpop button,.rpop .rcol{display:flex;align-items:center;gap:10px;width:100%;text-align:left;border:0;background:transparent;padding:9px 10px;border-radius:7px;font-size:13px;opacity:1!important;color:var(--ink)}
+.rpop button:hover,.rpop .rcol:hover{background:var(--bg2)}.rpop .danger{color:#d0443a}
+.rpop .rcol .bcol{opacity:1!important;margin-left:auto}
+#wzone tr.xr td.c-act{gap:0}
+#wzone tr.xr td.c-act button,.bctl button{color:var(--ink);opacity:.72}
+#wzone tr.xr td.c-act button:hover,.bctl button:hover{opacity:1;background:var(--bg2)}
+#wzone tr.xr td.c-act button:disabled{opacity:.22}
+#wzone tr.xr td.c-act button.danger{color:#d0443a}
+#wzone tr.blk td{overflow:visible!important}
+/* block notes align with the title, clearer header fields */
+.bh1~.npre,.bh1~.bn{margin-left:58px;width:calc(100% - 58px);border-left:2px solid color-mix(in srgb,var(--bc,var(--gold)) 55%,transparent);border-radius:0 8px 8px 0}
+.npre{padding-left:10px}
+td input.bm,td input.bff,select.bf{border:1px solid color-mix(in srgb,var(--bc,var(--gold)) 38%,var(--rule))!important}
+td input.bm::placeholder,td input.bff::placeholder,#wzone input::placeholder{color:color-mix(in srgb,var(--ink) 52%,transparent);opacity:1}
+/* library filter bar on narrow screens */
+.filtbtn,.attnbar{display:none}
+.attnbar{align-items:center;justify-content:space-between;gap:10px;border:1px solid var(--rule);border-left:2px solid var(--gold);border-radius:8px;padding:10px 14px;margin:0 0 14px}
+.attnbar{display:flex}
+@media (max-width:1000px){
+  .layout{grid-template-columns:1fr!important}
+  .side{display:none;border:1px solid var(--rule);border-radius:12px;padding:12px;margin-bottom:12px}.side.open{display:block}
+  .filtbtn{display:inline-block}
+  .layout .bar{flex-wrap:wrap}
+}
+@media (max-width:900px){#btnSync span{display:none}#btnSync .sdot{margin:0}#dataMenu .dl{display:none}header h1{font-size:12px;letter-spacing:.18em}}
+#tip{position:fixed;z-index:120;background:#111;color:#fff;border:1px solid var(--gold);padding:6px 10px;border-radius:8px;font-size:12px;max-width:260px;pointer-events:none;box-shadow:0 8px 24px rgba(0,0,0,.5)}
+.mtlist{max-height:55vh;overflow:auto;margin:12px 0;border-top:1px solid var(--rule)}
+.mtrow{display:grid;grid-template-columns:1fr 230px;gap:10px;align-items:center;padding:7px 4px;border-bottom:1px solid var(--rule)}
+.mtrow label{display:flex;gap:10px;align-items:center;cursor:pointer}.mtrow input[type=checkbox]{width:auto}
+@media (max-width:600px){.mtrow{grid-template-columns:1fr}}
+#dataMenu summary{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+input[type=checkbox]{accent-color:var(--gold)}
 /* ILIAD print */
 .pv{--bg:#fff;--ink:#141414;--mut:#6f6b63;--rule:#d9d5cc;--soft:#f4f1ea;font-family:"Helvetica Neue",Helvetica,Arial,sans-serif}
 .pv.dark{--bg:#0C0C0C;--ink:#F1EFEA;--mut:#8B8983;--rule:rgba(255,255,255,.14);--soft:#151514}
@@ -659,8 +700,9 @@ html.touch .sbmode button{min-width:46px;padding:0 10px}
   <nav id="nav"></nav>
   <span class="sp"></span>
   <button id="btnSync" title="Cloud sync status. Click to sync now."><i class="sdot warn"></i><span>connecting…</span></button>
-  <button id="btnTheme" title="Switch light / dark / auto"></button>
-  <details class="menu" id="dataMenu"><summary title="Import, export and library tools"><span class="gear">⚙</span> Data</summary><div class="pop">
+  <details class="menu" id="dataMenu"><summary title="Settings, import and export, library tools"><span class="gear">⚙</span><span class="dl"> Settings</span></summary><div class="pop">
+    <button id="btnTheme" title="Switch light / dark / auto"></button>
+    <hr>
     <button id="btnExport">Export JSON</button>
     <button id="btnImport">Import JSON</button>
     <hr>
@@ -1515,7 +1557,8 @@ function viewLibrary(){
     (!q||(e.name+' '+e.pattern+' '+e.move+' '+e.equipment+' '+(e.variations||[]).join(' ')).toLowerCase().includes(q)));
   list.sort((a,b)=>a.level-b.level||a.name.localeCompare(b.name));
   const nNone=base.filter(isNone).length;
-  const side=`<div class="side"><h3>Organize by</h3>
+  const nAct=(sel!=='all'?1:0)+(ui.show!=='all'?1:0)+(ui.attn?1:0);
+  const side=`<div class="side${ui.filtOpen?' open':''}"><h3>Organize by</h3>
     <div class="seg">${Object.entries(MODES).map(([k,m])=>`<button data-by="${k}" class="${ui.by===k?'on':''}">${m.head}</button>`).join('')}</div>
     <h3>Show</h3><select id="show"><option value="all" ${ui.show==='all'?'selected':''}>Everything</option><option value="train" ${ui.show==='train'?'selected':''}>Training exercises</option><option value="warm" ${ui.show==='warm'?'selected':''}>Warm-up drills</option></select>
     <h3>Needs attention</h3>
@@ -1537,9 +1580,9 @@ function viewLibrary(){
       +(list.some(isNone)?`<div class="group-h">${M.none||'Other'}</div><div class="grid">${list.filter(isNone).map(card).join('')}</div>`:'');
   } else body=`<div class="grid">${list.map(card).join('')}</div>`;
   return `<div class="layout">${side}<div>
-    <div class="bar noprint"><input type="search" id="q" placeholder="Search name, movement, equipment…" value="${esc(ui.q)}">
+    <div class="bar noprint"><button class="filtbtn" data-filt>Filters${nAct?' ('+nAct+')':''}</button><input type="search" id="q" placeholder="Search name, movement, equipment…" value="${esc(ui.q)}">
     <label class="meta"><input type="checkbox" id="grp" ${ui.group?'checked':''} style="width:auto"> group by ${M.head.toLowerCase()}</label>
-    <span class="sp"></span><button class="pri" data-new>+ Add exercise</button></div>${body}</div></div>`;
+    <span class="sp"></span><button class="pri" data-new>+ Add exercise</button></div>${ui.attn==='move'?`<div class="attnbar noprint"><span>${base.length} exercises have no movement pattern.</span><button class="pri" data-movetool>Review suggestions</button></div>`:''}${body}</div></div>`;
 }
 
 function viewTraits(){
@@ -1744,6 +1787,16 @@ document.addEventListener('pointerup',()=>endDrag(true));
 document.addEventListener('pointercancel',()=>endDrag(false));
 document.addEventListener('click',ev=>{if(_suppress){ev.stopPropagation();ev.preventDefault();}},true);
 
+
+/* ---------- icons ---------- */
+const ICON_P={
+ up:'<path d="M12 19V5M5 12l7-7 7 7"/>',down:'<path d="M12 5v14M19 12l-7 7-7-7"/>',x:'<path d="M6 6l12 12M18 6L6 18"/>',
+ pen:'<path d="M4 20h4L18 10l-4-4L4 16v4zM13 7l4 4"/>',star:'<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/>',
+ chevd:'<path d="M6 9l6 6 6-6"/>',chevr:'<path d="M9 6l6 6-6 6"/>',copy:'<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 012-2h9"/>',
+ dots:'<circle cx="5" cy="12" r="1.6" fill="currentColor"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/><circle cx="19" cy="12" r="1.6" fill="currentColor"/>',
+ web:'<circle cx="6" cy="12" r="2.2"/><circle cx="18" cy="6" r="2.2"/><circle cx="18" cy="18" r="2.2"/><path d="M8 11l8-4M8 13l8 4"/>',
+ info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/>',palette:'<circle cx="12" cy="12" r="9"/><circle cx="8.5" cy="10" r="1" fill="currentColor"/><circle cx="12" cy="7.5" r="1" fill="currentColor"/><circle cx="15.5" cy="10" r="1" fill="currentColor"/>'};
+const ic=n=>'<svg class="ic" viewBox="0 0 24 24" aria-hidden="true">'+(ICON_P[n]||'')+'</svg>';
 function viewWorkouts(){
   const w=curW();if(w)ui.wid=w.id;
   const sel=`<select id="wsel" style="max-width:260px">${S.workouts.map(x=>`<option value="${x.id}" ${w&&x.id===w.id?'selected':''}>${esc(x.name)}</option>`).join('')}</select>`;
@@ -1765,8 +1818,8 @@ function viewWorkouts(){
         const end=blockEnd(items,n),inBlk=items.slice(n+1,end).filter(x=>!isBlk(x));
         const sets=inBlk.reduce((a,x)=>a+(+x.sets||0),0);
         const f=i.fmt||'';
-        const ff=f==='circuit'?`<label class="bl">Rounds<input class="bff" value="${esc(i.rounds)}" data-bf="${n}:rounds"></label>`
-          :f==='emom'||f==='amrap'?`<label class="bl">${f==='emom'?'Minutes':'Cap (min)'}<input class="bff" value="${esc(i.rounds)}" data-bf="${n}:rounds"></label>`
+        const ff=f==='circuit'?`<label class="bl">Rounds<input class="bff" value="${esc(i.rounds)}" placeholder="3" data-bf="${n}:rounds"></label>`
+          :f==='emom'||f==='amrap'?`<label class="bl">${f==='emom'?'Minutes':'Cap (min)'}<input class="bff" value="${esc(i.rounds)}" placeholder="12" data-bf="${n}:rounds"></label>`
           :f==='every'?`<label class="bl">Every<input class="bff" value="${esc(i.interval)}" placeholder="2:30" data-bf="${n}:interval"></label><label class="bl">×<input class="bff" value="${esc(i.rounds)}" placeholder="6" data-bf="${n}:rounds"></label>`:'';
         const auto=!parseMin(i.time)&&blockMin(i)?` placeholder="${Math.round(blockMin(i)*10)/10} min (auto)"`:' placeholder="e.g. 20 min"';
         const noteLine=(i.notes||'').split('\n')[0];
@@ -1777,9 +1830,8 @@ function viewWorkouts(){
             <span class="meta bsum">${inBlk.length} exercise${inBlk.length===1?'':'s'} \u00b7 ${sets} sets${i.k===ui.activeBlock?'<span class="adtag noprint">Adding here</span>':''}</span></div>
           <div class="bopts"><label class="bl">Time<input class="bm" value="${esc(i.time)}"${auto} data-bf="${n}:time"></label>
           <select class="bf noprint" data-bf="${n}:fmt">${FMTS.map(([k,l])=>`<option value="${k}" ${f===k?'selected':''}>${l}</option>`).join('')}</select>${ff}</div>
-          <span class="bctl noprint">
-            <button data-btpl="${n}" title="Save this block as a reusable template" aria-label="Save block as template">\u2606</button><button data-bnotes="${n}" title="Block notes" aria-label="Block notes">\u270e${i.notes?'<i class="ndot"></i>':''}</button><button data-bcol="${n}" title="Collapse / expand" aria-label="Collapse or expand">${i.collapsed?'\u25b8':'\u25be'}</button>
-            <button data-bdup="${n}" title="Duplicate this block" aria-label="Duplicate block">⧉</button><button data-bmv="${n}:-1" title="Move block up" aria-label="Move block up">\u2191</button><button data-bmv="${n}:1" title="Move block down" aria-label="Move block down">\u2193</button><button class="danger" data-bdel="${n}" title="Remove this block header. Its exercises join the block above (Undo available)" aria-label="Remove block header">\u2715</button><input type="color" class="bcol" value="${col}" data-bf="${n}:color" title="Block colour" aria-label="Block colour"></span></div>
+          <span class="bctl noprint"><button data-bnotes="${n}" title="Block notes" aria-label="Block notes">${ic('pen')}${i.notes?'<i class="ndot"></i>':''}</button><button data-bcol="${n}" title="Collapse or expand" aria-label="Collapse or expand">${ic(i.collapsed?'chevr':'chevd')}</button><button data-bmv="${n}:-1" title="Move block up" aria-label="Move block up">${ic('up')}</button><button data-bmv="${n}:1" title="Move block down" aria-label="Move block down">${ic('down')}</button>
+            <details class="bmore"><summary title="More block actions" aria-label="More block actions">${ic('dots')}</summary><div class="rpop"><button data-btpl="${n}">${ic('star')} Save as template</button><button data-bdup="${n}">${ic('copy')} Duplicate block</button><label class="rcol">${ic('palette')} Colour <input type="color" class="bcol" value="${col}" data-bf="${n}:color" aria-label="Block colour"></label><button class="danger" data-bdel="${n}" title="Its exercises join the block above (Undo available)">${ic('x')} Remove block header</button></div></details></span></div>
           ${i.notesOpen?`<textarea class="bn" data-bf="${n}:notes" placeholder="Block notes: format, cues, e.g. log your top set">${esc(i.notes)}</textarea>`
             :(noteLine?`<div class="npre" data-bnotes="${n}" title="Click to edit notes">${esc(noteLine)}</div>`:'')}</td></tr>${inBlk.length&&!i.collapsed?'<tr class="colhd noprint"><td><span></span><span></span><span class="l">Exercise</span><span>Sets</span><span>Reps</span><span>Rest</span><span class="l">Note</span><span></span></td></tr>':''}`;
       }
@@ -1796,9 +1848,8 @@ function viewWorkouts(){
       <td class="c-num">${num}</td><td class="nm" data-ract="${n}">${lab?`<span class="gb" data-grpedit="${n}" title="Click to change the group label (A1, B2\u2026)" style="--gc:${curCol}">${esc(lab)}</span>`:''}<b data-info="${e.id}:${n}" title="Open exercise details">${nmA}</b><div>${chips(e)}</div><span class="lvl">${lvl(e.level)}</span>${lh?`<span class="last" title="Last used in ${esc(lh.wn)}">last ${esc(lh.sets)}×${esc(lh.reps)}${lh.rest?' · '+esc(lh.rest):''}</span>`:''}</td>
       <td class="c-sets" data-l="Sets"><input type="number" min="1" inputmode="numeric" enterkeyhint="next" value="${i.sets}" aria-label="Sets for ${nmA}" data-wf="${n}:sets"></td><td class="c-reps" data-l="Reps"><input value="${esc(i.reps)}" aria-label="Reps for ${nmA}" data-wf="${n}:reps"></td>
       <td class="c-rest" data-l="Rest"><input value="${esc(i.rest)}" aria-label="Rest for ${nmA}" data-wf="${n}:rest"></td><td class="c-note"><input value="${esc(i.note)}" placeholder="Add a note" aria-label="Note for ${nmA}" data-wf="${n}:note"></td>
-      <td class="noprint c-act"><button data-dup="${n}" title="Duplicate this row" aria-label="Duplicate row">\u29c9</button><button data-webc="${e.id}" title="Show this exercise in the web">\u2316</button><button data-swap="${n}:dn" ${dn.length?'':'disabled'} title="Swap for an easier option (regression)">\u2193</button>
-       <button data-swap="${n}:up" ${up.length?'':'disabled'} title="Swap for a harder option (progression)">\u2191</button>
-       <button class="danger" data-rm="${n}" title="Remove from workout (Undo available)">\u2715</button></td></tr>${sw}`;}).join('');
+      <td class="noprint c-act"><button data-swap="${n}:dn" ${dn.length?'':'disabled'} title="Swap for an easier option (regression)" aria-label="Swap for an easier option">${ic('down')}</button><button data-swap="${n}:up" ${up.length?'':'disabled'} title="Swap for a harder option (progression)" aria-label="Swap for a harder option">${ic('up')}</button><button class="danger" data-rm="${n}" title="Remove from workout (Undo available)" aria-label="Remove from workout">${ic('x')}</button>
+       <details class="rmore"><summary title="More row actions" aria-label="More row actions">${ic('dots')}</summary><div class="rpop"><button data-dup="${n}">${ic('copy')} Duplicate row</button><button data-info="${e.id}:${n}">${ic('info')} Exercise details</button><button data-webc="${e.id}">${ic('web')} Show in web</button></div></details></td></tr>${sw}`;}).join('');
     const rowsHtml=rows+((qb>=0&&!qbh)?qaRow(qb):'');
     const nsel=[...ui.sel].filter(k=>items.some(x=>x.k===k)).length;
     main=`<div class="bar noprint" style="margin-bottom:10px">${sel}<input id="wname" class="wt" value="${esc(w.name)}">
@@ -2105,6 +2156,9 @@ function viewWeb(){
 function webZoom(f){const W=ui.web,svg=$('#webSvg');if(!svg)return;const r=svg.getBoundingClientRect();webZoomAt(f,r.width/2,r.height/2);}
 function webZoomAt(f,px,py){const W=ui.web,ns=Math.max(.15,Math.min(3,W.sc*f)),k=ns/W.sc;W.tx=px-(px-W.tx)*k;W.ty=py-(py-W.ty)*k;W.sc=ns;webXf();}
 function extraClick(d,t,ev){
+  if(d.filt!==undefined){ui.filtOpen=!ui.filtOpen;render();return true;}
+  if(d.movetool!==undefined){moveTool();return true;}
+  if(d.mtgo!==undefined){moveToolApply();return true;}
   if(d.wk!==undefined){wkClick(d.wk);return true;}
   if(d.attn!==undefined){ui.attn=ui.attn===d.attn?'':d.attn;render();return true;}
   if(d.tour!==undefined){if(d.tour==='skip'){try{localStorage.setItem('wp_tour','1');}catch(e){}closeModal();}else tourCard(+d.tour);return true;}
@@ -2365,9 +2419,64 @@ window.addEventListener('offline',()=>setSync('offline'));
 window.addEventListener('online',()=>{setSync('reconnecting\u2026');cloudSyncNow();});
 if('serviceWorker' in navigator&&/^https?:/.test(location.protocol))navigator.serviceWorker.register('sw.js').catch(()=>{});
 
+/* ---------- movement pattern suggestions ---------- */
+const MOVE_GUESS=[
+ [/olympic|clean|snatch|jerk|high pull/i,'Olympic / Triple Extension'],
+ [/pogo|hop|bound|jump|depth drop|skip|plyo|landing|box jump/i,'Jump / Landing'],
+ [/sprint|shuffle|cut|agility|change of direction|accel|decel|ladder|shuttle|backpedal/i,'Sprint & Change of Direction'],
+ [/(med ball|\bmb\b|\bball\b).*(lateral|rotat|rainbow|stanton|side)|(lateral|rotat|rainbow|stanton).*(med ball|\bmb\b|toss|throw)/i,'Rotation / Anti-Rotation'],
+ [/(med ball|\bmb\b).*(slam|overhead|vertical|high)|slam/i,'Vertical Push'],
+ [/(med ball|\bmb\b|toss|throw|chest pass|atlas)/i,'Horizontal Push'],
+ [/switch|step through|projection|knee drive|arm pump|mechanics|max velocity|wall drill|quick hip|10-0-5|piston|leg cycles|marches|cross drives|front side|reciprocal|nervous system|rev (forward|foward|lateral)/i,'Sprint & Change of Direction'],
+ [/hip flips|hip switches|airplane|figure 4|90\/90|pigeon|crossover|inchworm|inch worm|downward dog|tall kneeling|ribcage|get ups|halo/i,'Mobility'],
+ [/belly lift|lift[- ]?off|psoas|mountain climber|hip flexion|leg cycles/i,'Core / Trunk'],
+ [/hamstring.*(iso|hold)|long lever hamstring/i,'Hinge'],
+ [/split stance|rear foot elevated|rfe|copenhagen|foot pops|pendulum|knee iso/i,'Lunge / Single-Leg'],
+ [/push-up hold|push[- ]?out|lateral drop to push/i,'Horizontal Push'],
+ [/oh weighted|pike|overhead iso|shoulder overhead/i,'Vertical Push'],
+ [/pinch|plate grip|around the world|grip/i,'Accessory / Isolation'],
+ [/pull[- ]?up|chin[- ]?up|pulldown|pull-down|lat pull|muscle[- ]?up/i,'Vertical Pull'],
+ [/\brow\b|inverted row|face pull|seal row|pendlay/i,'Horizontal Pull'],
+ [/overhead press|shoulder press|military|push press|arnold|handstand|landmine press|z press/i,'Vertical Push'],
+ [/bench|push[- ]?up|chest press|floor press|dip|fly\b|flye/i,'Horizontal Push'],
+ [/split squat|lunge|step[- ]?up|single[- ]leg|single leg|pistol|skater|bulgarian|rfe|cossack/i,'Lunge / Single-Leg'],
+ [/deadlift|\brdl\b|romanian|hip thrust|glute bridge|good morning|swing|hinge|hyperextension|back extension|nordic|hamstring curl|pull[- ]through/i,'Hinge'],
+ [/squat|leg press|hack|wall sit|sissy/i,'Squat'],
+ [/carry|farmer|suitcase|waiter|yoke|sled (push|drag)|drag|walk\b/i,'Carry'],
+ [/pallof|chop|twist|rotation|anti[- ]rotation|woodchop|landmine rotation|windmill/i,'Rotation / Anti-Rotation'],
+ [/plank|crunch|\bab\b|abs\b|dead bug|bird dog|sit[- ]?up|leg raise|hollow|v[- ]?up|rollout|core|side bridge/i,'Core / Trunk'],
+ [/curl|extension|raise|shrug|kickback|pushdown|calf|tricep|bicep|wrist|forearm|reverse fly|rear delt/i,'Accessory / Isolation'],
+ [/stretch|mobility|foam|release|breath|rotation drill|cat[- ]camel|90\/90/i,'Mobility'],
+ [/run|bike|cycl|rower|erg|swim|ski|jog|row machine|conditioning|burpee|battle rope|zone \d/i,'Conditioning']];
+function guessMove(name){for(const [re,m] of MOVE_GUESS)if(re.test(name))return m;return '';}
+function moveTool(){
+  const list=S.exercises.filter(e=>!e.move&&!e.phase).sort((a,b)=>a.name.localeCompare(b.name));
+  const rows=list.map(e=>{const g=guessMove(e.name);return `<div class="mtrow"><label><input type="checkbox" data-mtc="${e.id}" ${g?'checked':''}> <span>${esc(e.name)}</span></label><select data-mts="${e.id}"><option value="">\u2014 leave blank \u2014</option>${MOVES.map(m=>`<option ${g===m.id?'selected':''}>${esc(m.name)}</option>`).join('')}</select></div>`;}).join('');
+  $('#modalHost').innerHTML=`<div class="ov" data-ovclose><div class="modal" style="max-width:720px"><h2>Suggested movement patterns</h2>
+    <p class="meta">Suggestions come from the exercise names. Untick or change any that look wrong, then apply. ${list.filter(e=>guessMove(e.name)).length} of ${list.length} have a suggestion.</p>
+    <div class="mtlist">${rows||'<div class="empty">Nothing to review.</div>'}</div>
+    <div class="foot"><button data-mclose>Cancel</button><button class="pri" data-mtgo>Apply ticked</button></div></div></div>`;
+}
+function moveToolApply(){let n=0;document.querySelectorAll('[data-mtc]:checked').forEach(c=>{const e=exById(c.dataset.mtc),sel=document.querySelector('[data-mts="'+c.dataset.mtc+'"]');if(e&&sel&&sel.value){e.move=sel.value;n++;}});
+  save();closeModal();render();toast('Set the movement pattern on '+n+' exercises',false);}
+/* ---------- touch tooltips and keyboard-aware scrolling ---------- */
+(function(){let tm=null,tip=null,shown=false,sx=0,sy=0;
+  const hide=()=>{clearTimeout(tm);if(tip){tip.remove();tip=null;}};
+  document.addEventListener('pointerdown',ev=>{if(ev.pointerType==='mouse'||!ev.target.closest)return;const el=ev.target.closest('[title]');if(!el||el.closest('.grab,.sbgrip')||!el.getAttribute('title'))return;
+    sx=ev.clientX;sy=ev.clientY;clearTimeout(tm);tm=setTimeout(()=>{shown=true;tip=document.createElement('div');tip.id='tip';tip.textContent=el.getAttribute('title');document.body.appendChild(tip);
+      const r=el.getBoundingClientRect();tip.style.left=Math.max(8,Math.min(innerWidth-tip.offsetWidth-8,r.left+r.width/2-tip.offsetWidth/2))+'px';tip.style.top=Math.max(8,r.top-tip.offsetHeight-8)+'px';},450);});
+  document.addEventListener('pointermove',ev=>{if(tm&&Math.hypot(ev.clientX-sx,ev.clientY-sy)>8)hide();});
+  const up=()=>{clearTimeout(tm);if(tip)setTimeout(hide,1400);};document.addEventListener('pointerup',up);document.addEventListener('pointercancel',hide);
+  document.addEventListener('click',ev=>{if(shown){shown=false;ev.stopPropagation();ev.preventDefault();}},true);
+  const want=el=>el&&el.matches&&el.matches('.qa,#sbq,#webq,#q,input[data-wf],.bt,#f_name');
+  const toView=el=>{if(!document.documentElement.classList.contains('touch'))return;setTimeout(()=>{try{el.scrollIntoView({block:'center',behavior:'smooth'});}catch(e){}},320);};
+  document.addEventListener('focusin',ev=>{if(want(ev.target))toView(ev.target);});
+  if(window.visualViewport)visualViewport.addEventListener('resize',()=>{const a=document.activeElement;if(want(a))toView(a);});
+})();
+
 /* ---------- events ---------- */
 document.addEventListener('click',ev=>{
-  const t=ev.target.closest('[data-wk],[data-attn],[data-tour],[data-syncload],[data-syncdismiss],[data-info],[data-drawer],[data-dclose],[data-dup],[data-bdup],[data-qapick],[data-copyfrom],[data-cfgo],[data-keys],[data-bulkapply],[data-bulkp],[data-bulkdup],[data-bulkdel],[data-bulkclear],[data-undo],[data-grpedit],[data-sbopen],[data-sbclose],[data-btpl],[data-tplins],[data-tplren],[data-tpldel],[data-sbtab],[data-newsb],[data-newq],[data-webc],[data-webz],[data-webd],[data-webr],[data-webk],[data-webopen],[data-webadd],[data-tab],[data-pro],[data-printgo],[data-bact],[data-ract],[data-bnotes],[data-bsuper],[data-bnew],[data-bgroup],[data-bcol],[data-bmv],[data-bdel],[data-sbtrait],[data-sbby],[data-sbgrp],[data-sbmore],[data-sbmode],[data-sbclear],[data-by],[data-trait],[data-open],[data-new],[data-ttog],[data-unlink],[data-exsave],[data-exdel],[data-mclose],[data-tadd],[data-tdel],[data-wsel],[data-wnew],[data-wdup],[data-wdel],[data-wprint],[data-add],[data-swap],[data-doswap],[data-mv],[data-rm],[data-ovclose],[data-pickadd]');
+  const t=ev.target.closest('[data-filt],[data-movetool],[data-mtgo],[data-wk],[data-attn],[data-tour],[data-syncload],[data-syncdismiss],[data-info],[data-drawer],[data-dclose],[data-dup],[data-bdup],[data-qapick],[data-copyfrom],[data-cfgo],[data-keys],[data-bulkapply],[data-bulkp],[data-bulkdup],[data-bulkdel],[data-bulkclear],[data-undo],[data-grpedit],[data-sbopen],[data-sbclose],[data-btpl],[data-tplins],[data-tplren],[data-tpldel],[data-sbtab],[data-newsb],[data-newq],[data-webc],[data-webz],[data-webd],[data-webr],[data-webk],[data-webopen],[data-webadd],[data-tab],[data-pro],[data-printgo],[data-bact],[data-ract],[data-bnotes],[data-bsuper],[data-bnew],[data-bgroup],[data-bcol],[data-bmv],[data-bdel],[data-sbtrait],[data-sbby],[data-sbgrp],[data-sbmore],[data-sbmode],[data-sbclear],[data-by],[data-trait],[data-open],[data-new],[data-ttog],[data-unlink],[data-exsave],[data-exdel],[data-mclose],[data-tadd],[data-tdel],[data-wsel],[data-wnew],[data-wdup],[data-wdel],[data-wprint],[data-add],[data-swap],[data-doswap],[data-mv],[data-rm],[data-ovclose],[data-pickadd]');
   if(!t)return;const d=t.dataset;
   if(extraClick(d,t,ev))return;
   if(d.ovclose!==undefined){if(ev.target===t)closeModal();return;}
@@ -2450,7 +2559,7 @@ document.addEventListener('change',ev=>{
   else if(t.id==='addtrait'){ui.addT=t.value;render();}
   else if(t.dataset.tname||t.dataset.tcolor)render();
 });
-document.addEventListener('click',ev=>{document.querySelectorAll('details.wmore[open]').forEach(m=>{if(!ev.target.closest('details.wmore')||ev.target.closest('.wpop button'))m.open=false;});});
+document.addEventListener('click',ev=>{document.querySelectorAll('details.wmore[open],details.rmore[open],details.bmore[open]').forEach(m=>{if(!m.contains(ev.target)||ev.target.closest('.wpop button,.rpop button'))m.open=false;});});
 document.addEventListener('click',ev=>{const m=document.getElementById('dataMenu');if(!m||!m.open)return;if(ev.target.closest('#dataMenu .pop button')||!ev.target.closest('#dataMenu'))m.open=false;});
 document.addEventListener('keydown',ev=>{if(ev.key==='Escape'){if(typeof DR!=='undefined'&&DR)endDrag(false);else if(D)closeModal();}});
 
@@ -2474,7 +2583,7 @@ $('#btnReset').onclick=()=>{if(confirm('Replace everything with the starter set?
 /* theme: auto | light | dark */
 let theme='auto';try{theme=localStorage.getItem('wp_theme')||'dark'}catch(e){}
 function applyTheme(){const r=document.documentElement;theme==='auto'?r.removeAttribute('data-theme'):r.setAttribute('data-theme',theme);
-  $('#btnTheme').textContent={auto:'◐ Auto',light:'☀ Light',dark:'☾ Dark'}[theme];try{localStorage.setItem('wp_theme',theme)}catch(e){}}
+  $('#btnTheme').textContent='Theme: '+{auto:'◐ Auto',light:'☀ Light',dark:'☾ Dark'}[theme];try{localStorage.setItem('wp_theme',theme)}catch(e){}}
 $('#btnTheme').onclick=()=>{theme={auto:'light',light:'dark',dark:'auto'}[theme];applyTheme();};
 applyTheme();
 gateThen(()=>{render();cloudLoad();maybeTour();});
