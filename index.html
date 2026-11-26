@@ -722,6 +722,12 @@ html.touch #btnSync{min-width:42px}
 html.touch #btnCmd{min-width:42px}
 .sblists button{white-space:nowrap;min-height:0!important;padding:4px 10px;flex:1 1 auto;border-radius:99px}
 .sbsaved{margin-top:2px}
+/* continuous block outline: header, column strip, rows and quick-add share one coloured edge */
+#wzone tr.colhd{margin:0}
+#wzone tr.colhd td{box-shadow:inset 6px 0 0 var(--bc,var(--gold))}
+#wzone tr.qadd{margin:0!important}
+#wzone tr.qadd td{background:color-mix(in srgb,var(--bc,var(--gold)) 4%,transparent)!important;box-shadow:inset 6px 0 0 var(--bc,var(--gold));border-radius:0 0 14px 14px;padding:6px 10px 8px 22px!important}
+#wzone .qares{left:22px;right:10px}
 /* ILIAD print */
 .pv{--bg:#fff;--ink:#141414;--mut:#6f6b63;--rule:#d9d5cc;--soft:#f4f1ea;font-family:"Helvetica Neue",Helvetica,Arial,sans-serif}
 .pv.dark{--bg:#0C0C0C;--ink:#F1EFEA;--mut:#8B8983;--rule:rgba(255,255,255,.14);--soft:#151514}
@@ -1865,7 +1871,7 @@ function viewWorkouts(){
     const cov={},mcov={};
     items.forEach(i=>{const e=exById(i.ex);if(!e)return;if(e.traits[0])cov[e.traits[0]]=(cov[e.traits[0]]||0)+1;if(e.move&&!e.phase)mcov[e.move]=(mcov[e.move]||0)+1;});
     let num=0,hidden=false,totalSets=0,totalMin=0,nEx=0,bn=0,curCol='transparent',bLet='',pos=0,qb=-1,qbh=false;
-    const qaRow=bi=>`<tr class="qadd noprint"><td><input class="qa" data-qa="${bi}" placeholder="+ Add exercise to ${esc(items[bi].title||'this block')}\u2026" autocomplete="off" aria-label="Quick add exercise to ${esc(items[bi].title||'block')}"><div class="qares" hidden></div></td></tr>`;
+    const qaRow=bi=>`<tr class="qadd noprint" style="--bc:${items[bi].color||BLK_COL[(items.slice(0,bi+1).filter(isBlk).length-1)%BLK_COL.length]}"><td><input class="qa" data-qa="${bi}" placeholder="+ Add exercise to ${esc(items[bi].title||'this block')}\u2026" autocomplete="off" aria-label="Quick add exercise to ${esc(items[bi].title||'block')}"><div class="qares" hidden></div></td></tr>`;
     const jn=new Map();
     items.forEach((x,n)=>{if(isBlk(x)||!exById(x.ex))return;const b=blockOf(items,n),bl=b>=0?items[b]:null,cyc=bl&&['circuit','emom','amrap','every'].includes(bl.fmt);
       const nx=items[n+1];if(!nx||isBlk(nx)||!exById(nx.ex))return;
@@ -1892,7 +1898,7 @@ function viewWorkouts(){
           <span class="bctl noprint"><button data-bnotes="${n}" title="Block notes" aria-label="Block notes">${ic('pen')}${i.notes?'<i class="ndot"></i>':''}</button><button data-bcol="${n}" title="Collapse or expand" aria-label="Collapse or expand">${ic(i.collapsed?'chevr':'chevd')}</button><button data-bmv="${n}:-1" title="Move block up" aria-label="Move block up">${ic('up')}</button><button data-bmv="${n}:1" title="Move block down" aria-label="Move block down">${ic('down')}</button>
             <details class="bmore"><summary title="More block actions" aria-label="More block actions">${ic('dots')}</summary><div class="rpop"><button data-btpl="${n}">${ic('star')} Save as template</button><button data-bdup="${n}">${ic('copy')} Duplicate block</button><label class="rcol">${ic('palette')} Colour <input type="color" class="bcol" value="${col}" data-bf="${n}:color" aria-label="Block colour"></label><button class="danger" data-bdel="${n}" title="Its exercises join the block above (Undo available)">${ic('x')} Remove block header</button></div></details></span></div>
           ${i.notesOpen?`<textarea class="bn" data-bf="${n}:notes" placeholder="Block notes: format, cues, e.g. log your top set">${esc(i.notes)}</textarea>`
-            :(noteLine?`<div class="npre" data-bnotes="${n}" title="Click to edit notes">${esc(noteLine)}</div>`:'')}</td></tr>${inBlk.length&&!i.collapsed?'<tr class="colhd noprint"><td><span></span><span></span><span class="l">Exercise</span><span>Sets</span><span>Reps</span><span>Rest</span><span class="l">Note</span><span></span></td></tr>':''}`;
+            :(noteLine?`<div class="npre" data-bnotes="${n}" title="Click to edit notes">${esc(noteLine)}</div>`:'')}</td></tr>${inBlk.length&&!i.collapsed?'<tr class="colhd noprint" style="--bc:'+col+'"><td><span></span><span></span><span class="l">Exercise</span><span>Sets</span><span>Reps</span><span>Rest</span><span class="l">Note</span><span></span></td></tr>':''}`;
       }
       const e=exById(i.ex);if(!e)return '';
       nEx++;totalSets+=(+i.sets||0);pos++;const autoG=bLet?bLet+pos:'';
